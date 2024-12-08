@@ -729,7 +729,7 @@ def result_u8 |x, y| {
 
 areaで割らなくてもいいような気もするんだが、ダメだった。なんか良く理解出来てない事がありそうだな。（追記：p+q+rで割らないとダメなのを忘れていた。areaで割るとこれが1.0になるのだろう。p+q+rで割っても正しく描けた）
 
-![ベジエ、スクリーンショット](imgs/bezier.png)
+![ベジエ、スクリーンショット](imgs/bezier_screenshot.png)
 
 ## 繰り返しフィルタ
 
@@ -752,6 +752,6 @@ def result_u8 |x, y| {
 
 ```
 
-![繰り返し、スクリーンショット](repeat_screenshot.png)
+![繰り返し、スクリーンショット](imgs/repeat_screenshot.png)
 
 割と簡単にできたな。
