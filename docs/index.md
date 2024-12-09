@@ -1,6 +1,6 @@
 # MFGのドキュメントのページ
 
-## リファレンス、MEEP
+## リファレンス、MEP
 
 - [リファレンス](Reference.md)
 - [MEPのインデックス](MEPIndex.md) 仕様の変更など
