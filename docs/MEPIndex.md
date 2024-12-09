@@ -1,4 +1,6 @@
-MFG Enhanced Proposalの略。PythonのPEPなどのMFG版。
+# MEPの目次
+
+MEPはMFG Enhanced Proposalの略。PythonのPEPなどのMFG版。
 
 現在は文法の開発中で、何が最新版かを正しく残すのは難しいので、
 何か文法を変更したり追加したりする都度MEPを書く事にし、
@@ -30,3 +32,4 @@ MFG Enhanced Proposalの略。PythonのPEPなどのMFG版。
 - [MEP 18: デコレータをsamplerと揃える](MEP/18.md)
 - [MEP 19: paramの国際化](MEP/19.md)
 - [MEP 20: 他のレイヤーの参照](MEP/20.md)
+- [MEP 21: テンソルリテラル対応](MEP/21.md)
