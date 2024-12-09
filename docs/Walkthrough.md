@@ -6,7 +6,7 @@ MFGのスクリプトの例を見つつ、入門的な解説を行っていく�
 
 - [リファレンス](Reference.md)
 - [MEP: シンタックスの検討](MEPIndex.md)
-- 工事中 [ハンズオン](HandsOn.md)
+- [ハンズオン](HandsOn.md)
 
 ## ネガポジ反転
 
