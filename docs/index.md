@@ -12,6 +12,8 @@
 
 ## ノート
 
-調査した時のメモなど。
+調査した時のメモ、思想など。
 
+- [MFGとは？](notes/WhatIsMFG.md)
+- [GPGPU上の言語という性質から来る特徴](notes/LangForGPGPU.md)
 - [シークエンスの第二引数の意味](notes/seq_second_arg.md)
