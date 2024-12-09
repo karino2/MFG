@@ -2,7 +2,7 @@
 
 Created: 2023-03-14 17:12:50
 
-distance, normalizeなどを用いたプログラミングと同じ感じで出来るようにプリミティブを揃えていきたい。 Flangにはベクトル型などが無いのでこういうのを揃える気もあまりしていなかったが、書いていると二次元のベクトルを扱う機会は多いので、なんらかの形でベクトルの特別扱いはしたいと思った。
+distance, normalizeなどを用いたプログラミングと同じ感じで出来るようにプリミティブを揃えていきたい。 MFGにはベクトル型などが無いのでこういうのを揃える気もあまりしていなかったが、書いていると二次元のベクトルを扱う機会は多いので、なんらかの形でベクトルの特別扱いはしたいと思った。
 
 -   [OpenGL 4.x Reference Pages](https://registry.khronos.org/OpenGL-Refpages/gl4/html/)
 -   [abs - Win32 apps - Microsoft Learn](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-abs)
