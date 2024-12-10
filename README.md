@@ -1,4 +1,4 @@
-# MFG (Modern Filter Language for GPU)
+# MFG (Modern Filter-language for GPU)
 
 GPUに特化したモダンなフィルタ記述言語、MFGのページです。
 
