@@ -107,10 +107,10 @@ let mw = i32( strength * sample )
 
 let ar = 0.33 * mw
 
+let [W, H] = input_u8.extent()
+
 @bounds(mw+1)
 def weights |m|{ 100 * exp( -m*m / (2*ar*ar) ) }
-
-let extended = sampler<input_u8>(address=.ClampToBorderValue, border_value=u8[0, 0, 0, 0] )
 
 @bounds(input.extent(0), input.extent(1))
 def mid_all |x, y| {
@@ -118,10 +118,11 @@ def mid_all |x, y| {
 
 	  let px = x + ((DeltaU * rx) >> 16)
 	  let py = y + ((DeltaV * rx) >> 16)
+	  
+    let inside = px >= 0 && px < W && py >= 0 && py < H
+    let gauss = ifel(inside, weights( abs(rx) ), 0.0)
 	
-	  let gauss = weights( abs(rx) )
-	
-    let [b, g, r, a] = f32(extended( px, py ))
+    let [b, g, r, a] = f32(input_u8( px, py ))
 	  let ga = gauss * a
 	
 		[
@@ -142,7 +143,8 @@ def result_u8 |x, y| {
 }
 ```
 
-以前は中間の和にuint64を使っていたがDirectComputeにuint64が無かったのでfloatに変更。
+DirectComputeにはu64が無いのでMFGもu64は無し。
+という事で中間の値にはf32を使っている。
 
 ## **レンズぼかし**
 
