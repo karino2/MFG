@@ -163,7 +163,7 @@ finput(0.3, 0.7)
 
 ## テンソルのメソッド
 
-現状ではextentとto_ncoordがテンソルのメソッドと解釈される（ただしto_ncoordはselfが省略されて現在定義中のテンソルとなる）。
+現状ではextentとis_insideとto_ncoordがテンソルのメソッドと解釈される（ただしto_ncoordはselfが省略されて現在定義中のテンソルとなる）。
 
 ### ts.extent(dim)
 
@@ -175,6 +175,10 @@ let h = input_u8.extent(1)
 ```
 
 wやhはinputの「最大のインデックス-1」となる（0オリジンなので）。
+
+### ts.is_inside(x, y)
+
+x, yがtsの範囲内ならノンゼロを、範囲内なら0を返す。
 
 ### to_ncoord([x, y])
 

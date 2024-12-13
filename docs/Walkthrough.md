@@ -107,8 +107,6 @@ let mw = i32( strength * sample )
 
 let ar = 0.33 * mw
 
-let [W, H] = input_u8.extent()
-
 @bounds(mw+1)
 def weights |m|{ 100 * exp( -m*m / (2*ar*ar) ) }
 
@@ -119,7 +117,7 @@ def mid_all |x, y| {
 	  let px = x + ((DeltaU * rx) >> 16)
 	  let py = y + ((DeltaV * rx) >> 16)
 	  
-    let inside = px >= 0 && px < W && py >= 0 && py < H
+    let inside = input_u8.is_inside(px, py)
     let gauss = ifel(inside, weights( abs(rx) ), 0.0)
 	
     let [b, g, r, a] = f32(input_u8( px, py ))
@@ -204,6 +202,56 @@ rsumはループ変数のみだが、edge.sumは値も渡ってくるのは変�
 edge.sumでカッコを省略出来るのは、引数一つでブロックの時はカッコが省略出来るとしよう。この辺はkotlinと同じ感じで、最後のブロックはカッコの外に出せて、引数が一つの場合はカッコを省略出来る、という事にする。だが今の所複数引数があるブロック引数を持つものは存在しないので、引数一つだけ特別扱い。
 
 最初に一旦sumListなどに入れる必要は無いのだが、読みづらいので一旦変数に入れた。
+
+追記: 境界の扱いがバグってたので修正。ただしもとのスクリプトはedge.sumの例になっているので遺しておく。
+
+```fsharp
+@title "レンズぼかし"
+@param_i32 radius(SLIDER, label="半径", min=1, max=200, init=5)
+
+let extended = sampler<input_u8>(address=.ClampToBorderValue, border_value=u8[0, 0, 0, 0] )
+
+# y座標をindexにした、円の外周のx座標。
+# ただdy1は0〜2rまでの値をとり、中心を原点とするなら y = dy1-r （これでyは-r〜rとなる）
+
+@bounds(2*radius+1)
+def edge |dy1|{
+ i32(sqrt( f32(radius^2 - (dy1 - radius)^2) ))
+}
+
+@bounds(input.extent(0), input.extent(1))
+def expbuf |x, y| {
+  let [b, g, r, a] = f32(input_u8(x, y))
+
+  let rcomp = r*r*a
+  let gcomp = g*g*a
+  let bcomp = b*b*a
+
+  [bcomp, gcomp, rcomp, a]
+}
+
+@bounds(input.extent(0), input.extent(1))
+def sumList |x, y| {
+	rsum(0:2*radius+1, 0:2*radius+1) |r_edgex, r_edgey| {
+	  let sx = x+r_edgex-radius
+	  let sy = y+r_edgey-radius
+    let inside = expbuf.is_inside(sx, sy)
+
+		ifel(insinde && (r_edgex-radius)^2 + (r_edgey-radius)^2 <= radius^2,
+		  [1.0, *expbuf(sx, sy)],
+			[0.0, 0.0, 0.0, 0.0, 0.0]
+		)
+	}
+}
+
+def result |x, y|{
+  let [area, b, g, r, a] = sumList(x, y)
+  let [b3, g3, r3, a3] = [b, g, r, a]/area
+
+  u8[*sqrt([b3, g3, r3]/a3), a3]
+}
+```
+
 
 ## 砂あらし
 

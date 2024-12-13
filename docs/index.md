@@ -17,3 +17,4 @@
 - [MFGとは？](notes/WhatIsMFG.md)
 - [GPGPU上の言語という性質から来る特徴](notes/LangForGPGPU.md)
 - [シークエンスの第二引数の意味](notes/seq_second_arg.md)
+- [なぜto_ncoordの引数はタプルなのか？](notes/WhyToNCoordArgIsTuple.md)
