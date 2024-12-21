@@ -10,6 +10,10 @@
 - [ハローMFG](HandsOnHello.md) まずはここから。
 - [ウォークスルー](Walkthrough.md) 全体を外観する（後半は難しい）
 
+## スクリプト例
+
+- [ガウスぼかし](examples/gauss_blur.md)
+
 ## ノート
 
 調査した時のメモ、思想など。
