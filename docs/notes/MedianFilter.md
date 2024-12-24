@@ -200,7 +200,7 @@ def median |x, y| {
 
   def med by reduce(hist_cumsum, dim=0, init=-1) |i, rgb, val, accm| {
     select(accm != -1, accm,
-      select(val &lt; hist_cumsum(255, rgb)/2, -1, i)
+      select(val < hist_cumsum(255, rgb)/2, -1, i)
     )
   }
   [med(0), med(1), med(2)]
@@ -265,7 +265,7 @@ def hist_cumsum %trans(hist, dist=0, init=0) |i, rgb, val, accm| {
 }
 def med %reduce(hist_cumsum, dim=0, init=-1) |i, rgb, val, accm| {
   select(accm != -1, accm,
-    select(val &lt; hist_cumsum(255, rgb)/2, -1, i)
+    select(val < hist_cumsum(255, rgb)/2, -1, i)
   )
 }
 ```
@@ -280,7 +280,7 @@ def hist_cumsum %hist.trans_accm(dist=0) |i, rgb, val, accm | {
 }
 def med %hist_cumsum.reduce(dim=0, init=-1) |i, rgb, val, accm| {
   select(accm != -1, accm,
-    select(val &lt; hist_cumsum(255, rgb)/2, -1, i)
+    select(val < hist_cumsum(255, rgb)/2, -1, i)
   )
 }
 ```
@@ -309,7 +309,7 @@ def median |x, y| {
 
   def _med %_hist_cumsum.reduce(dim=0, init=-1) |i, rgb, val, accm| {
     select(accm != -1, accm,
-      select(val &lt; _hist_cumsum(255, rgb)/2, -1, i)
+      select(val < _hist_cumsum(255, rgb)/2, -1, i)
     )
   }
   [_med(0), _med(1), _med(2)]
@@ -351,13 +351,13 @@ def _hist_cumsum by trans_accm(_hist, dim=0) |i, rgb, val, accm| { val+accm }
 角括弧でくくってみるか？
 
 ```
-def _hist_cumsum by &lt;trans_accm&gt;(_hist, dim=0) |i, rgb, val, accm| { val+accm }
+def _hist_cumsum by <trans_accm>(_hist, dim=0) |i, rgb, val, accm| { val+accm }
 ```
 
 悪くは無いかもしれない。スカラーになるreduce\_sumも書いてみよう。
 
 ```
-let area = &lt;reduce_sum&gt;(edge) |i, val| { 2*val+1 }
+let area = <reduce_sum>(edge) |i, val| { 2*val+1 }
 ```
 
 このreduce\_sumはスカラーの時だけexpressionになるのは違和感が強いよなぁ。このケースだけメソッドにするか？
@@ -390,11 +390,11 @@ def median |x, y| {
      _hist(b, 2) += wval
   }
 
-  def _hist_cumsum by &lt;trans_accm&gt;(_hist, dim=0) |i, rgb, val, accm | { val+accm }
+  def _hist_cumsum by <trans_accm>(_hist, dim=0) |i, rgb, val, accm | { val+accm }
 
-  def _med by &lt;reduce&gt;(_hist_cumsum, dim=0, init=-1) |i, rgb, val, accm| {
+  def _med by <reduce>(_hist_cumsum, dim=0, init=-1) |i, rgb, val, accm| {
     select(accm != -1, accm,
-      select(val &lt; _hist_cumsum(255, rgb)/2, -1, i)
+      select(val < _hist_cumsum(255, rgb)/2, -1, i)
     )
   }
   [_med(0), _med(1), _med(2)]
@@ -454,18 +454,18 @@ mut! trans_accm!(_hist, dim=0) |i, rgb, val, accm | { val+accm }
 やっぱりメソッドの方がストレートにかんじるな。 reduceもメソッドっぽくしてみるとどうかな？
 
 ```
-def _med by _hist.&lt;reduce&gt;(dim=0, init=-1) |i, rgb, val, accm| {
+def _med by _hist.<reduce>(dim=0, init=-1) |i, rgb, val, accm| {
   ifel(accm != -1, accm, ...)
-  elif(val &lt; _hist_cumsum(255, rgb)/2, -1, i)
+  elif(val < _hist_cumsum(255, rgb)/2, -1, i)
 }
 ```
 
 各カッコが意味が分からない。selfもくくるとどうだろう？
 
 ```
-def _med by &lt;_hist.reduce&gt;(dim=0, init=-1) |i, rgb, val, accm| {
+def _med by <_hist.reduce>(dim=0, init=-1) |i, rgb, val, accm| {
   ifel(accm != -1, accm, ...)
-  elif(val &lt; _hist_cumsum(255, rgb)/2, -1, i)
+  elif(val < _hist_cumsum(255, rgb)/2, -1, i)
 }
 ```
 
@@ -490,26 +490,26 @@ mut! wmat.sort!(dim=0)
 transと角括弧でくくるとどうだろう？
 
 ```
-mut! trans&lt;_hist&gt;.accumulate!(dim=0) |i, col, val, accm | { val+accm }
-mut! trans&lt;_hist&gt;.cumsum!(dim=0)
-mut! trans&lt;wmat&gt;.sort!(dim=0)
+mut! trans<_hist>.accumulate!(dim=0) |i, col, val, accm | { val+accm }
+mut! trans<_hist>.cumsum!(dim=0)
+mut! trans<wmat>.sort!(dim=0)
 ```
 
 するとdef byの方も合わせた方がいいよな。
 
 ```
-def _med by reduce&lt;_hist&gt;(dim=0, init=-1) |i, col, val, accm| {
+def _med by reduce<_hist>(dim=0, init=-1) |i, col, val, accm| {
     ifel(accm != -1, accm, ...)
-    elif(val &lt; _hist(255, col)/2, -1, i)
+    elif(val < _hist(255, col)/2, -1, i)
 }
 ```
 
 うーん、これは意味が違う気がするな。テンソルのdefを行う特殊な何か、という事を表したかったので、元の方が良い気がする。
 
 ```
-def _med by &lt;_hist.reduce&gt;(dim=0, init=-1) |i, col, val, accm| {
+def _med by <_hist.reduce>(dim=0, init=-1) |i, col, val, accm| {
     ifel(accm != -1, accm, ...)
-    elif(val &lt; _hist(255, col)/2, -1, i)
+    elif(val < _hist(255, col)/2, -1, i)
 }
 ```
 
@@ -532,9 +532,9 @@ mut! trans!(wmat).sort(dim=0)
 def byとの一貫性のなさは気になるが、とりあえず角括弧にしておくか。
 
 ```
-mut! trans&lt;_hist&gt;.accumulate!(dim=0) |i, col, val, accm | { val+accm }
-mut! trans&lt;_hist&gt;.cumsum!(dim=0)
-mut! trans&lt;wmat&gt;.sort!(dim=0)
+mut! trans<_hist>.accumulate!(dim=0) |i, col, val, accm | { val+accm }
+mut! trans<_hist>.cumsum!(dim=0)
+mut! trans<wmat>.sort!(dim=0)
 ```
 
 ----
@@ -542,7 +542,7 @@ mut! trans&lt;wmat&gt;.sort!(dim=0)
 reduceは次元が減る縮約を表すのであって、accumulate的にreduceするのはtransと同じルールとするなら、
 
 ```
-reduce&lt;ts&gt;.accumulate
+reduce<ts>.accumulate
 ```
 
 と書くべきな気がしてきた。 これならtransとの並列構造も分かりやすいのでこう変更する。

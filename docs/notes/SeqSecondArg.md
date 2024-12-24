@@ -7,23 +7,23 @@
 Python
 
 ```
-&gt;&gt;&gt; i = [x for x in range(5)]
-&gt;&gt;&gt; i
+>>> i = [x for x in range(5)]
+>>> i
 [0, 1, 2, 3, 4]
-&gt;&gt;&gt; i[2:3]
+>>> i[2:3]
 [2]
-&gt;&gt;&gt; i[2:4]
+>>> i[2:4]
 [2, 3]
 ```
 
 [R: Colon Operator](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Colon.html)
 
 ```
-&gt; 2:3
+> 2:3
 [1] 2 3
-&gt; 3:2
+> 3:2
 [1] 3 2
-&gt; 3:4
+> 3:4
 [1] 3 4
 ```
 
