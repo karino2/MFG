@@ -12,7 +12,7 @@
 
 ## スクリプト例
 
-- [ガウスぼかし](examples/gauss_blur.md)
+- [ガウスぼかし](examples/GaussBlur.md)
 
 ## ノート
 

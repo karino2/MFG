@@ -296,7 +296,7 @@ elifと…については以下を参照。
 
 以下に移動。
 
-[notes: メディアンフィルタのスクリプト案を検討](notes/median_filter.md)
+[notes: メディアンフィルタのスクリプト案を検討](notes/MedianFilter.md)
 
 現在の結論
 

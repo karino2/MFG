@@ -7,7 +7,7 @@
 
 ## 名前付き引数
 
-[notes: メディアンフィルタのスクリプト案を検討](notes/median_filter.md)
+[notes: メディアンフィルタのスクリプト案を検討](notes/MedianFilter.md)
 
 いくつかの関数呼び出しは名前付き引数をサポートしている。名前付き引数は基本的には名前無しのpositional argsのシンタックスシュガーに過ぎず、名前をつけないと指定出来ない引数は存在しない。全ての引数には順番があって、名前無しで並べる事で指定できる。
 
@@ -317,7 +317,7 @@ rsumなどは0..<2などの範囲指定がある。Swift同様終わりは含ま
 
 特に説明が必要なさそうなものはここに列挙しておく。
 
-以下のチケットも参照のこと。 [notes: OpenGLなどのプリミティブの採用検討メモ](notes/gl_like_primitives.md)
+以下のチケットも参照のこと。 [notes: OpenGLなどのプリミティブの採用検討メモ](notes/GLLikePrimitives.md)
 
 だいたい対応するOpenGLのAPIの説明で十分と思うのでそちらを参照のこと。[OpenGL 4.x Reference Pages](https://registry.khronos.org/OpenGL-Refpages/gl4/html/indexflat.php)
 
