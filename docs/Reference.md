@@ -305,7 +305,7 @@ rsumなどは0..<2などの範囲指定がある。Swift同様終わりは含ま
 
 - [Built-in Types — Python 3.11.1 documentation](https://docs.python.org/3/library/stdtypes.html#common-sequence-operations)
 - [R: Colon Operator](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Colon.html)
-- [notes: シーケンスの第２引数の調査検討](notes/seq_second_arg.md)
+- [notes: シーケンスの第２引数の調査検討](notes/SeqSecondArg.md)
 
 ## 組み込み関数
 
