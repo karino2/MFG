@@ -36,7 +36,7 @@ Pythonのドキュメントへのリンク。 [Built-in Types — Python 3.11.1 
 ----
 
     
-JavaScriptは単なる関数だがやはりend excusive。 [ArrayBuffer.prototype.slice() - JavaScript - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer/slice)
+JavaScriptは単なる関数だがやはりend exclusive。 [ArrayBuffer.prototype.slice() - JavaScript - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer/slice)
 
 ----
 
@@ -52,3 +52,7 @@ Rustは逆に`..`がexclusiveで、inclusiveに`..=`を使う。
 -   [for と range - Rust By Example 日本語版](https://doc.rust-jp.rs/rust-by-example-ja/flow_control/for.html)
 
 exclusiveが明示的なswiftが一番クリアな気がする（inclusiveは今の所使わないので）
+
+Golangもend exclusive
+
+- [A Tour of Go](https://go.dev/tour/moretypes/7)
