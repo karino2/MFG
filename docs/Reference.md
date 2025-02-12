@@ -144,7 +144,7 @@ let extend = sampler<input_u8>(address=.ClampToBorderValue, border_value=u8[0, 0
 
 border_valueの値の型はテンソルの要素の型と揃っている必要がある事に注意。
 
-### 座標指定(coord）
+### 座標指定(coord)
 
 通常のピクセル単位のi32と、0.0〜1.0にnormalizeされたf32の座標指定が選べる
 
@@ -231,6 +231,35 @@ let u8_bgra = to_u8color(ncolor)
 ```
 
 to_u8colorは0.0〜1.0にclampしてu8にするので、1.0より大きな値は1.0に、マイナスの値は0.0として扱われる。
+
+## ガンマ補正
+
+ガンマ補正を考慮に入れたフィルタを書くために、以下の２つの関数が提供されている。
+
+- `genType gamma2linear(genType ncolor)`
+- `genType linear2gamma(genType ncolor)`
+
+genTypeはこの場合はfloatのスカラーかfloatのベクトルを意味する。
+4要素のタプルまで動くけれど、ガンマ補正はRGBについて行うものでアルファは普通はリニアなものなので、
+普通は3要素のタプルで使う。
+
+引数としてはノーマライズドカラー（floatの0.0〜1.0の色）を使う。
+
+通常の画像ファイルなどはガンマ補正が入った値になっているので、それをlinearのスケールに戻して計算を進め、
+そのあと最後にふたたびガンマ補正するのが通常の流れとなる。
+
+典型的には以下のようなコードになる。
+
+```
+let bgra = to_ncolor(input_u8(x, y))
+let lin_bgr = gamma2linear(bgra.xyz)
+let alpha = bgra.w
+# 何か処理
+
+to_u8color([*linear2gamma(lin_bgr), alpha])
+```
+
+具体例としては[ガウスぼかし](examples/GaussBlur.md)の「ガウスフィルタ、linRGB2」を参照の事。
 
 ## シンタックスシュガーのメモ
 

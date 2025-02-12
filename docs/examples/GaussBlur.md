@@ -282,6 +282,63 @@ def result_u8 |xi, yi| {
 真ん中がlinear化、下が通常の何もしてないガウスぼかし。やはりリニア化しないと暗くなってしまって良く無いですね。
 ガンマ補正しないと駄目か。
 
+ガンマ補正は良く使うのでビルトインの関数として提供する事にした。
+gamma2linearでlinearになおして、計算したあとにlinear2gammaでガンマ補正ありの値に戻す。
+
+それにto_u8colorとto_ncolorも使って書き直したのが以下。（アルファのガンマ補正は不適切だと思ったのでやらないようについでに直した）
+
+```cpp
+
+@title "ガウスフィルタ、linRGB2"
+
+@param_i32 ar(SLIDER, label="サイズ", min=2, max=300, init=10)
+
+let clamped = sampler<input_u8>(address=.ClampToEdge)
+let sigma = f32(ar)
+let WR = 3*ar
+let mWR = -(WR-1)
+
+@bounds(WR)
+def weight |x| {
+  exp(- f32(x^2)/(2.0*sigma^2) )
+}
+
+let coeff = rsum(mWR..<WR) |rx| { weight(abs(rx)) }
+
+let [W, H] = input_u8.extent()
+@bounds(W, H)
+def xblur |xi, yi| {
+   let [bs, gs, rs, as] = rsum(mWR..<WR) |rx| {
+      let bgra = to_ncolor( clamped( xi + rx, yi) )
+      let [linB, linG, linR] = gamma2linear(bgra.xyz)
+      let A = bgra.w
+      let ga = A*weight(abs(rx))
+      let g_bgr = [linB, linG, linR]*ga
+
+     [g_bgr.x, g_bgr.y, g_bgr.z, ga]
+   }
+   let a = as/coeff
+   let [b, g, r] = ifel(abs(as) < 0.0001, [0.0, 0.0, 0.0], [bs, gs, rs]/as)
+  [b, g, r, a]
+}
+
+let clamped_x = sampler<xblur>(address=.ClampToEdge)
+
+def result_u8 |xi, yi| {
+   let [gb, gg, gr, ga] = rsum(mWR..<WR) |ry| {
+      let [b1, g1, r1, a1] = clamped_x( xi, yi+ry)
+      let a2 = a1*weight(abs(ry))
+      let [b2, g2, r2] = [b1, g1, r1]*a2
+      [b2, g2, r2, a2]
+   }
+  let a = ga/coeff
+  let [linB, linG, linR] = ifel(abs(ga) < 0.0001, [0.0, 0.0, 0.0], [gb, gg, gr]/ga)
+  let [b, g, r] = linear2gamma([linB, linG, linR])
+  to_u8color([b, g, r, a])
+}
+```
+
+
 CIELabでもやってみたい気もするが、思ったが変換が面倒なので、手つかず。後発のOKLabでやってみるのがいいかもしれない。
 
 [A perceptual color space for image processing](https://bottosson.github.io/posts/oklab/)
