@@ -38,7 +38,7 @@ def result_u8 |x, y| {
 
 ```
 
-`Flang Filter: 20550 [ms]`
+`MFG Filter: 20550 [ms]`
 
 ## ガウスフィルタ、2パス版
 
@@ -80,13 +80,13 @@ def result_u8 |x, y| {
 
 ```
 
-`Flang Filter: 13731 [ms]`
+`MFG Filter: 13731 [ms]`
 
 おぉ、劇的に早くなった！
 
 ちなみにリリースビルドでCPUで頑張って書いたフィルタと比較すると、
 
-- `Flang Filter: 3076 [ms]`
+- `MFG Filter: 3076 [ms]`
 - `Gaussian Blur: 640 [ms]`
 
 という事でCPUは4.8倍くらい早い。結果が違うので実装を見ると、CPUの方はX方向に3回ぼかしたあとにY方向に3回ぼかしている。＞結果の違いはsigmaを2乗し忘れていたバグとアルファの扱いの違い
