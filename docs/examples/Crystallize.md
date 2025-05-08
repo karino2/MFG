@@ -19,9 +19,9 @@
 格子間隔を1とした時に、すべての格子を+-0.5で動かす事にしよう。
 隣の点と入れ替わる事は無いとする。
 
-[ウォークスルー](../Walkthrough.md)のモザイクとパーリンノイズをあわせたようなもので目的の格子は作れそうか？
+[ウォークスルー](../Walkthrough.md)のパーリンノイズと似たような処理で目的の格子は作れそうか？
 
-```cpp
+```swift
 @param_i32 GRID_INTERVAL(SLIDER, label="グリッドサイズ", min=10, max=256, init=50)
 
 let [GRID_WIDTH, GRID_HEIGHT] = (input_u8.extent() -1)/GRID_INTERVAL + 1
@@ -34,7 +34,7 @@ def gridOffset |x, y|{
 
 とりあえずこれをデバッグ表示してみよう。
 
-```cpp
+```swift
 @title "クリスタライズフィルタ"
 @param_i32 GRID_INTERVAL(SLIDER, label="グリッドサイズ", min=10, max=256, init=50)
 
@@ -65,6 +65,8 @@ def result_u8 |x, y| {
 }
 ```
 
+結果は以下。
+
 ![母点の表示](imgs/crys_boten.png)
 
 4点くらいならいいかと同じような処理を4回書いたが意外とデバッグ表示が大変になってしまった。reduceを使う方が良かったかもしれない。
@@ -72,7 +74,7 @@ def result_u8 |x, y| {
 ランダムさは格子が大きくなると大きすぎる気がするな。
 ランダムさの強さも選べるようにしておくか。
 
-```cpp
+```swift
 @param_f32 STRENGTH(SLIDER, label="ランダムの強さ", min=0.1, max=1.0, init=1.0)
 
 @bounds(GRID_WIDTH, GRID_HEIGHT)
@@ -80,6 +82,8 @@ def gridOffset |x, y|{
   STRENGTH*[rand()-0.5, rand()-0.5]
 }
 ```
+
+いい感じになった。
 
 母点は割と自由に作れるようになったかな。
 
@@ -91,7 +95,7 @@ def gridOffset |x, y|{
 
 少し考えてみたら斜め上と斜め下が近くになる事は無いので、以下のような範囲を見れば良さそう。
 
-![調べなくてはいけない格子点の図](crys_necessary_grid.png)
+![調べなくてはいけない格子点の図](imgs/crys_necessary_grid.png)
 
 プログラム的には面倒なので不要な斜め上と斜め下の点も計算してしまおうか。
 
@@ -152,7 +156,7 @@ def result_u8 |x, y| {
 
 これでできた図が以下。
 
-![ボロノイ図っぽい図](crys_voronoi.png)
+![ボロノイ図っぽい図](imgs/crys_voronoi.png)
 
 それっぽくなっている気はする。この時点で割と面白い。
 
@@ -191,7 +195,7 @@ def gridCol |x, y|{
 ある母点がランダムで動く範囲は最大で0.5だ。その一番動いたところでもっとも遠い最近接点の可能性を考えると、
 周囲の8個の母点をそれぞれ0.5 intervalだけ広げた矩形になる、かな。
 
-![調べる必要のある範囲](crys_necessary_area.png)
+![調べる必要のある範囲](imgs/crys_necessary_area.png)
 
 - 内側の破線: 真ん中の母点がずれ得る範囲
 - 外側の破線: 対象の母点が最近接になりうるピクセルの範囲
@@ -224,7 +228,7 @@ def gridCol |x, y|{
 
 結果は以下。
 
-![クリスタライズ、結果](crys_result.png)
+![クリスタライズ、結果](imgs/crys_result.png)
 
 良さそう。
 
