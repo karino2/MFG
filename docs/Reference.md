@@ -5,6 +5,56 @@
 - [MEP Index](MEPIndex.md)
 - [ウォークスルー](Walkthrough.md)
 
+## ループ系の機能
+
+ループは以下の種類がある。
+
+- rangeのループ
+  - rsum
+  - reduce
+- テンソルの要素を巡回するもの
+  - for_each
+  - sum
+  - trans
+     - trans.cumsum
+     - trans.sort
+     - trans.accumulate
+  - reduce
+     - reduce.accumulate
+     - reduce.find_first_index
+     - def by reduceのreduce
+
+MFGのループは、それも実際のGPUのプロセッサの動きを自然に表したものになっていて、通常の言語のようなジャンプをベースとした無制限のループは提供していない。
+
+### rangeのループ
+
+rangeのループは通常の言語のループに近い。
+引数にrangeとブロックを取り、rangeのそれぞれに対してblockを実行していく。
+
+以下の２つがある。
+
+- rsum
+- reduce
+
+rsumは結果を足したものが結果になる。
+
+```swift
+def result_u8 |x, y| {
+    rsum(0..<3, 0..<5) |rx, ry| { 
+        u8[rx, ry, 3, 4]
+    }
+} 
+```
+
+reduceは前のブロックの実行結果をaccmとして次に渡していき、最後のブロック実行の結果の値を返す。
+
+```swift
+let r1 = reduce(init=1, 2..<4) |r, accm| { r*accm }
+```
+
+
+
+
 ## 名前付き引数
 
 [notes: メディアンフィルタのスクリプト案を検討](notes/MedianFilter.md)
