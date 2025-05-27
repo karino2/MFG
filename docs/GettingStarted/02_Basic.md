@@ -190,7 +190,7 @@ def result_u8 |x, y| {
 
 シンタックスは以下となります。
 
-```cpp
+```swift
 ifel( COND, TRUE_VALUE, FALSE_VALUE )
 ```
 
@@ -198,7 +198,7 @@ CONDがtrueの時はTRUE_VALUEが、falseの時はFALSE_VALUEが返ります。
 
 最初のスクリプトの例では、以下のように使われています。
 
-```cpp
+```swift
   ifel(newx < input.extent(0) && newy < input.extent(1),
        input_u8(newx, newy),
        u8[0, 0, 0, 0])
@@ -212,7 +212,7 @@ CONDがtrueの時はTRUE_VALUEが、falseの時はFALSE_VALUEが返ります。
 
 それを用いると左上に移動するフィルタは以下のように直せます。
 
-```cpp
+```swift
 @title "左上に5px移動、ClampToBorderValueバージョン"
 
 let extended = sampler<input_u8>(address=.ClampToBorderValue, border_value=u8[0, 0, 0, 0] )
@@ -244,7 +244,7 @@ let extended = sampler<input_u8>(address=.ClampToBorderValue, border_value=u8[0,
 
 なお、良く使うアドレスモードとしてはClampToBorderValueの他に、端の値がずっとそのまま続くとみなす、ClampToEdgeというのがあります。
 
-```cpp
+```swift
 let extended = sampler<input_u8>(address=.ClampToEdge)
 ```
 
