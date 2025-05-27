@@ -23,7 +23,7 @@ def result_u8 |x, y|{
 言語の詳細やもっと複雑な例については、以下を参照ください。
 
 - [ウォークスルー](../Walkthrough.md)
-- [ハンズオン](../HandsOn.md)
+- [Getting Started](../GettingStarted/README.md)
 
 ## iPadでスクリプトで書いたフィルタを動かすために必要な事
 

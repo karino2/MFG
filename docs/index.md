@@ -1,5 +1,9 @@
 # MFGのドキュメントのページ
 
+## Getting Started
+
+- [Getting Started](GettingStarted/) まずはここから。
+
 ## リファレンス、MEP
 
 - [リファレンス](Reference.md)
@@ -7,7 +11,6 @@
 
 ## 触って学ぶ系
 
-- [ハローMFG](HandsOnHello.md) まずはここから。
 - [ウォークスルー](Walkthrough.md) 全体を外観する（後半は難しい）
 
 ## スクリプト例
