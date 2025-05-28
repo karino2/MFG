@@ -224,7 +224,7 @@ let w = input_u8.extent(0)
 let h = input_u8.extent(1)
 ```
 
-wやhはinputの「最大のインデックス-1」となる（0オリジンなので）。
+wやhはinputの「最大のインデックス+1」となる（0オリジンなので）。
 
 ### ts.is_inside(x, y)
 
