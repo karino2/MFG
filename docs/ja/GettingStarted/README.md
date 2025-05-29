@@ -1,7 +1,7 @@
 # Getting Started
 
 最初に触りながら学んでみるページです。
-MFGStudioのインストールは[セットアップのページ](../Setup.md)を参照ください。
+MFGStudioのインストールは[Installation](../Installation.md)を参照ください。
 
 - [01 ハローMFG](01_HelloMFG.md)
 - [02 入力と基本的な演算](02_Basic.md)
