@@ -1,8 +1,6 @@
 # MFG (Modern Filter-language for GPU)
 
-GPUに特化したモダンなフィルタ記述言語、MFGのページです。
+Source code is comming soone.
 
-まずはドキュメントを置いていきます。
-
-- [ドキュメントのトップ(docs/ja)](docs/ja/)
-- [English Docs Top(docs/en)](docs/en/)
+- [日本語ドキュメント(docs/ja)](docs/ja/)
+- [English Docs(docs/en)](docs/en/)
