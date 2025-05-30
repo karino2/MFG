@@ -5,6 +5,8 @@
 MFGはGPU上で動作する画像処理フィルタを開発するために、1から設計されたプログラム言語です。
 現代的なプログラム言語の多くの特徴を取り入れつつ、GPUプログラムという特殊性を最初から言語のコアコンセプトの段階で考慮に入れた設計となっています。
 
+複数のカーネルと中間バッファを使用したモザイクフィルタも、以下のように簡単に書けます。
+
 ```swift
 @title "モザイクフィルター"
 @param_i32 MOSAIC_WIDTH(SLIDER, label="サイズ", min=2, max=256, init=16)
@@ -28,18 +30,36 @@ def result_u8 |x2, y2| {
 }
 ```
 
+![モザイクフィルタのデモgif](imgs/mosaic_demo.gif)
 
+## MFGの特徴
 
+- GPU上での画像処理専用に作られた言語
+- タプルやそのdestructuring、ベクトライズ、swizzle演算子、限定された副作用、ブロックを用いた高機能なループ処理といった現代的なプログラム機能
+- カーネルやグローバルメモリといったGPUプログラムの特徴を言語の中心に据えた言語設計
+- ペイントソフトとのデータのやり取りやユーザーからの入力の受取りなどが最初から組み込まれている
+- MFGのフィルタはFireAlpaca SE 3.0上で動作
+- オープンソースとして近日公開予定
+
+## MFGStudioのInstall
+
+MFGの開発はMFGStudioで行います。
+
+- [Installaion](Installation.md)
 
 ## Getting Started
 
-- [Getting Started](GettingStarted/) まずはここから。
+- [Getting Started](GettingStarted/)
 
 ## リファレンス
 
 - [リファレンス](Reference/)
 
-## スクリプト例
+## 発展的な内容
+
+以下はコア開発者向けの、より発展的な内容となります。
+
+### スクリプト例
 
 具体的なフィルタの開発を解説付きで行ったもの。
 
@@ -47,7 +67,7 @@ def result_u8 |x2, y2| {
 - [クリスタライズ](examples/Crystallize.md)
 - [アンチエイリアス（MLAA）](examples/MLAA.md)
 
-## ノート
+### ノート
 
 調査した時のメモ、思想など。
 
@@ -57,7 +77,7 @@ def result_u8 |x2, y2| {
 - [なぜto_ncoordの引数はタプルなのか？](notes/WhyToNCoordArgIsTuple.md)
 - [改行の扱い](notes/EOLHandling.md)
 
-## 仕様更新の議論
+### 仕様更新の議論
 
 - [MEPのインデックス](MEPIndex.md) 仕様
 
