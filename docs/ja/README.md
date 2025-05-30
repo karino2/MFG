@@ -11,13 +11,16 @@ MFGはGPU上で動作する画像処理フィルタを開発するために、1�
 
 let inputEx = sampler<input_u8>(address=.ClampToEdge)
 
-def result_u8 |x, y| {
-  let [mx, my] = [x/MOSAIC_WIDTH, y/MOSAIC_WIDTH]
-
-  let [b2, g2, r2, a2] = rsum(0..<MOSAIC_WIDTH, 0..<MOSAIC_WIDTH) |rx, ry|{
-    let [b, g, r, a] = i32(inputEx( MOSAIC_WIDTH*mx+rx, MOSAIC_WIDTH*my+ry ))
+@bounds( (input_u8.extent(0)-1)/MOSAIC_WIDTH+1, (input_u8.extent(1)-1)/MOSAIC_WIDTH+1)
+def avg |x, y|{
+  rsum(0..<MOSAIC_WIDTH, 0..<MOSAIC_WIDTH) |rx, ry|{
+    let [b, g, r, a] = i32(inputEx( MOSAIC_WIDTH*x+rx, MOSAIC_WIDTH*y+ry ))
     [*[b, g, r]*a, a]
   }
+}
+
+def result_u8 |x2, y2| {
+  let [b2, g2, r2, a2] = avg( x2/MOSAIC_WIDTH, y2/MOSAIC_WIDTH )
 
   ifel(a2==0,
       u8[0, 0, 0, 0],
