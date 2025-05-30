@@ -314,4 +314,4 @@ Since it has only 1px front and back, it is difficult to see the effect unless y
 
 ## Next
 
-[04 Implementing complex algorithms using intermediate tensors](04_InterTensor.md)
+[04 Intermediate tensors for complex algorithms](04_InterTensor.md)
