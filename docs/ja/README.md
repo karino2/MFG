@@ -1,5 +1,33 @@
 # MFGのドキュメントのページ
 
+モダンなプログラム言語でGPU上のフィルタ開発を！
+
+MFGはGPU上で動作する画像処理フィルタを開発するために、1から設計されたプログラム言語です。
+現代的なプログラム言語の多くの特徴を取り入れつつ、GPUプログラムという特殊性を最初から言語のコアコンセプトの段階で考慮に入れた設計となっています。
+
+```swift
+@title "モザイクフィルター"
+@param_i32 MOSAIC_WIDTH(SLIDER, label="サイズ", min=2, max=256, init=16)
+
+let inputEx = sampler<input_u8>(address=.ClampToEdge)
+
+def result_u8 |x, y| {
+  let [mx, my] = [x/MOSAIC_WIDTH, y/MOSAIC_WIDTH]
+
+  let [b2, g2, r2, a2] = rsum(0..<MOSAIC_WIDTH, 0..<MOSAIC_WIDTH) |rx, ry|{
+    let [b, g, r, a] = i32(inputEx( MOSAIC_WIDTH*mx+rx, MOSAIC_WIDTH*my+ry ))
+    [*[b, g, r]*a, a]
+  }
+
+  ifel(a2==0,
+      u8[0, 0, 0, 0],
+      u8[*[b2, g2, r2]/a2, a2/(MOSAIC_WIDTH*MOSAIC_WIDTH)] )
+}
+```
+
+
+
+
 ## Getting Started
 
 - [Getting Started](GettingStarted/) まずはここから。
