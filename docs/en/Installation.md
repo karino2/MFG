@@ -1,4 +1,4 @@
-# Installing MFGStudio and checking sample collection
+# Installing MFGStudio and checking Examples collection
 
 This page explains how to install MFG Studio and basic usage.
 
@@ -40,8 +40,8 @@ To check whether it was installed correctly, let's open the Examples Project and
 2. Press the Run button on the top left
 3. Check the preview in the top right corner to see the mosaic filter running
 
-![Demo of Open Sample Collection](imgs/open_samples_demo.gif)
+![Demo of Open Examples Project](imgs/open_samples_demo.gif)
 
 Try opening and running other filters from ProjectExplorer on the left.
 
-Please note that if you change the language settings, comments and other information will not be updated to the target language unless you re-open the sample collection.
+Please note that if you change the language settings, comments and other information of Examples will not be updated to the target language unless you re-open the Examples Project.
