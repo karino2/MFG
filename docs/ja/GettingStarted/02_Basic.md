@@ -260,4 +260,4 @@ let extended = sampler<input_u8>(address=.ClampToEdge)
 
 ## 次回
 
-[03 ベクトル演算とrsum](03_VectorRsum.md)
+[03 ベクトライズ演算とrsum](03_VectorRsum.md)

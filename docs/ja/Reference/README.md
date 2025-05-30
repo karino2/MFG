@@ -2,8 +2,9 @@
 
 - [テンソル](Tensor.md)
 - [型](Type.md)
-- 式とベクトル演算
+- 式とベクトライズ演算
 - ループとifel
 - sampler
-- パラメータ入力widget
 - [transとreduce](TransReduce.md)
+- パラメータ入力widget
+- 組み込み関数
