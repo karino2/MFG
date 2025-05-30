@@ -275,4 +275,4 @@ For filter like blur, this is a good way.
 
 ## Next
 
-[03 Vector calculations and rsum](03_VectorRsum.md)
+[03 Vectorized Operations and rsum](03_VectorRsum.md)
