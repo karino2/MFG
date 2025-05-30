@@ -11,8 +11,8 @@
 
 ## Windowsでのインストール
 
-1. ダウンロードページからWindows用のzipファイル（MFGStudioWin32.zip）をダウンロードする
-2. MFGStudioWin32.zipを展開する
+1. ダウンロードページからWindows用のzipファイルをダウンロードする
+2. ダウンロードしたzipファイルを展開する（MFGStudioディレクトリが出来る）
 3. Program Filesの下にMFGStudioディレクトリを移動する（ここで管理者権限を求められるので許可する）
 4. MFGStudio.exeを実行する
 
@@ -26,9 +26,9 @@
 
 ## Macでのインストール
 
-1. ダウンロードページからMac用のzip（MFGStudioMac.zip）をダウンロード
-2. MFGStudioMac.zipを展開
-3. 展開したフォルダにあるMFGStudio.appをApplicationフォルダにコピー
+1. ダウンロードページからMac用のzipをダウンロード
+2. zipファイルを展開(MFGStudio.appが出来る)
+3. 展開したMFGStudio.appをApplicationフォルダにコピー
 4. MFGStudio.appをダブルクリック
 
 ## サンプル集と動作の確認
