@@ -256,3 +256,16 @@ let finput = sampler<input_u8>(address=.ClampToEdge, coord=.NormalizedLinear)
 これらの型を指定する方法が型推論以外に無いため、現時点ではEnumは関数呼び出しやsamplerの引数でしか使う事が出来ません。
 
 Enum型の値は`.`で始まる識別子で、その引数の型推論で判明したEnum型で許される識別子だけが来る事が出来ます。
+
+## Range型
+
+型としてはRange型というのも存在します。
+ですがこれも特殊な場所でしか使う事が出来ない特殊な型です。
+
+Range型はrsumなどのループ系関数の引数に使用します。
+
+```swift
+let s = rsum(0..<5) |i| { i*2 }
+```
+
+詳細は[ifelとループ](IfelLoop.md)の「範囲」のセクションを参照ください。
