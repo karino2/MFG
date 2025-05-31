@@ -54,16 +54,34 @@ border_valueの値の型はテンソルの要素の型と揃っている必要�
 
 ## 座標指定(coord引数)
 
-座標指定には、通常のピクセル単位のi32と、0.0〜1.0にnormalizeされたf32の座標指定が選べる。
-f32にnormalizeされたほうの座標では、間を指定した時の挙動により二種類のEnumとなっている。
+座標指定には、通常のピクセル単位のi32と、0.0〜1.0にnormalizeされたf32の座標指定が選べます。
+f32にnormalizeされた座標では、間を指定した時の挙動により二種類のEnumがあります。
 
-- Pixel …  デフォルト。i32で指定
-- NormalizedNearest … 0.0〜1.0で、間の値は一番近いピクセルが使われる
-- NormalizedLinear … 0.0〜1.0で間の値はbinlinearで補間される
+| Enumのシンボル | 解説 |
+| ---- | ---- |
+| Pixel |  デフォルト。i32で指定 |
+| NormalizedNearest | 0.0〜1.0で、間の値は一番近いピクセルが使われる |
+| NormalizedLinear | 0.0〜1.0で間の値はbinlinearで補間される |
 
-NormalizedXXX系を指定すると、以下のように引数をf32で指定するようになる。
+NormalizedXXX系を指定すると、以下のように引数をf32で指定するようになります。
 
-```cpp
+```swift
 let finput = sampler<input_u8>(coord=.NormalizedLinear)
 finput(0.3, 0.7)
 ```
+
+テンソル定義で現在の座標をこのf32にnormalizeされた座標に変換するためには、
+テンソルのto_ncoordが使えます。
+
+```swift
+let finput = sampler<input_u8>(coord=.NormalizedLinear)
+
+def result_u8 |x, y| {
+   let fxy = to_ncoord([x, y])
+   let col = finput(*fxy)
+   ...
+}
+```
+
+なお、このアスタリスクはsplat演算子です。
+詳細は[テンソル](Tensor.md)を参照ください。
