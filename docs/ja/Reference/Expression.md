@@ -258,4 +258,4 @@ MFGはプログラムのほとんどの要素が式となるので、このリ�
 - sampler呼び出しは[サンプラー](Sampler.md)
 - タプルのswizzle演算子などは[型](Type.md)
 - reduce, rsum, ifelなどは[ifelとループ](IfelLoop.md)
-- def by reduceのreduceも式となる事があるが、これは[transとreduce](TransReduce.md)
+- tensor reduceも式となる事があるが、これは[transとreduce](TransReduce.md)
