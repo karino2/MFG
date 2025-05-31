@@ -1,38 +1,61 @@
 # サンプラー
 
-テンソルのロードをカスタマイズする、サンプラーというものがある。基本的には座標指定を0.0〜1.0にノーマライズして間をどう補間するか（nearestかlinear）と、境界より外側をどう扱うか（端の値を繰り返す、指定したボーダーの値を繰り返す）の組み合わせとなる。
+テンソルのロード方法をカスタマイズする機能として、サンプラーというものがあります。
 
-```cpp
+```swift
 let finput = sampler<input_u8>(address=.ClampToEdge, coord=.NormalizedLinear)
 ```
 
-以後、このfinputは通常のテンソルのように使える。
+以後、このfinputは通常のテンソルのように使えます。
 
-引数はaddress, coord, border_valueの３つで、最後のborder_valueは.ClampToBorderValueの時だけ使われる。種類はenumで指定し、enumはドット始まりのPascalCaseがコンベンション。.ClampToEdgeとドットで始まる事に注意。
+samplerには以下の３つを基本的には指定します。
 
-デフォルトの時は指定しなくても良い。
+- テンソル
+- アドレスモード(address引数)
+- 座標指定(coord引数)
 
-## アドレスモード（address）
+この３つを順番に見ていきましょう。
 
-境界より外の座標を指定した時の振る舞いを指定。address引数で指定。以下がある。（コード上はドットで始める必要がある事に注意、以下同じ）
+## テンソルの指定
 
-- None … デフォルト。はみ出し処理を何もしない、動作は未定義（プログラム的にはみ出さない事が分かっている時の処理）
-- ClampToEdge … 端の値を繰り返す
-- ClampToBorderValue … border_valueで指定した値
+samplerは対象とするテンソルから値を取得する時に、その取得の仕方をカスタマイズするものです。
+ですから必ず、対象とするテンソルを指定します。
 
-Noneは安全のために将来はWrapにするかも。スクリプトとしてはデフォルトなので指定しないでおく方が将来の変更に対応出来て良さそう。
+MFGではテンソルは変数とは違う特別なものになるため、シンタックス上も他の引数とは区別しています。
+テンソルの指定はどこでも角括弧、つまり`<>`で囲んで指定します。
 
-border_valueの例を示しておく。
+以下は`input_u8`を指定する例です。
 
-```cpp
+```
+sampler<input_u8>(...)
+```
+
+## アドレスモード（address引数）
+
+境界より外の座標を指定した時の振る舞いを指定するものを、アドレスモードと呼んでいます。
+
+アドレスモードはEnum型で以下の３つのうちのどれかを指定します。
+
+| Enumのシンボル | 効果 |
+| ---- | ---- |
+| None | デフォルト。はみ出し処理を何もしない、動作は未定義（プログラム的にはみ出さない事が分かっている時の処理） |
+| ClampToEdge | 端の値を繰り返す |
+| ClampToBorderValue | border_valueで指定した値 |
+
+Enumを引数で使う時は`.`で始める事に注意。
+
+ClampToBorderValueの時だけborder_valueという追加の引数が必要になります。
+
+```swift
 let extend = sampler<input_u8>(address=.ClampToBorderValue, border_value=u8[0, 0, 0, 0])
 ```
 
-border_valueの値の型はテンソルの要素の型と揃っている必要がある事に注意。
+border_valueの値の型はテンソルの要素の型と揃っている必要があります。
 
-## 座標指定(coord)
+## 座標指定(coord引数)
 
-通常のピクセル単位のi32と、0.0〜1.0にnormalizeされたf32の座標指定が選べる
+座標指定には、通常のピクセル単位のi32と、0.0〜1.0にnormalizeされたf32の座標指定が選べる。
+f32にnormalizeされたほうの座標では、間を指定した時の挙動により二種類のEnumとなっている。
 
 - Pixel …  デフォルト。i32で指定
 - NormalizedNearest … 0.0〜1.0で、間の値は一番近いピクセルが使われる
@@ -44,5 +67,3 @@ NormalizedXXX系を指定すると、以下のように引数をf32で指定す�
 let finput = sampler<input_u8>(coord=.NormalizedLinear)
 finput(0.3, 0.7)
 ```
-
-[MEP 18: デコレータをsamplerと揃える](../MEP/18.md)
