@@ -4,7 +4,7 @@
 - [型](Type.md)
 - [式とベクトライズ演算](Expression.md)
 - [ifelとループ](IfelLoop.md)
-- サンプラー
+- [サンプラー](Sampler.md)
 - [transとreduce](TransReduce.md)
 - パラメータ入力widget
 - 組み込み関数
