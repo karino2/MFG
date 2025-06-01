@@ -6,5 +6,5 @@
 - [ifelとループ](IfelLoop.md)
 - [サンプラー](Sampler.md)
 - [transとreduce](TransReduce.md)
-- パラメータ入力widget
+- [アトリビュートと入力ウィジェット](AttrWidget.md)
 - 組み込み関数
