@@ -155,7 +155,7 @@ paramの最初の引数はウィジェットの種類を表します。
 **例:**
 
 ```
-@param_f32 angle(DIRECTION, init=10.0)
+@param_f32 angle(DIRECTION, init=1.0)
 ```
 
 **引数***
