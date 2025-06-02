@@ -51,9 +51,9 @@ MFG will be developed using MFG Studio.
 
 ## Getting Started
 
-- [Getting Started](GettingStarted/)
+- [Getting Started](GettingStarted/README.md)
 
 ## Reference
 
-- [Reference](Reference/)
+- [Reference](Reference/README.md)
 

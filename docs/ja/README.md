@@ -51,11 +51,11 @@ MFGの開発はMFGStudioで行います。
 
 ## Getting Started
 
-- [Getting Started](GettingStarted/)
+- [Getting Started](GettingStarted/README.md)
 
 ## リファレンス
 
-- [リファレンス](Reference/)
+- [リファレンス](Reference/README.md)
 
 ## 発展的な内容
 

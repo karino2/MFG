@@ -189,4 +189,4 @@ Getting Started will end at this point.
 
 From here onwards, there are many samples in the "Examples Project" in the MFGStudio File menu.
 
-Additionally, the [Reference](../Reference/) provides a more detailed explanation.
+Additionally, the [Reference](../Reference/README.md) provides a more detailed explanation.

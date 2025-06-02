@@ -1,6 +1,6 @@
 # Getting Started
 
-[English Ver. Getting Started](../../en/GettingStarted/)
+[English Ver. Getting Started](../../en/GettingStarted/README.md)
 
 最初に触りながら学んでみるページです。
 MFGStudioのインストールは[Installation](../Installation.md)を参照ください。
