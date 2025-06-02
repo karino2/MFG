@@ -1,13 +1,125 @@
 # MLAAフィルタ
 
-解説は後ほど。
+Morphological Antialiasing、略してMLAAを実装していく。
+
+## 参考文献
+
+- [Morphological antialiasing - Proceedings of the Conference on High Performance Graphics 2009](https://dl.acm.org/doi/abs/10.1145/1572769.1572787)
+- [Morphological Antialiasing - Real-Time Rendering](https://www.realtimerendering.com/blog/morphological-antialiasing/)
+
+## 基本的なアイデアと実装方針
+
+もともとの論文はCPU用なので、GPUのために幾つか変更が必要になる。
+そういう事も踏まえて、何を実装したのかのメモを残しておく。
+
+通常のアンチエイリアスというのは境界がボケてしまうが、
+形状を意識した賢いアンチエイリアスを実装する事で、エイリアスっぽい所はキレイにしつつ、
+そうでない所はぼやかさない、というのがMLAAの基本的なアイデアです。
+
+上記の論文が嚆矢となり、その後多くの関連研究がなされましたが、ここでは一番基本的なアイデアを実装してみます。
+
+基本的なアイデアとしては、色が大きく変わる所をエッジとした時に、
+その境界のパターンが幾つかに分けられて、そのうちL字の内側だけを補完すると良い、
+というのが基本的なアイデアになります。
+
+今回の実装は、なるべく論文のアイデアをそのままにシンプルに実装して、
+細かい挙動を調べる為のベースラインになるような実装を目指します。
+
+### 色の差分と補完の式の変更
+
+色の差分については、ガンマ補正を考慮してリニアライズしたRGB空間の単純な距離としました。
+距離を判定するにはより優れた色空間を使う方が良いですが、最初の基礎となるバージョンとして一番簡単な実装にしました。
+
+もとの論文では色の連続性を保つように一次方程式を解いていましたが、
+今回は論文の白黒のアルゴリズムと同様に、単純に距離で台形の面積を求めて比率とします。
+
+### エッジの長さの上限
+
+もとの論文ではエッジの長さに特に制限は無かったけれど、
+GPU実装のために最大のサイズを決めてしまう事にします。
+最大のサイズは7としています。
+
+## エッジの検出
+
+最初に、隣あうピクセルで色が大きく変わる所を探します。
+隣接するピクセル同士は境界を共有するため、片方だけ保持していけば十分。
+
+ピクセルの下と右のエッジだけを保持する事にし、一番下の行と一番右の列のデータは持たない事にする。
+
+するとテンソルとしては`@bounds( (input_u8.extent(0)-1), (input_u8.extent(1)-1))` の範囲となる。
+
+結果は2要素のベクトルで良いのだけれど、u8v2は環境によってはi32の2要素ベクトルにされてしまう事があるので、
+確実にi32にパックされるu8v4を使う。
+
+ガンマ補正をリニアライズした色をLのsuffixで表すと、x, yの点の色は
+
+```swift
+   let col0 = to_ncolor(input_u8(x, y))
+   let col0L = [*gamma2linear(col0.xyz), col0.w]
+```
+
+のように表せる。
+これを用いると、以下のようになる。
+
+```swift
+let DIFF_THRESHOLD= 1.0/12.0 # これ以上RGB距離があればedgeとみなす。
+
+# u8[bottom, right, 0, 0]を返す。
+@bounds( (input_u8.extent(0)-1), (input_u8.extent(1)-1))
+def edge |x, y|{
+   let col0 = to_ncolor(input_u8(x, y))
+   let col0L = [*gamma2linear(col0.xyz), col0.w]
+
+   let colRight = to_ncolor(input_u8(x+1, y))
+   let colBottom = to_ncolor(input_u8(x, y+1))
+   let colRightL = [*gamma2linear(colRight.xyz), colRight.w]
+   let colBottomL = [*gamma2linear(colBottom.xyz), colBottom.w]
+
+   let eb = distance(colBottomL, col0L) > DIFF_THRESHOLD
+   let er = distance(colRightL, col0L) > DIFF_THRESHOLD
+
+   # 今の所u8v2よりu8v4の方が最適化が効くのでu8v4にしておく。
+   u8[eb, er, 0, 0]
+}
+```
+
+デバッグの為に、エッジの立っている所を適当な色にしてみる。
+
+```
+let edgeEx = sampler<edge>(address=.ClampToEdge)
+
+def result_u8 |x, y| {
+  let einfo = edgeEx(x, y)
+  ifel(einfo.x&&einfo.y,
+        u8[0, 0, 0xff, 0xff],
+        ...)
+   elif(einfo.x,
+        u8[0, 0xff, 0, 0xff],
+        ...)
+    elif(einfo.y,
+         u8[0xff, 0, 0, 0xff],
+         ...)
+    else(input_u8(x, y))     
+}
+```
+
+| **適用前画像** | **エッジに色づけした画像** |
+|------|-----|
+|![適用前画像](imgs/nonaa_color.png) | ![エッジに色付け](imgs/mlaa_edge.png) |
+
+
+
+## 最終コード
+
+エッジの長さなど、やる事は多いが、ひとまずコメントに書いておく。
+
 
 ```
 @title "MLAA"
 
 let EDGE_MAX_LENGTH = 7
 let END_FOUND_MASK = i32(0x80)
-let DIFF_THRESHOLD= 1.0/12.0 # これ以上lumiの差分があればedgeとみなす。
+let DIFF_THRESHOLD= 1.0/12.0 # これ以上RGB距離の差分があればedgeとみなす。
 
 # 色が大きく変わる所をエッジとみなして、それの垂直方向と水平方向を各ピクセルで計算する。
 # エッジは２つのピクセルで共有されるので、片方だけ計算すれば十分
@@ -26,7 +138,6 @@ let DIFF_THRESHOLD= 1.0/12.0 # これ以上lumiの差分があればedgeとみ�
 # u8[bottom, right, 0, 0]を返す。
 @bounds( (input_u8.extent(0)-1), (input_u8.extent(1)-1))
 def edge |x, y|{
-   let lumiVec = [0.0722, 0.7152, 0.2127]
    let col0 = to_ncolor(input_u8(x, y))
    let col0L = [*gamma2linear(col0.xyz), col0.w]
 
@@ -206,7 +317,7 @@ R"(
 # 補完の方法は三角形の長さで論文の白黒のケースの計算で補完する。
 # 簡単のため色のケースの連立方程式を解く方法にはしない。
 # なお、xでもoでも無い違う色でエッジが立ってしまっている場合は間を補完して良いか良く分からないが、
-# ひとまずこのケースは補完しない事にする。なお同じ色かは単にluminanceで判断。
+# ひとまずこのケースは補完しない事にする。なお同じ色かは単にリニアライズしたRGB空間のユークリッド距離で判断。
 # つまり、Cの下の色と、negativeの左の色が同じならケース2とみなす。エッジを見る必要は無くなる。
 #
 # 同様にtopのnegative側（左に伸びる）のエッジの方の補完を考える。
@@ -312,7 +423,7 @@ def result_u8 |x, y| {
 
   let isHRange = HLen+eps < HMid
 
-  # エッジの判定のために、Cの下のluminanceを求める
+  # エッジの判定のために、Cの下の色を求める
   # 反対側の色をopsで表す。bottomのOpsはOpsBとする。
   let colOpsB = to_ncolor(inputEx(x, y+1))
   let colOpsBL = [*gamma2linear(colOpsB.xyz), colOpsB.w]
