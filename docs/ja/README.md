@@ -61,13 +61,13 @@ MFGの開発はMFGStudioで行います。
 
 以下はコア開発者向けの、より発展的な内容となります。
 
-### スクリプト例
+### ケーススタディ
 
 具体的なフィルタの開発を解説付きで行ったもの。
 
-- [ガウスぼかし](examples/GaussBlur.md)
-- [クリスタライズ](examples/Crystallize.md)
-- [アンチエイリアス（MLAA）](examples/MLAA.md)
+- [ガウスぼかし](study/GaussBlur.md)
+- [クリスタライズ](study/Crystallize.md)
+- [アンチエイリアス（MLAA）](study/MLAA.md)
 
 ### ノート
 

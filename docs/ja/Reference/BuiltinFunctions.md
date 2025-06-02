@@ -178,7 +178,7 @@ let alpha = bgra.w
 to_u8color([*linear2gamma(lin_bgr), alpha])
 ```
 
-具体例としては[ガウスぼかし](../examples/GaussBlur.md)の「ガウスフィルタ、linRGB2」を参照の事。
+具体例としては[ガウスぼかし](../study/GaussBlur.md)の「ガウスフィルタ、linRGB2」を参照の事。
 
 ### gamma2linear
 
