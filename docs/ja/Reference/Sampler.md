@@ -85,3 +85,7 @@ def result_u8 |x, y| {
 
 なお、このアスタリスクはsplat演算子です。
 詳細は[テンソル](Tensor.md)を参照ください。
+
+## サンプラーの引数は名前つき引数として使えます
+
+coordやaddress、border_valueは名前つき引数として使えます。
