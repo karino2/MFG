@@ -7,4 +7,4 @@
 - [サンプラー](Sampler.md)
 - [transとreduce](TransReduce.md)
 - [アトリビュートと入力ウィジェット](AttrWidget.md)
-- 組み込み関数
+- [組み込み関数](BuiltinFunctions.md)
