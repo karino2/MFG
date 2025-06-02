@@ -195,19 +195,19 @@ reduceは元となるテンソルの次元を一つ減らす操作となりま�
 
 この場合、テンソルのreduceは式として使う事が出来、通常のletで変数に入れたり出来ます。
 
-つまり以下の２つは同じ意味です。
+wcumsumという1次元の重みの累積和から、あるindexより大きな場所を求めたい時、
+以下の２つの式は同じです。
 
 ```swift
-  # defによる定義。ただしmedianは0次元なのでテンソルでは無く単なる変数
-  def median by reduce<histCumSum>.find_first_index(dim=0) |i, col, val| {
-    val >= histCumSum(255,col)/2
-  }
+  # defによる定義。結果は0次元となるのでi3は単なる値となる
+  def i3 by reduce<wcumsum>.find_first_index(dim=0) |_, val| { index < val }
 
-  # 0次元になる時だけテンソルreduceは式として使える。
-  let median = reduce<histCumSum>.find_first_index(dim=0) |i, col, val| {
-    val >= histCumSum(255,col)/2
-  }
+  # 0次元になる時だけはletで変数として普通に代入出来る
+  let i3 = reduce<wcumsum>.find_first_index(dim=0) |_, val| { index < val }
 ```
+
+これはメディアンフィルタで、ヒストグラムを求めるのでは無く、
+色を重複して並べる事で重み付きメディアンを求める時に使う計算から持ってきた例です。
 
 ### reduceは元となるテンソルも現時点ではローカルテンソルのみ
 
