@@ -1,5 +1,9 @@
 # サンプラー
 
+- 前: [ifelとループ](IfelLoop.md)
+- [トップへ](README.md)
+
+
 テンソルのロード方法をカスタマイズする機能として、サンプラーというものがあります。
 
 ```swift
@@ -89,3 +93,7 @@ def result_u8 |x, y| {
 ## サンプラーの引数は名前つき引数として使えます
 
 coordやaddress、border_valueは名前つき引数として使えます。
+
+## 次
+
+[transとreduce](TransReduce.md)

@@ -1,5 +1,9 @@
 # 式とベクトライズ演算
 
+- 前: [型](Type.md)
+- [トップへ](README.md)
+
+
 MFGにおいては、多くの構成要素は式となります。
 他の言語では文になることが多いループや条件選択も式として実装されています。
 
@@ -263,3 +267,7 @@ MFGはプログラムのほとんどの要素が式となるので、このリ�
 - reduce, rsum, ifelなどは[ifelとループ](IfelLoop.md)
   - 範囲を表すRangeについてもここ
 - tensor reduceも式となる事があるが、これは[transとreduce](TransReduce.md)
+
+## 次
+
+[ifelとループ](IfelLoop.md)
