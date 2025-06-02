@@ -1,10 +1,12 @@
 # ウォークスルー
 
 MFGのスクリプトの例を見つつ、入門的な解説を行っていくページです。
+開発初期に書かれたドキュメントで、現在は[Getting Started](GettingStarted/)を参照する事を推奨しています。
 
 以下のページと関連があります。
 
-- [リファレンス](Reference.md)
+- [Getting Started](GettingStarted/)
+- [リファレンス](Reference/)
 - [MEP: シンタックスの検討](MEPIndex.md)
 
 ## ネガポジ反転
