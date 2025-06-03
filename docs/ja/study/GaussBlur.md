@@ -4,19 +4,18 @@
 
 2パスにすると早くなると本などには書いてあるが、本当に早くなるかを手元の環境で実験。
 
-4608x3456の写真で、フィルタのサイズ30でベンチマークログで測定。
+colorful_baloon.mdzに対してサイズ30でMFGStudioの出力で計測。
 
 ## ガウスぼかし、1パス版
 
-```cpp
-@title "ガウスフィルタ"
+```swift
+@title "ガウスフィルタ 1pass"
 
 @param_i32 ar(SLIDER, label="サイズ", min=2, max=100, init=5)
 
 let clamped = sampler<input_u8>(address=.ClampToEdge)
 let sigma = f32(ar)
 let WR = 3*ar
-# minus WR - 1
 let mWR = -(WR-1)
 
 @bounds(WR, WR)
@@ -29,21 +28,27 @@ let coeff = rsum(mWR..<WR, mWR..<WR) |rx, ry| { weight(abs(rx), abs(ry)) }
 def result_u8 |x, y| {
 
    let fbgra_res = rsum(mWR..<WR, mWR..<WR) |rx, ry| {
-      let fbgra = f32( clamped( x + rx, y+ry) ) / 255.0
+      let fbgra = to_ncolor( clamped( x + rx, y+ry) )
       fbgra*weight(abs(rx), abs(ry))
    }
-   # u8(min([255, 255, 255, 255], i32(255.0*fbgra_res/coeff) ))
-   u8(255.0*fbgra_res/coeff)
+   to_u8color(fbgra_res/coeff)
 }
-
 ```
 
-`MFG Filter: 20550 [ms]`
+結構待つ。
+
+```
+InputSetup: 963 [ms]
+Kernel: 9302 [ms]
+ResultCopy: 62 [ms]
+Total: 10327 [ms]
+```
+
+10秒ほど。カーネルは9秒くらい。
 
 ## ガウスフィルタ、2パス版
 
-```cpp
-
+```swift
 @title "ガウスフィルタ、2パス"
 
 @param_i32 ar(SLIDER, label="サイズ", min=2, max=300, init=5)
@@ -64,7 +69,7 @@ let [W, H] = input_u8.extent()
 @bounds(W, H)
 def xblur |x, y| {
    rsum(mWR..<WR) |rx| {
-      let fbgra = f32( clamped( x + rx, y) ) 
+      let fbgra = to_ncolor( clamped( x + rx, y) ) 
       fbgra*weight(abs(rx))
    }
 }
@@ -75,21 +80,22 @@ def result_u8 |x, y| {
    let fbgra_res = rsum(mWR..<WR) |ry| {
       clamped_x( x, y+ry)  * weight(abs(ry))
    }
-   u8(fbgra_res/(coeff^2))
+   to_u8color(fbgra_res/(coeff^2))
 }
-
 ```
 
-`MFG Filter: 13731 [ms]`
+結果は以下。
+
+```
+InputSetup: 972 [ms]
+Kernel: 268 [ms]
+ResultCopy: 48 [ms]
+Total: 1288 [ms]
+```
 
 おぉ、劇的に早くなった！
+カーネルは0.25秒ほど。
 
-ちなみにリリースビルドでCPUで頑張って書いたフィルタと比較すると、
-
-- `MFG Filter: 3076 [ms]`
-- `Gaussian Blur: 640 [ms]`
-
-という事でCPUは4.8倍くらい早い。結果が違うので実装を見ると、CPUの方はX方向に3回ぼかしたあとにY方向に3回ぼかしている。＞結果の違いはsigmaを2乗し忘れていたバグとアルファの扱いの違い
 
 ## アルファを考慮に入れたガウスぼかし
 
