@@ -120,7 +120,7 @@ Note that you can place `_` for any elements that are not used. For example, if 
 
 ```swift
 def result |x, y| {
-  let [b, g, r, _] = input(x, y)
+  let [b, g, r, _] = input_u8(x, y)
   u8[255-b, 255-g, 255-r, 255]
 }
 ```
@@ -204,7 +204,7 @@ If COND is true, TRUE_VALUE is returned, and if false, FALSE_VALUE is returned.
 The first example script is used as follows:
 
 ```swift
-  ifel(newx < input.extent(0) && newy < input.extent(1),
+  ifel(newx < input_u8.extent(0) && newy < input_u8.extent(1),
        input_u8(newx, newy),
        u8[0, 0, 0, 0])
 ```
