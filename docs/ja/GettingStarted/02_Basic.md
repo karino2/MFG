@@ -116,7 +116,7 @@ input_u8は入力を、B, G, R, Aの順番で、それぞれが8ビットのタ�
 なお、使わない要素は `_` を置きます。例えばaはいつも255にしたい場合は以下のようにします。
 
 ```swift
-def result |x, y| {
+def result_u8 |x, y| {
   let [b, g, r, _] = input_u8(x, y)
   u8[255-b, 255-g, 255-r, 255]
 }
@@ -133,7 +133,7 @@ def result |x, y| {
 ```swift
 @title "左上に5px移動、手書きバージョン"
 
-def result |x, y| {
+def result_u8 |x, y| {
   let [newx, newy] = [x+5, y+5]
   ifel(newx < input_u8.extent(0) && newy < input_u8.extent(1),
        input_u8(newx, newy),
@@ -217,7 +217,7 @@ CONDがtrueの時はTRUE_VALUEが、falseの時はFALSE_VALUEが返ります。
 
 let extended = sampler<input_u8>(address=.ClampToBorderValue, border_value=u8[0, 0, 0, 0] )
 
-def result |x, y| {
+def result_u8 |x, y| {
   extended(x+5, y+5)
 }
 ```

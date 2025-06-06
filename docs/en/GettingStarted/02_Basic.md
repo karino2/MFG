@@ -119,7 +119,7 @@ input_u8 treats the inputs as 8-bit tuples in the order B, G, R, A. This can be 
 Note that you can place `_` for any elements that are not used. For example, if you want `a` to be always 255, do the following:
 
 ```swift
-def result |x, y| {
+def result_u8 |x, y| {
   let [b, g, r, _] = input_u8(x, y)
   u8[255-b, 255-g, 255-r, 255]
 }
@@ -225,7 +225,7 @@ Using this, the filter that moves to the top left can be fixed as follows:
 
 let extended = sampler<input_u8>(address=.ClampToBorderValue, border_value=u8[0, 0, 0, 0] )
 
-def result |x, y| {
+def result_u8 |x, y| {
   extended(x+5, y+5)
 }
 ```
