@@ -117,7 +117,7 @@ input_u8は入力を、B, G, R, Aの順番で、それぞれが8ビットのタ�
 
 ```swift
 def result |x, y| {
-  let [b, g, r, _] = input(x, y)
+  let [b, g, r, _] = input_u8(x, y)
   u8[255-b, 255-g, 255-r, 255]
 }
 ```
@@ -199,7 +199,7 @@ CONDがtrueの時はTRUE_VALUEが、falseの時はFALSE_VALUEが返ります。
 最初のスクリプトの例では、以下のように使われています。
 
 ```swift
-  ifel(newx < input.extent(0) && newy < input.extent(1),
+  ifel(newx < input_u8.extent(0) && newy < input_u8.extent(1),
        input_u8(newx, newy),
        u8[0, 0, 0, 0])
 ```
