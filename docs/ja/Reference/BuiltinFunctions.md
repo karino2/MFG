@@ -101,21 +101,40 @@ let res = [sin(1.0) sin(2.0), sin(3.0), sin(4.0), sin(5.0)]
 
 この場合、APIの表記としては単一引数の表記をして、そのあとに **ベクトライズ可** と付記するようにしています。
 
+## 色変換とサポートしている色
 
-## u8カラーとノーマライズドカラー
+MFGでは、必要な計算に応じてガンマ補正をしたりCIE XYZカラーにしたりする必要があるため、これらの間の変換をサポートしています。
 
-MFGでは色を扱うのに、大きく2つの方式があります。
+### 色の略称
 
-一つはu8やu16といった整数を各色成分で使うものです。
-input_u8などがそれで、BGRAをu8の4次元ベクトルで扱います（このu8の4次元ベクトルは良く使うのでu8v4と略記する事もあります）。
+それぞれの色には略称がつけられています。
 
-もう一つは、各色成分をf32の0.0〜1.0で扱う、ノーマライズドカラーと呼ばれる形式です
-これはAPIなどではncolorと略記されます。
+| 色の名前 | 略称 | 解説 |
+| ---- | ---- | ---- |
+|u8カラー、u16カラー| u8color、u16color |  各BGRAをu8やu16といった整数の4次元ベクトルで保持する色です。リニア化されてないBGRAで、input_u8などがそれで、BGRAをu8の4次元ベクトルで扱います（このu8の4次元ベクトルは良く使うのでu8v4と略記する事もあります）。リニア化についてはガンマ補正を参照。 |
+| ノーマライズドカラー | ncolor |  u8カラーやu16カラーを単純に0.0〜1.0の範囲にスケールしたものをノーマライズドカラー、ncolorと呼んでいます。これもリニア化されていません。 |
+| リニアライズドBGR, BGRA | lbgr、lbgra | ncolorをリニア化したものを、linealized bgrと呼んでいて、lbgrと略記します。lbgraはそれにアルファを加えたものですが、アルファは最初からリニアなのでそのままの値を保持しています。 |
+| CIE XYZ, 及びそのアルファ | xyz, xyza | lbgrをCIE XYZカラーに変換したものをxyzと略記しています。swizzleのxyzと被ってしまっているので注意が必要です。xyzはいつもリニアライズされています。 |
 
-この２つの形式は良く使うので、両者の変換を行う以下の関数が提供されています。
 
-- to_ncolor
-- to_u8color
+### それぞれの間の変換
+
+基本的には 「`元のカラー名_to_結果のカラー名`」という関数名で変換します。`lbgr_to_xyz` などです。
+
+u8color以外は基本的にはアルファがなければf32v3、アルファがあればf32v4となります。
+`lbgr_to_xyz`などはf32v3を引数にf32v3を返します。
+
+```swift
+f32v3 lbgr_to_xyz(col:f32v3)
+u8v4 xyza_to_u8color(col:f32v4)
+```
+
+また、元のカラー名がu8colorの時は省略されます。
+
+```swift
+f32v4 to_xyza(col:u8v4)
+f32v4 to_lbgra(col:u8v4)
+```
 
 ### to_ncolor
 
@@ -150,24 +169,67 @@ let u8_bgra = to_u8color(ncolor)
 ```
 
 
-## ガンマ補正
+### リニア化されたBGRA関連
 
-ガンマ補正を考慮に入れたフィルタを書くために、以下の２つの関数が提供されている。
+ガンマ補正済みのリニア化されたBGRA関連の関数としては以下があります。(v1.01にて実装)
 
-- `T gamma2linear(T ncolor)`
-- `T linear2gamma(T ncolor)`
+```swift
+f32v4 to_lbgra(col:u8v4)
+u8v4 lbgra_to_u8color(col:f32v4)
+```
 
-Tはスカラーのf32も使えます。
+**例**
+
+```swift
+def result_u8 |x, y| {
+  let lcol = to_lbgra(input_u8(x, y))
+  lbgra_to_u8color(lcol)
+}
+```
+
+### CIE XYZカラー関連
+
+以下の関数があります。(v1.01にて実装)
+
+```swift
+f32v4 to_xyza(col:u8v4)
+u8v4 xyza_to_u8color(col:f32v4)
+
+f32v3 lbgr_to_xyz(col:f32v3)
+f32v3 xyz_to_lbgr(col:f32v3)
+```
+
+
+**例**
+
+```swift
+def result_u8 |x, y| {
+  let xcol = to_xyza(input_u8(x, y))
+  xyza_to_u8color(xcol)
+}
+```
+
+### ガンマ補正
+
+ガンマ補正を処理したい時は、そのまま to_lbgraやto_xyzaを呼んでリニア化された色を取得する方が一般的ですが、
+より細かい処理をしたい時はリニア化だけをするための関数も提供されています。
+
+以下の2つの関数がガンマ補正の基本となる関数です。
+
+- `T gamma2linear(ncolor:T)`
+- `T linear2gamma(ncolor:T)`
+
+Tはf32のベクトル、またはスカラーです。
 
 4要素のタプルまで動くけれど、ガンマ補正はRGBについて行うものでアルファは普通はリニアなものなので、
-普通は3要素のタプルで使う。
+普通は3要素のタプルで使います。
 
-引数としてはノーマライズドカラー（floatの0.0〜1.0の色）を使う。
+引数としてはノーマライズドカラー（floatの0.0〜1.0の色）です。
 
 通常の画像ファイルなどはガンマ補正が入った値になっているので、それをlinearのスケールに戻して計算を進め、
-そのあと最後にふたたびガンマ補正するのが通常の流れとなる。
+そのあと最後にふたたびガンマ補正するのが通常の流れとなります。
 
-典型的には以下のようなコードになる。
+典型的には以下のようなコードになります。
 
 ```
 let bgra = to_ncolor(input_u8(x, y))
@@ -180,12 +242,37 @@ to_u8color([*linear2gamma(lin_bgr), alpha])
 
 具体例としては[ガウスぼかし](../study/GaussBlur.md)の「ガウスフィルタ、linRGB2」を参照の事。
 
+現在では以下のように書いて、直接lbgrを取得する方が簡単で同じ挙動になります。
+
+```
+let lbgra = to_lbgra(input_u8(x, y))
+let lin_bgr = lbgra.xyz
+let alpha = lbgra.w
+# 何か処理
+
+lbgra_to_u8color(lbgra)
+```
+
+
+また、アルファをそのまま素通ししてそのほかの要素だけそれぞれを適用する、末尾に`A`のついた関数もあります。
+
+- `f32v4 gamma2linearA(ncolor:f32v4)` (v1.01より)
+- `f32v4 linear2gammaA(ncolor:f32v4)` (v1.01より)
+
+この場合は4次元固定です。以下の２つは同じ意味になります。
+
+```swift
+let lcol1 = gamma2linearA(ncol)
+let lcol2 = [*gamma2linear(ncol.xyz), ncol.w]
+```
+
 ### gamma2linear
 
 ```swift
 # Tはf32のスカラーでもOK
 
-T gamma2linear(T ncolor)
+T gamma2linear(ncolor:T)
+f32v4 gamma2linearA(ncolor:f32v4) # v1.01より
 ```
 
 引数はガンマ補正されているノーマライズドカラーの成分。成分ごとに計算するので別にBGRの順番でなくてもいいし、例えば全てRでも構わない。
@@ -196,11 +283,13 @@ input_u8はガンマ補正された状態の値です。
 ```swift
 # Tはf32のスカラーでもOK
 
-T linear2gamma(T ncolor)
+T linear2gamma(ncolor:T)
+f32v4 linear2gammaA(ncolor:f32v4) # v1.01より
 ```
 
 リニアライズされたノーマライズドカラーを、ガンマ補正したノーマライズドカラーに変換する。
 result_u8に戻す前にはガンマ補正された値にする必要がある。
+
 
 ## rand
 
