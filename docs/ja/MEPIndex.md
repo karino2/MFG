@@ -12,6 +12,8 @@ MEPはMFG Enhanced Proposalの略。PythonのPEPなどのMFG版。
 
 ## MEP
 
+### ステータス実装済み
+
 - [MPE 1: Selectの改善](MEP/1.md)
 - [MEP 2: rsum](MEP/2.md)
 - [MEP 3: パラメータ](MEP/3.md)
@@ -33,3 +35,8 @@ MEPはMFG Enhanced Proposalの略。PythonのPEPなどのMFG版。
 - [MEP 19: paramの国際化](MEP/19.md)
 - [MEP 20: 他のレイヤーの参照](MEP/20.md)
 - [MEP 21: テンソルリテラル対応](MEP/21.md)
+
+### ステータス、Proposed
+
+- [MEP 22: パイプライン演算子](MEP/22.md)
+- [MEP 23: result_u8などをresultに](MEP/23.md)
