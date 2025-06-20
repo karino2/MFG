@@ -171,7 +171,7 @@ let u8_bgra = to_u8color(ncolor)
 
 ### リニア化されたBGRA関連
 
-ガンマ補正済みのリニア化されたBGRA関連の関数としては以下があります。(v1.01にて実装)
+ガンマ補正済みのリニア化されたBGRA関連の関数としては以下があります。(v1.0.01にて実装)
 
 ```swift
 f32v4 to_lbgra(col:u8v4)
@@ -189,7 +189,7 @@ def result_u8 |x, y| {
 
 ### CIE XYZカラー関連
 
-以下の関数があります。(v1.01にて実装)
+以下の関数があります。(v1.0.01にて実装)
 
 ```swift
 f32v4 to_xyza(col:u8v4)
@@ -256,8 +256,8 @@ lbgra_to_u8color(lbgra)
 
 また、アルファをそのまま素通ししてそのほかの要素だけそれぞれを適用する、末尾に`A`のついた関数もあります。
 
-- `f32v4 gamma2linearA(ncolor:f32v4)` (v1.01より)
-- `f32v4 linear2gammaA(ncolor:f32v4)` (v1.01より)
+- `f32v4 gamma2linearA(ncolor:f32v4)` (v1.0.01より)
+- `f32v4 linear2gammaA(ncolor:f32v4)` (v1.0.01より)
 
 この場合は4次元固定です。以下の２つは同じ意味になります。
 
@@ -272,7 +272,7 @@ let lcol2 = [*gamma2linear(ncol.xyz), ncol.w]
 # Tはf32のスカラーでもOK
 
 T gamma2linear(ncolor:T)
-f32v4 gamma2linearA(ncolor:f32v4) # v1.01より
+f32v4 gamma2linearA(ncolor:f32v4) # v1.0.01より
 ```
 
 引数はガンマ補正されているノーマライズドカラーの成分。成分ごとに計算するので別にBGRの順番でなくてもいいし、例えば全てRでも構わない。
@@ -284,7 +284,7 @@ input_u8はガンマ補正された状態の値です。
 # Tはf32のスカラーでもOK
 
 T linear2gamma(ncolor:T)
-f32v4 linear2gammaA(ncolor:f32v4) # v1.01より
+f32v4 linear2gammaA(ncolor:f32v4) # v1.0.01より
 ```
 
 リニアライズされたノーマライズドカラーを、ガンマ補正したノーマライズドカラーに変換する。
