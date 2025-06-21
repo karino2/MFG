@@ -1,6 +1,6 @@
 # Tensor
 
-[To Top](README.md)
+[Top](README.md)
 
 A tensor is a one- or two-dimensional, tuple or scalar array.
 
