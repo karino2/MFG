@@ -5,7 +5,7 @@ Under construction.
 
 - [Tensor](Tensor.md)
 - [Type](Type.md)
-- Expression and Vectorize Operation (Expression.md)
+- [Expression and Vectorize Operation](Expression.md)
 - ifel and Loops (IfelLoop.md)
 - Sampler (Sampler.md)
 - trans and reduce (TransReduce.md)

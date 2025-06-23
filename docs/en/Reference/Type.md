@@ -214,7 +214,7 @@ in this case, you will also need to cast it to u8.
 Since it is common to want to cast literals in tuples,
 we offer syntactic sugar.
 
-Specifically, you can omit the parences after the type name and write square brackets directly.
+Specifically, you can omit the parenthesis after the type name and write square brackets directly.
 
 For example, the following two codes have the same meaning:
 
@@ -232,7 +232,7 @@ u8[b, g, r, a]
 
 ### splat Operator for Tuples
 
-You can use what is called the splat operator `*` in square brackets and in the parences of function calls.
+You can use what is called the splat operator `*` in square brackets and in the parenthesis of function calls.
 This behaves as if you wrote down each element of tuple under splat operator.
 
 For example:
