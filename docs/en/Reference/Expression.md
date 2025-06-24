@@ -222,10 +222,11 @@ For more information, see [ifel and Loops](IfelLoop.md).
 `...` changes the location of the expression from which it is replaced by the pipe operator `|>`.
 `|>` replaces `...` in the right side with the expression on the left side.
 
-In other words, the following two expressions have the same meaning:
+In other words, the following three expressions have the same meaning:
 
 ```swift
 f(a, b, c)
+f(a, b, ...) c
 c |> f(a, b, ...)
 ```
 
