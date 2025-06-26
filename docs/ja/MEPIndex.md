@@ -46,3 +46,4 @@ MEPはMFG Enhanced Proposalの略。PythonのPEPなどのMFG版。
 
 - [MEP 23: result_u8などをresultに](MEP/23.md)
 - [MEP 24: mapのサポート](MEP/24.md)
+- [MEP 25: mar内での国際化](MEP/25.md)
