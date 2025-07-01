@@ -42,8 +42,12 @@ MEPはMFG Enhanced Proposalの略。PythonのPEPなどのMFG版。
 
 - [MEP 22: パイプライン演算子](MEP/22.md)
 
+**v1.0.02(next release)**
+
+- [MEP 25: mar内での国際化](MEP/25.md)
+
+
 ### ステータス、Proposed
 
 - [MEP 23: result_u8などをresultに](MEP/23.md)
 - [MEP 24: mapのサポート](MEP/24.md)
-- [MEP 25: mar内での国際化](MEP/25.md)
