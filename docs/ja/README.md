@@ -34,6 +34,8 @@ def result_u8 |x2, y2| {
 
 ![モザイクフィルタのデモgif](imgs/mosaic_demo.gif)
 
+- 公式ページ [MFG - Modern Filter-language for GPU / MFG Studio](https://modernfilterlanguageforgpu.org/)
+
 ## MFGの特徴
 
 - GPU上での画像処理専用に作られた言語
