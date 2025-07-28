@@ -2,6 +2,14 @@
 
 更新履歴です。
 
+## v1.0.02 2025-07-28
+
+- `@param_f32v4`とCOLOR_PICKERの追加 (examplesのperlinノイズ参照)
+- `@param_f32v2`を導入して`@param_pos`をdeprecatedに
+- png画像のテクスチャをサポート
+- strings.jsonとそれを使った国際化を対応 [MEP 25: mar内での国際化](MEP/25.md)
+- 予期せぬトークンのパースエラーのエラーメッセージを改善
+
 ## v1.0.01 2025-06-24
 
 - vec2を実装

@@ -2,6 +2,14 @@
 
 Update history.
 
+## v1.0.02 2025-07-28
+
+- Adding `@param_f32v4` and COLOR_PICKER (see perlin noise in examples) 
+- Introducing `@param_f32v2` to deprecated `@param_pos` 
+- Supports textures of png images 
+- Supports strings.json and internationalization using it. (Document is not yet ready.)
+- Improved error message for unexpected token parsing errors
+
 ## v1.0.01 2025-06-24
 
 - Implement vec2

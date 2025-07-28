@@ -459,7 +459,7 @@ reduceで0から100までのループで順番に値を更新するものを書�
 ```cpp
 @title "白黒マンデルブロ集合"
 @param_f32 ZOOM(SLIDER, label="ズーム", min=0.001, max=1.0, init=0.1)
-@param_pos ORIGIN(POINTER, label="中心") 
+@param_f32v2 ORIGIN(POINTER, label="中心") 
 
 let [ox, oy] = ORIGIN
 let [cx, cy] = [ox*f32(input_u8.extent(0)), oy*f32(input_u8.extent(1))]
@@ -485,7 +485,7 @@ def result_u8 |x, y| {
 }
 ```
 
-`@param_pos` で要素２つのfloatのタプルとして選ばれた位置を返す。値の範囲は0.0〜1.0で中心が0.5。
+`@param_f32v2` で要素２つのfloatのタプルとして選ばれた位置を返す。値の範囲は0.0〜1.0で中心が0.5。
 
 なんか数学的にちゃんと中心を移動出来てい無さそうだが、ウィジェットの動作確認としてはちゃんと動いている。アルバイトの人が来たら直してもらおう…
 
@@ -664,7 +664,7 @@ Perlin Noiseは、元論文によると、t=0・t=1で1回微分・2回微分が
 ```cpp
 @title "水鏡"
 
-@param_pos CENTER(POINTER, label="鏡の位置")
+@param_f32v2 CENTER(POINTER, label="鏡の位置")
 
 let [_, cy] = CENTER
 let finput = sampler<input_u8>(coord=.NormalizedLinear)
@@ -705,7 +705,7 @@ sampler<input_u8>(coord=.NormalizedLinear)で、inputの座標を0.0〜1.0とし
 とりあえず三角形描く所から始めるか。
 
 ```cpp
-@param_pos v2_pos(POINTER, label="制御点")
+@param_f32v2 v2_pos(POINTER, label="制御点")
 
 # 底辺、とりあえずハードコードで(0.2, 0.8), (0.8, 0.8)とする。3次元にしておく。
 let v0 = [0.2, 0.8, 0.0]
@@ -740,7 +740,7 @@ v0, v1, v2の点を(0, 0), (0, 1/2), (1, 1)に射影する変換でx, yを変換
 
 @title "ベジエ"
 
-@param_pos v2_pos(POINTER, label="制御点")
+@param_f32v2 v2_pos(POINTER, label="制御点")
 
 # 底辺、とりあえずハードコードで(0.2, 0.8), (0.8, 0.8)とする。3次元にしておく。
 let v0 = [0.2, 0.8, 0.0]
@@ -792,7 +792,7 @@ areaで割らなくてもいいような気もするんだが、ダメだった�
 
 @title "繰り返し"
 
-@param_pos pos(POINTER, label="右下の点")
+@param_f32v2 pos(POINTER, label="右下の点")
 
 let wh = i32(pos*f32(input_u8.extent()))
 
