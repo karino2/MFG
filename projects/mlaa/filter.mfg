@@ -1,0 +1,344 @@
+
+@title $TITLE
+
+# For further detail, see.
+# https://github.com/karino2/MFG/tree/main/docs/examples/MLAA.md
+
+let EDGE_MAX_LENGTH = 7
+let END_FOUND_MASK = i32(0x80)
+let DIFF_THRESHOLD= 1.0/12.0 # If RGB distance is bigger than this value, it's considered an edge
+
+# Return whether bottom or right of target pixel is edge or not.
+# u8[bottom, right, 0, 0]
+@bounds( (input_u8.extent(0)-1), (input_u8.extent(1)-1))
+def edge |x, y|{
+   let lumiVec = [0.0722, 0.7152, 0.2127]
+   let col0 = to_ncolor(input_u8(x, y))
+   let col0L = [*gamma2linear(col0.xyz), col0.w]
+
+   let colRight = to_ncolor(input_u8(x+1, y))
+   let colBottom = to_ncolor(input_u8(x, y+1))
+   let colRightL = [*gamma2linear(colRight.xyz), colRight.w]
+   let colBottomL = [*gamma2linear(colBottom.xyz), colBottom.w]
+
+   let eb = distance(colBottomL, col0L) > DIFF_THRESHOLD
+   let er = distance(colRightL, col0L) > DIFF_THRESHOLD
+
+   # Return as u8v4 for u8v4 special optimization.
+   u8[eb, er, 0, 0]
+}
+
+
+# let edgeEx = sampler<edge>(address=..ClampToBorderValue, border_value=u8(vec4(0)))
+let edgeEx = sampler<edge>(address=.ClampToEdge)
+
+# edgeLen
+#
+# Bottom and right, positive and negative for each, total 4 elements.
+# If you find end of edge, turn on END_FOUND_MASK bit.
+# Max length is 7 and treat 'end not found' if longer than 7.
+#
+# u8[bottomNeg, bottomPos, rightNeg, rightPos]
+#
+@bounds( (input_u8.extent(0)-1), (input_u8.extent(1)-1))
+def edgeLen |x, y|{
+   # For simplicity, we first calculate the bottomPositive and rightPositive directions only.
+   #
+   # accm:
+   # If first pixel is not edge, -1.
+   # Note -1 also include END_FOUND_MASK.
+   # 
+   # Else length of bottomPositive or rightPositive + END_FOUND_MASK.
+   let eLenBRPos0 = reduce(init=[0, 0], 0..<EDGE_MAX_LENGTH+1) |i, accm|{
+     let edgeBP = edgeEx(x+i, y)
+     let edgeRP = edgeEx(x, y+i)
+
+     let curEdge = [edgeBP.x, edgeRP.y]
+     let curOrtho = [edgeBP.y, edgeRP.x]
+
+     let alreadyEnd = (accm & END_FOUND_MASK) != 0
+     let prevEnd = (curEdge == 0)
+     let curEnd = (curOrtho != 0)
+
+     ifel(alreadyEnd,
+         accm,
+         ...)
+      elif(i == 0,
+         ifel(curEdge,
+               ifel(curEnd,
+                  [0, 0] | END_FOUND_MASK ,
+                  [0, 0]
+               ),
+               [-1, -1]),
+         ...)
+      elif(prevEnd, # i is not 0 and edge end is not yet found.
+              accm|END_FOUND_MASK,
+              ...)
+      elif(curEnd, 
+              (accm+1)|END_FOUND_MASK,
+              accm+1
+              )
+   }
+
+   #
+   # Next, calculate bottomNegative, rightNegative direction.
+   #
+   let eLenBRNeg0 = reduce(init=[0, 0], 0..<EDGE_MAX_LENGTH+1) |i, accm2|{
+     # For negative direction, left is the right of next pixel. So we finish at previous iteration.
+
+     let edgeBN = edgeEx(x-i, y)
+     let edgeRN = edgeEx(x, y-i)
+
+     let curEdge = [edgeBN.x, edgeRN.y]
+     let curOrtho = [edgeBN.y, edgeRN.x]
+     
+     let alreadyEnd = (accm2 & END_FOUND_MASK) != 0
+     let prevEnd = (curOrtho != 0) || (curEdge == 0)
+
+     # The only difference from the above reduce is in `prevEnd` and `curEnd`.
+     # While it might be possible to combine them with some refactoring, the number of DRAM accesses won't change.
+     # There should be little difference in speed even if kept separate.
+     ifel(alreadyEnd,
+         accm2,
+         ...)
+      elif(i == 0,
+         ifel(curEdge,
+               [0, 0],
+               [-1, -1]),
+         ...)
+      elif(prevEnd,
+              accm2|END_FOUND_MASK,
+              accm2+1)
+   }
+
+   #
+   # u8[bottomNeg, bottomPos, rightNeg, rightPos]
+   #
+   let eLen0 = [eLenBRNeg0.x, eLenBRPos0.x, eLenBRNeg0.y, eLenBRPos0.y]
+   let eLen = ifel(eLen0 == -1, [0, 0, 0, 0], eLen0)
+   u8(eLen)
+}
+
+
+
+let edgeLenEx = sampler<edgeLen>(address=.ClampToBorderValue, border_value=u8(vec4(0)))
+let inputEx = sampler<input_u8>(address=.ClampToEdge)
+
+def result_u8 |x, y| {
+  let eps = 0.0001
+  let col0 = to_ncolor(input_u8(x, y))
+  let col0L = [*gamma2linear(col0.xyz), col0.w]
+
+
+  #
+  # [bottomNeg, botomPos, rightNeg, rightPos]
+  #
+  let einfo = i32(edgeLenEx(x, y))
+  let endFound = (einfo & END_FOUND_MASK) != 0
+  let edgeLen = (einfo & (END_FOUND_MASK-1))
+
+
+  #
+  # Horizontal interpolation
+  #
+  # [bottomNeg, bottomPos, topNeg, topPos]
+  #
+
+  # top (neg, pos) einfo
+  let einfoTNP = i32(edgeLenEx(x, y-1).xy)
+  let TNPEnd = (einfoTNP & END_FOUND_MASK) != 0
+  let TNPLen = (einfoTNP & (END_FOUND_MASK-1))
+
+  # [bottomNeg, botomPos]
+  let BNPLen = edgeLen.xy
+  let BNPEnd = endFound.xy  
+
+  # [bottomNeg, bottomPos, topNeg, topPos]
+  let HLen = [*BNPLen, *TNPLen]
+  let HEnd = [*BNPEnd, *TNPEnd]
+
+  # Calculate Edge len (ELen)
+  let B_ELen = f32(HLen.x+HLen.y+1)
+  let bmid = B_ELen/2.0
+
+  let T_ELen = f32(HLen.z+HLen.w+1)
+  let tmid = T_ELen/2.0
+
+  # HLen: horizontal len.
+  # H_ELen: horizontal edge len
+  let H_ELen = [B_ELen, B_ELen, T_ELen, T_ELen]
+  let HMid = [bmid, bmid, tmid, tmid]
+
+
+  # Inside L condition.
+
+  let isHRange = HLen+eps < HMid
+
+  # Opposite color of current pixel.
+  # OpsB == Opposite color of Bottom.
+  let colOpsB = to_ncolor(inputEx(x, y+1))
+  let colOpsBL = [*gamma2linear(colOpsB.xyz), colOpsB.w]
+  
+  # Opposite color of top
+  let colOpsT = to_ncolor(inputEx(x, y-1))
+  let colOpsTL = [*gamma2linear(colOpsT.xyz), colOpsT.w]
+
+  
+  # next color of bottomNegative
+  let colBN = to_ncolor(inputEx(x-1-HLen.x, y))
+  let colBNL = [*gamma2linear(colBN.xyz), colBN.w]
+
+  # next color of bottomPositive
+  let colBP = to_ncolor(inputEx(x+1+HLen.y, y))
+  let colBPL = [*gamma2linear(colBP.xyz), colBP.w]
+
+  # same for topNegative
+  let colTN = to_ncolor(inputEx(x-1-HLen.z, y))
+  let colTNL = [*gamma2linear(colTN.xyz), colTN.w]
+
+  # same for topPositive
+  let colTP = to_ncolor(inputEx(x+1+HLen.w, y))
+  let colTPL = [*gamma2linear(colTP.xyz), colTP.w]
+
+  # Opposite of BN, BP, TN, TPs are OpsB, OpsB, OpsT, OpsT
+  let sameToOpsBN = distance(colOpsBL, colBNL) < DIFF_THRESHOLD
+  let sameToOpsBP = distance(colOpsBL, colBPL) < DIFF_THRESHOLD
+  let sameToOpsTN = distance(colOpsTL, colTNL) < DIFF_THRESHOLD
+  let sameToOpsTP = distance(colOpsTL, colTPL) < DIFF_THRESHOLD
+
+
+  let sameToOpsH = [sameToOpsBN, sameToOpsBP, sameToOpsTN, sameToOpsTP]
+  
+  # Inside L? for horizontal
+  let insideHL = isHRange && HEnd && sameToOpsH
+
+  # Area of trapezoid, some simple calculus lead to (1-(2n+1)/L)*1/2
+  let areaH = (1.0-(2.0*HLen+1.0)/H_ELen)*0.5
+  # for triangle case (end of trapezoid becomes triangle)
+  let isTriangleH = abs( (HMid-f32(HLen)) - 0.5 ) < 0.001
+
+  # area of triangle, same for pos and neg.
+  let triAreaH = 1.0/(8.0*H_ELen)
+
+  # blending ratio of horizontal
+  let ratioH = ifel(insideHL,
+                          ifel(isTriangleH, triAreaH, areaH),
+                          [0.0, 0.0, 0.0, 0.0])
+
+  #
+  # For vertial orientation, that is, interpolation to left and right.
+  # Calculation is similar for horizontal, but is cumbersome to do it at once.
+  # Just dup for easier understanding.
+  #
+
+  let RNPLen = edgeLen.zw
+  let RNPEnd = endFound.zw
+
+  # left einfo
+  let einfoLNP = i32(edgeLenEx(x-1, y).zw)
+  let LNPEnd = (einfoLNP & END_FOUND_MASK) != 0
+  let LNPLen = (einfoLNP & (END_FOUND_MASK-1))
+
+
+  # [rightNeg, rightPos, leftNeg, leftPos]
+  # Right coming ealier is a bit tricky, but it's more natural to calculate for increasing order.
+  # This is because stored edge is right, not left.
+  let VLen = [*RNPLen, *LNPLen]
+  let VEnd = [*RNPEnd, *LNPEnd]
+
+  let R_ELen = f32(VLen.x+VLen.y+1)
+  let rmid = R_ELen/2.0
+
+  let L_ELen = f32(VLen.z+VLen.w+1)
+  let lmid = L_ELen/2.0
+
+  let V_ELen = [R_ELen, R_ELen, L_ELen, L_ELen]
+  let VMid = [rmid, rmid, lmid, lmid]
+
+  let isVRange = VLen+eps < VMid
+  
+  # opposite color, right and left.
+  let colOpsR = to_ncolor(inputEx(x+1, y))
+  let colOpsRL = [*gamma2linear(colOpsR.xyz), colOpsR.w]
+
+  let colOpsL = to_ncolor(inputEx(x-1, y))
+  # Left Linear.
+  let colOpsLL = [*gamma2linear(colOpsL.xyz), colOpsL.w]
+
+  let colRN = to_ncolor(inputEx(x, y-1-VLen.x))
+  let colRNL = [*gamma2linear(colRN.xyz), colRN.w]
+
+  let colRP = to_ncolor(inputEx(x, y+1+VLen.y))
+  let colRPL = [*gamma2linear(colRP.xyz), colRP.w]
+
+  let colLN = to_ncolor(inputEx(x, y-1-VLen.z))
+  let colLNL = [*gamma2linear(colLN.xyz), colLN.w]
+
+  let colLP = to_ncolor(inputEx(x, y+1+VLen.w))
+  let colLPL = [*gamma2linear(colLP.xyz), colLP.w]
+
+  # Opposite color of rightNeg, rightPos, leftNeg, leftPos is OpsR, OpsR, OpsL, OpsL
+  let sameToOpsRN = distance(colOpsRL, colRNL) < DIFF_THRESHOLD
+  let sameToOpsRP = distance(colOpsRL, colRPL) < DIFF_THRESHOLD
+  let sameToOpsLN = distance(colOpsLL, colLNL) < DIFF_THRESHOLD
+  let sameToOpsLP = distance(colOpsLL, colLPL) < DIFF_THRESHOLD
+
+  let sameToOpsV = [sameToOpsRN, sameToOpsRP, sameToOpsLN, sameToOpsLP]
+
+  let insideVL = isVRange && VEnd && sameToOpsV
+
+  let areaV = (1.0-(2.0*VLen+1.0)/V_ELen)*0.5
+  let isTriangleV = abs( (VMid-f32(VLen)) - 0.5 ) < 0.001
+
+  let triAreaV = 1.0/(8.0*V_ELen)
+
+  let ratioV = ifel(insideVL,
+                          ifel(isTriangleV, triAreaV, areaV),
+                          [0.0, 0.0, 0.0, 0.0])
+
+   # Calculate ratio of bottom, top, right, left from ratioV and ratioH.
+   # It's easier to calculate separately for special center handling and opposite color difference.
+   let ratioB = ifel(insideHL.x && insideHL.y && isTriangleH.x, 
+                         # Just center, 0.5 case. IsTriangle check is enought for one side.
+                         ratioH.x+ratioH.y,...)
+                       elif(insideHL.x,
+                         ratioH.x, ratioH.y)
+
+   let ratioT = ifel(insideHL.z && insideHL.w && isTriangleH.z, 
+                          ratioH.z+ratioH.w,...)
+                       elif(insideHL.z,
+                          ratioH.z, ratioH.w)
+
+   let ratioR = ifel(insideVL.x && insideVL.y && isTriangleV.x, 
+                         ratioV.x+ratioV.y,...)
+                       elif(insideVL.x,
+                         ratioV.x, ratioV.y)
+
+   let ratioL = ifel(insideVL.z && insideVL.w && isTriangleV.z, 
+                          ratioV.z+ratioV.w,...)
+                       elif(insideVL.z,
+                          ratioV.z, ratioV.w)
+
+  # Blend color.
+  let destColBL = mix(col0L, colOpsBL, ratioB)
+  let destColTL = mix(col0L, colOpsTL, ratioT)
+  let destColRL = mix(col0L, colOpsRL, ratioR)
+  let destColLL = mix(col0L, colOpsLL, ratioL)
+
+  let destColB = to_u8color([*linear2gamma(destColBL.xyz), destColBL.w])
+  let destColT = to_u8color([*linear2gamma(destColTL.xyz), destColTL.w])
+  let destColR = to_u8color([*linear2gamma(destColRL.xyz), destColRL.w])
+  let destColL = to_u8color([*linear2gamma(destColLL.xyz), destColLL.w])
+
+   # If multiple interpolation is overwrap, use biggest ratio's one.
+   ifel( ratioB+ratioL > ratioR+ratioL,
+     ifel( ratioB > ratioT,
+        destColB,
+        destColT),
+      ifel( ratioR > ratioL,
+         destColR,
+         destColL)
+   )
+
+}
+
