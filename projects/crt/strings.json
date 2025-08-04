@@ -1,0 +1,4 @@
+{
+  "ja": {"TITLE_CRT_FILTER": "CRTフィルター", "LABEL_DISTORT": "歪み", "LABEL_ROUGHNESS": "粗さ", "LABEL_BRIGHTNESS": "明るさ"},
+  "en": {"TITLE_CRT_FILTER": "CRT Filter", "LABEL_DISTORT": "Distort", "LABEL_ROUGHNESS": "Roughness", "LABEL_BRIGHTNESS": "Brightness"}
+}

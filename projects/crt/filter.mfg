@@ -1,0 +1,53 @@
+@title $TITLE_CRT_FILTER
+
+#
+# Similar to following shader, but much simpler.
+# [VHS and CRT monitor effect - Godot Shaders](https://godotshaders.com/shader/vhs-and-crt-monitor-effect/)
+
+@param_f32 dratio(SLIDER, label=$LABEL_DISTORT, init=0.5, min=0.0, max=1.0)
+@param_f32 roughness(SLIDER, label=$LABEL_ROUGHNESS, init=0.2, min=0.01, max=1.0)
+@param_f32 vratio(SLIDER, label="Vignette", init=0.5, min=0.0, max=1.0)
+@param_f32 brightness(SLIDER, label=$LABEL_BRIGHTNESS, init=1.4, min=1.0, max=3.0)
+
+let resolution = input_u8.extent()*roughness
+let grille_opacity = 0.3
+let PI = 3.141592
+let scanline_width = 0.25
+let scanline_opacity = 0.4
+
+
+let inputEx = sampler<input_u8>(coord=.NormalizedLinear, address=.ClampToBorderValue, border_value=u8[0, 0, 0, 255])
+
+def result_u8 |x, y| {
+  let fxy0 = to_ncoord([x, y]) 
+
+  # distort
+  let rxy0 = fxy0 - 0.5
+  let d0 = length(rxy0)
+  let d = d0^6.0
+  let fxy = 0.5+(1.0+d*dratio)*rxy0
+
+  #pixelate   
+  let pxy = ceil(fxy*resolution)/resolution
+  let col = inputEx(*pxy) |> to_ncolor(...) |> gamma2linearA(...)
+
+  # grille
+  let g_offset = [0.0, 1.05, 2.1]
+  let g_ratio = smoothstep(vec3(0.85), vec3(0.95), abs(sin(g_offset+fxy.x*resolution.x*PI)))
+  let g_col = mix(col.xyz, col.xyz*g_ratio, grille_opacity)
+
+  # scan line
+  let scan = smoothstep(scanline_width, scanline_width+0.5, abs(sin(fxy.y*resolution.y*PI)))
+  let s_col = mix(g_col, g_col*scan, scanline_opacity)
+
+  # Vignette
+  let vd0 = distance(fxy, vec2(0.5))/length(vec2(0.5))
+  let vd = vratio*(vd0^2.0)
+  let v_col = s_col*(1.0-vd)
+
+  let b_col = saturate(v_col*brightness)
+
+  let res_col = [*b_col, col.w]
+
+  linear2gammaA(res_col) |> to_u8color(...)
+}
