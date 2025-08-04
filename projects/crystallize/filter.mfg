@@ -1,0 +1,56 @@
+
+@title $TITLE
+
+@param_i32 GRID_INTERVAL(SLIDER, label=$LABEL_GRID_SIZE, min=10, max=256, init=50)
+@param_f32 STRENGTH(SLIDER, label=$LABEL_RANDOM_STRENGTH, min=0.1, max=1.0, init=1.0)
+
+let [GRID_WIDTH, GRID_HEIGHT] = (input_u8.extent() -1)/GRID_INTERVAL + 1
+
+@bounds(GRID_WIDTH, GRID_HEIGHT)
+def gridOffset |x, y|{
+  STRENGTH*[rand()-0.5, rand()-0.5]
+}
+
+let goffEx = sampler<gridOffset>(address=.ClampToBorderValue, border_value=[0.0, 0.0])
+
+@bounds(input_u8.extent(0), input_u8.extent(1))
+def nn |x, y| {
+  let go_xy = [x, y]/GRID_INTERVAL # x y of grid coordinate, upper left
+
+  let nearest = reduce(init=[0, 0, 999999.0], 0..<4, 0..<4) |rx, ry, accm| {
+    let gxy = go_xy + [-1, -1] + [rx, ry]
+    let ggxy = gxy*GRID_INTERVAL + i32(goffEx(*gxy)*GRID_INTERVAL) # global coordinate
+    let d = distance(f32([x, y]), f32(ggxy))
+    ifel(d <accm.z, 
+        [gxy.x, gxy.y, d],
+        accm
+    )
+  }
+  [nearest.x, nearest.y]
+}
+
+let inputEx = sampler<input_u8>(address=.ClampToEdge)
+
+@bounds(GRID_WIDTH, GRID_HEIGHT)
+def gridCol |x, y|{
+  let gs_xy0 =  [x, y] * GRID_INTERVAL
+  let candW = 3*GRID_INTERVAL
+  let [sb, sg, sr, sa, count] = rsum(0..<candW, 0..<candW) |rx, ry|{
+    let sxy = gs_xy0+[rx, ry] - i32(1.5*GRID_INTERVAL)*[1, 1]
+    let g_nn = nn(*sxy)
+    let [b, g, r, a] = i32(inputEx( *sxy ))
+    ifel( all(g_nn == [x, y]),
+        [*[b, g, r]*a, a, 1],
+        [0, 0, 0, 0, 0]
+    )
+  }
+  
+  ifel(sa==0,
+    u8[0, 0, 0, 0],
+    u8[*[sb, sg, sr]/sa, sa/count] )
+}
+
+def result_u8 |x, y| {
+  let g_nn = nn(x, y)
+  gridCol(*g_nn)
+}
