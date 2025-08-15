@@ -6,7 +6,7 @@
 
 let [GRID_WIDTH, GRID_HEIGHT] = (input_u8.extent() -1)/GRID_INTERVAL + 1
 
-@bounds(GRID_WIDTH, GRID_HEIGHT)
+@bounds(GRID_WIDTH+3, GRID_HEIGHT+3)
 def gridOffset |x, y|{
   STRENGTH*[rand()-0.5, rand()-0.5]
 }
@@ -19,27 +19,37 @@ def nn |x, y| {
 
   let nearest = reduce(init=[0, 0, 999999.0], 0..<4, 0..<4) |rx, ry, accm| {
     let gxy = go_xy + [-1, -1] + [rx, ry]
-    let ggxy = gxy*GRID_INTERVAL + i32(goffEx(*gxy)*GRID_INTERVAL) # global coordinate
+    let ggxy = gxy*GRID_INTERVAL + i32(gridOffset(*(gxy+1))*GRID_INTERVAL) # global coordinate
     let d = distance(f32([x, y]), f32(ggxy))
     ifel(d <accm.z, 
         [gxy.x, gxy.y, d],
         accm
     )
   }
-  [nearest.x, nearest.y]
+  nearest
 }
 
 let inputEx = sampler<input_u8>(address=.ClampToEdge)
+let nnEx = sampler<nn>(address=.ClampToEdge)
 
-@bounds(GRID_WIDTH, GRID_HEIGHT)
+@bounds(GRID_WIDTH+3, GRID_HEIGHT+3)
 def gridCol |x, y|{
-  let gs_xy0 =  [x, y] * GRID_INTERVAL
-  let candW = 3*GRID_INTERVAL
-  let [sb, sg, sr, sa, count] = rsum(0..<candW, 0..<candW) |rx, ry|{
-    let sxy = gs_xy0+[rx, ry] - i32(1.5*GRID_INTERVAL)*[1, 1]
-    let g_nn = nn(*sxy)
+   # revert to grid coord.
+   let gxy = [x, y] - 1
+
+   # screen coord of gxy
+   let gs_xy0 =  gxy* GRID_INTERVAL
+   let candW = 3*GRID_INTERVAL
+   let [sb, sg, sr, sa, count] = rsum(0..<candW, 0..<candW) |rx, ry|{
+    # candidate input pixel coord.
+    let sxy = gs_xy0+[rx, ry] - i32(0.5*candW)
+   
+    # nearest site of sxy
+    let g_nn = nnEx(*sxy)
+
     let [b, g, r, a] = i32(inputEx( *sxy ))
-    ifel( all(g_nn == [x, y]),
+    # whether nearest site is same as gxy?
+    ifel( all(g_nn.xy == gxy),
         [*[b, g, r]*a, a, 1],
         [0, 0, 0, 0, 0]
     )
@@ -52,5 +62,5 @@ def gridCol |x, y|{
 
 def result_u8 |x, y| {
   let g_nn = nn(x, y)
-  gridCol(*g_nn)
+  gridCol(*(g_nn.xy +1))
 }
