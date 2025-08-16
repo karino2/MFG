@@ -50,4 +50,8 @@ MEPはMFG Enhanced Proposalの略。PythonのPEPなどのMFG版。
 ### ステータス、Proposed
 
 - [MEP 23: result_u8などをresultに](MEP/23.md)
+- [MEP 26: ユーザー定義関数](MEP/26.md)
+
+### ステータス、Declined
+
 - [MEP 24: mapのサポート](MEP/24.md)
