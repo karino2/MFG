@@ -2,6 +2,11 @@
 
 Update history.
 
+## v1.0.03 2025-08-18
+
+- Fixed random number seeds in preview and execution to make the same value 
+- Adding a user-defined function
+
 ## v1.0.02 2025-07-28
 
 - Adding `@param_f32v4` and COLOR_PICKER (see perlin noise in examples) 

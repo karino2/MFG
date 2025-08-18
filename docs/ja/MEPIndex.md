@@ -46,7 +46,7 @@ MEPはMFG Enhanced Proposalの略。PythonのPEPなどのMFG版。
 
 - [MEP 25: mar内での国際化](MEP/25.md)
 
-**v1.0.03(next release)**
+**v1.0.03**
 
 - [MEP 26: ユーザー定義関数](MEP/26.md)
 

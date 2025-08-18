@@ -35,6 +35,7 @@ def result_u8 |x2, y2| {
 ![Mosaic demo gif](imgs/mosaic_demo.gif)
 
 - Official: [MFG - Modern Filter-language for GPU / MFG Studio](https://modernfilterlanguageforgpu.org/)
+- [ReleaseNotes.md](ReleaseNotes.md)
 
 ## MFG Features
 
