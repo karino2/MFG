@@ -9,5 +9,5 @@ Under construction.
 - [ifel and Loops](IfelLoop.md)
 - [Sampler](Sampler.md)
 - [trans and reduce](TransReduce.md)
-- Attributes and Input Widgets (AttrWidget.md)
+- [Attributes and Input Widgets](AttrWidget.md)
 - Bultin Functions (BuiltinFunctions.md)
