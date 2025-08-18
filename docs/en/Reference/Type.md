@@ -193,6 +193,12 @@ However, since vector-compatible functions only support up to 4 dimensions, the 
 normalize([1.0, 2,0, 3.0, 4.0, 5.0])
 ```
 
+### Vector type notation
+
+The notation of vector types is like `f32v3` and `f32v4`.
+The type of the component (in this case `f32`) is followed by a vector `v`, followed by a dimension number like 3 or 4. 
+
+Another example is like `i32v2`.
 
 ### vec2, vec3, vec4 functions
 
