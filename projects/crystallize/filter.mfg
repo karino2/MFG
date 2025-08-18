@@ -11,8 +11,6 @@ def gridOffset |x, y|{
   STRENGTH*[rand()-0.5, rand()-0.5]
 }
 
-let goffEx = sampler<gridOffset>(address=.ClampToBorderValue, border_value=[0.0, 0.0])
-
 @bounds(input_u8.extent(0), input_u8.extent(1))
 def nn |x, y| {
   let go_xy = [x, y]/GRID_INTERVAL # x y of grid coordinate, upper left
