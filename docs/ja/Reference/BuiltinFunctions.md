@@ -12,11 +12,16 @@
 
 関数名の前に戻りの型を、引数の名前のあとにコロンで引数の型を書きます。
 
-```swift
-f32 sin(x:f32)
+```rust
+f32 sin |x:f32|
 ```
 
 これは、引数一つで型はf32、戻りはf32である事を表します。
+複数の引数はカンマで区切ります。
+
+```rust
+f32 clamp|x:f32, minVal:f32, maxVal:f32|
+```
 
 ### 特殊なベクトルを表すT, Ti
 
@@ -62,8 +67,8 @@ distance([1.0, 1.0], [2.0, 2.0, 2.0])
 こういう言葉にするとややこしい事情を表記するために、
 f32のベクトルをTという表記で書き、同じTは同じ次元のベクトル、という事を表す事にします。
 
-```swift
-f32 distance(x:T, y:T)
+```rust
+f32 distance|x:T, y:T|
 ```
 
 この時、Tはf32の2要素〜4要素のタプルで、xとyは同じ次元となります。
@@ -78,8 +83,8 @@ f32 distance(x:T, y:T)
 
 例えばsinは以下のような関数ですが、
 
-```swift
-f32 sin(x:f32)
+```rust
+f32 sin|x:f32|
 ```
 
 これはベクトライズで使えます。
@@ -121,22 +126,22 @@ MFGでは、必要な計算に応じてガンマ補正をしたりCIE XYZカラ�
 u8color以外は基本的にはアルファがなければf32v3、アルファがあればf32v4となります。
 `lbgr_to_xyz`などはf32v3を引数にf32v3を返します。
 
-```swift
-f32v3 lbgr_to_xyz(col:f32v3)
-u8v4 xyza_to_u8color(col:f32v4)
+```rust
+f32v3 lbgr_to_xyz| col:f32v3 |
+u8v4 xyza_to_u8color| col:f32v4 |
 ```
 
 また、元のカラー名がu8colorの時は省略されます。
 
-```swift
-f32v4 to_xyza(col:u8v4)
-f32v4 to_lbgra(col:u8v4)
+```rust
+f32v4 to_xyza| col:u8v4 |
+f32v4 to_lbgra| col:u8v4 |
 ```
 
 ### to_ncolor
 
-```swift
-f32v4 to_ncolor(col:u8v4)
+```rust
+f32v4 to_ncolor| col:u8v4 |
 ```
 
 u8v4のBGRAの色を、ノーマライズドカラーに変換する。
@@ -150,8 +155,8 @@ let ncolor = to_ncolor(input_u8(x, y))
 
 ### to_u8color
 
-```swift
-u8v4 to_u8color(col:f32v4)
+```rust
+u8v4 to_u8color| col:f32v4 |
 ```
 
 ncolorからu8v4のBGRAへの変換を行う。
@@ -170,9 +175,9 @@ let u8_bgra = to_u8color(ncolor)
 
 ガンマ補正済みのリニア化されたBGRA関連の関数としては以下があります。(v1.0.01にて実装)
 
-```swift
-f32v4 to_lbgra(col:u8v4)
-u8v4 lbgra_to_u8color(col:f32v4)
+```rust
+f32v4 to_lbgra|col:u8v4|
+u8v4 lbgra_to_u8color|col:f32v4|
 ```
 
 **例**
@@ -188,12 +193,12 @@ def result_u8 |x, y| {
 
 以下の関数があります。(v1.0.01にて実装)
 
-```swift
-f32v4 to_xyza(col:u8v4)
-u8v4 xyza_to_u8color(col:f32v4)
+```rust
+f32v4 to_xyza| col:u8v4 |
+u8v4 xyza_to_u8color| col:f32v4 |
 
-f32v3 lbgr_to_xyz(col:f32v3)
-f32v3 xyz_to_lbgr(col:f32v3)
+f32v3 lbgr_to_xyz| col:f32v3 |
+f32v3 xyz_to_lbgr| col:f32v3 |
 ```
 
 
@@ -213,8 +218,8 @@ def result_u8 |x, y| {
 
 以下の2つの関数がガンマ補正の基本となる関数です。
 
-- `T gamma2linear(ncolor:T)`
-- `T linear2gamma(ncolor:T)`
+- `T gamma2linear| ncolor:T |`
+- `T linear2gamma| ncolor:T |`
 
 Tはf32のベクトル、またはスカラーです。
 
@@ -253,8 +258,8 @@ lbgra_to_u8color(lbgra)
 
 また、アルファをそのまま素通ししてそのほかの要素だけそれぞれを適用する、末尾に`A`のついた関数もあります。
 
-- `f32v4 gamma2linearA(ncolor:f32v4)` (v1.0.01より)
-- `f32v4 linear2gammaA(ncolor:f32v4)` (v1.0.01より)
+- `f32v4 gamma2linearA| ncolor:f32v4 |` (v1.0.01より)
+- `f32v4 linear2gammaA| ncolor:f32v4 |` (v1.0.01より)
 
 この場合は4次元固定です。以下の２つは同じ意味になります。
 
@@ -265,11 +270,11 @@ let lcol2 = [*gamma2linear(ncol.xyz), ncol.w]
 
 ### gamma2linear
 
-```swift
+```rust
 # Tはf32のスカラーでもOK
 
-T gamma2linear(ncolor:T)
-f32v4 gamma2linearA(ncolor:f32v4) # v1.0.01より
+T gamma2linear| ncolor:T |
+f32v4 gamma2linearA| ncolor:f32v4 | # v1.0.01より
 ```
 
 引数はガンマ補正されているノーマライズドカラーの成分。成分ごとに計算するので別にBGRの順番でなくてもいいし、例えば全てRでも構わない。
@@ -277,11 +282,11 @@ input_u8はガンマ補正された状態の値です。
 
 ### linear2gamma
 
-```swift
+```rust
 # Tはf32のスカラーでもOK
 
-T linear2gamma(ncolor:T)
-f32v4 linear2gammaA(ncolor:f32v4) # v1.0.01より
+T linear2gamma| ncolor:T |
+f32v4 linear2gammaA| ncolor:f32v4 | # v1.0.01より
 ```
 
 リニアライズされたノーマライズドカラーを、ガンマ補正したノーマライズドカラーに変換する。
@@ -290,8 +295,8 @@ result_u8に戻す前にはガンマ補正された値にする必要がある�
 
 ## rand
 
-```swift
-f32 rand()
+```rust
+f32 rand| |
 ```
 
 0.0〜1.0の乱数を返します。
@@ -303,31 +308,31 @@ atan2は引数が２つなのでベクトライズは出来ず、Tだけサポ�
 
 | API | ベクトライズ可？ | 説明 |
 | ---- | ---- | ---- |
-| `f32 exp(x:f32)`| yes | eの指数乗 |
-| `f32 exp2(x:f32)` | yes | 2の指数乗 |
-| `f32 sin(x:f32)` | yes | 角度はラジアン |
-| `f32 cos(x:f32)` | yes |  |
-| `f32 tan(x:f32)` | yes | |
-| `f32 log(x:f32)` | yes | 底がeの対数を計算 |
-| `f32 log2(x:f32)` | yes | 底が2の対数を計算 |
-| `f32 sqrt(x:f32)` | yes | |
-| `T atan2(y:T, x:T)` | no | y/xのアークタンジェントを計算 |
+| `f32 exp| x:f32 |`| yes | eの指数乗 |
+| `f32 exp2| x:f32 |` | yes | 2の指数乗 |
+| `f32 sin| x:f32 |` | yes | 角度はラジアン |
+| `f32 cos| x:f32 |` | yes |  |
+| `f32 tan| x:f32 |` | yes | |
+| `f32 log| x:f32 |` | yes | 底がeの対数を計算 |
+| `f32 log2| x:f32 |` | yes | 底が2の対数を計算 |
+| `f32 sqrt| x:f32 |` | yes | |
+| `T atan2| y:T, x:T |` | no | y/xのアークタンジェントを計算 |
 
 
 ## 小数の端数や符号などの計算
 
 | API | ベクトライズ可？ | 説明 |
 | ---- | ---- | ---- |
-| `f32 abs(x: f32)` | yes | i32も可能 |
-| `f32 ceil(x: f32)` | yes | 切り上げ。x以上の最小の整数を返す。 |
-| `f32 floor(x: f32)` | yes | x以下の最大の整数を返す |
-| `f32 fract(x: f32)` | yes | xの小数部分を返す |
-| `f32 round(x: f32)` | yes | xを四捨五入した整数を返す |
-| `f32 saturate(x: f32)` | yes | xを0.0から1.0の間にclampした値を返す |
-| `f32 sign(x: f32)` | yes | xが正なら1.0, xが負なら-1.0を返す |
-| `f32 trunc(x: f32)` | yes | xの端数部を切り捨てた整数を返す |
-| `i32 isnan(x:f32)` | yes | xがnanなら1を、そうでなければ0を返す |
-| `i32 isinf(x:f32)` | yes | xがinfなら1を、そうでなければ0を返す |
+| `f32 abs|x: f32|` | yes | i32も可能 |
+| `f32 ceil|x: f32|` | yes | 切り上げ。x以上の最小の整数を返す。 |
+| `f32 floor|x: f32|` | yes | x以下の最大の整数を返す |
+| `f32 fract|x: f32|` | yes | xの小数部分を返す |
+| `f32 round|x: f32|` | yes | xを四捨五入した整数を返す |
+| `f32 saturate|x: f32|` | yes | xを0.0から1.0の間にclampした値を返す |
+| `f32 sign|x: f32|` | yes | xが正なら1.0, xが負なら-1.0を返す |
+| `f32 trunc|x: f32|` | yes | xの端数部を切り捨てた整数を返す |
+| `i32 isnan|x:f32|` | yes | xがnanなら1を、そうでなければ0を返す |
+| `i32 isinf|x:f32|` | yes | xがinfなら1を、そうでなければ0を返す |
 
 
 ## ベクトル系関数
@@ -336,13 +341,13 @@ atan2は引数が２つなのでベクトライズは出来ず、Tだけサポ�
 
 | API | 説明 |
 | ---- | ---- |
-| `i32 all(x:Ti)` | xの要素が全てノンゼロなら1を、そうでなければ0を返す |
-| `i32 any(x:Ti)` | xの要素が一つでもノンゼロなら1を、全てゼロなら0を返す |
-| `f32 distance(x:T, y:T)` | ２つのベクトル、xとyの間の距離を求める |
-| `f32 dot(x:T, y:T)` | xとyの内積を求める |
-| `f32v3 cross(x:f32v3, y:f32v3)` | xとyの外積を求める |
-| `f32 length(x: T)` | ベクトルxの長さを求める |
-| `T normalize(x: T)` | ベクトルxを長さ1にノーマライズした同じ向きのベクトルを返す(`x/length(x)`と同じ) |
+| `i32 all|x: Ti|` | xの要素が全てノンゼロなら1を、そうでなければ0を返す |
+| `i32 any|x: Ti|` | xの要素が一つでもノンゼロなら1を、全てゼロなら0を返す |
+| `f32 distance|x:T, y:T|` | ２つのベクトル、xとyの間の距離を求める |
+| `f32 dot|x:T, y:T|` | xとyの内積を求める |
+| `f32v3 cross|x:f32v3, y:f32v3|` | xとyの外積を求める |
+| `f32 length|x: T|` | ベクトルxの長さを求める |
+| `T normalize|x: T|` | ベクトルxを長さ1にノーマライズした同じ向きのベクトルを返す(`x/length(x)`と同じ) |
 
 ## スカラーとベクトルの両方を使える関数
 
@@ -351,9 +356,9 @@ atan2は引数が２つなのでベクトライズは出来ず、Tだけサポ�
 
 | API | 説明 |
 | ---- | ---- |
-| `T mix(x:T, y:T, a:T)` | xとyの線形補間、`x+(y-x)*a` を返す。aは0.0から1.0までの範囲でなくてはいけない。|
-| `T step(edge:T, x:T)` | xがedgeより小さいと0.0、edge以上だと1.0を返す |
-| `T smoothstep(edge0:T, edge1:T, x:T)` | xがedge0より小さいと0.0、edge1以上だと1.0を返し、間はスムースになるような補完を行う（後述）|
+| `T mix|x:T, y:T, a:T|` | xとyの線形補間、`x+(y-x)*a` を返す。aは0.0から1.0までの範囲でなくてはいけない。|
+| `T step|edge:T, x:T|` | xがedgeより小さいと0.0、edge以上だと1.0を返す |
+| `T smoothstep|edge0:T, edge1:T, x:T|` | xがedge0より小さいと0.0、edge1以上だと1.0を返し、間はスムースになるような補完を行う（後述）|
 
 smoothstepはシェーダーで一般的な関数です。
 smoothstepの補完は以下の計算式で行います。
@@ -371,8 +376,8 @@ t * t * (3.0 – 2.0 * t);
 
 どちらもベクトライズは出来ません。
 
-- `i32v3 vec3(x:i32)` または `f32v3 vec3(x:f32)`
-- `i32v4 vec4(x:i32)` または `f32v4 vec4(x:f32)`
+- `i32v3 vec3|x:i32|` または `f32v3 vec3|x:f32|`
+- `i32v4 vec4|x:i32|` または `f32v4 vec4|x:f32|`
 
 **例**
 
@@ -409,11 +414,11 @@ clampはスカラーとベクトルが使えて、さらにi32とf32のどちら
 
 厳密に書けば、以下の4通りがあるという事です。
 
-```swift
-f32 clamp(x:f32, minVal:f32, maxVal:f32)
-i32 clamp(x:i32, minVal:i32, maxVal:i32)
-T clamp(x:T, minVal:T, maxVal:T)
-Ti clamp(x:Ti, minVal:Ti, maxVal:Ti)
+```rust
+f32 clamp|x:f32, minVal:f32, maxVal:f32|
+i32 clamp|x:i32, minVal:i32, maxVal:i32|
+T clamp|x:T, minVal:T, maxVal:T|
+Ti clamp|x:Ti, minVal:Ti, maxVal:Ti|
 ```
 
 clampはxがminValより小さければminValを、maxValより大きければmaxValを、それ以外はxの値を返します。
@@ -452,9 +457,9 @@ max([1, 2, 3], [3, 2, 1], [1, 3, 2])
 
 これまでの書き方だと、
 
-```swift
-T max(x1:T, x2:T, ...)
-T min(x1:T, x2:T, ...)
+```rust
+T max|x1:T, x2:T, ...|
+T min|x1:T, x2:T, ...|
 ```
 
 さらにTはTiも使えて、f32とi32も使える、というものになります。
