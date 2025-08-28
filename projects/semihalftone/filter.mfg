@@ -1,0 +1,30 @@
+
+@title $TITLE
+
+# similar to:
+# https://www.shadertoy.com/view/XslGRM
+
+@param_f32 THRESHOLD(SLIDER, label=$LABEL_THRESHOLD, init=0.6, min=0.0, max=1.0)
+@param_f32 ANGLE(DIRECTION, init=1.273)
+@param_i32 SIZE(SLIDER, label=$LABEL_SIZE, init=6, min=1, max=30)
+
+let PI = 3.1415926
+
+fn sincos_pat |sh: f32v2, pscale:f32 | {
+  let dir = [cos(ANGLE), sin(ANGLE)]
+  let ortho = [dir.y, -dir.x]
+  0.5 + 0.25 * cos(dot(sh, dir) * pscale) + 0.25 * cos(dot(sh, ortho) * pscale)
+}
+
+
+def result_u8 |x, y| {
+   let coord = f32([x, y])/input_u8.extent(0)
+   let fsize = f32(SIZE)
+   let pscale =  2.0*PI / fsize * 680.0
+
+   let  src = input_u8(x, y) |> to_xyza(...).y
+
+   let pat = sincos_pat(coord, pscale)
+   let gray = smoothstep(THRESHOLD, 1.0, (pat*THRESHOLD+src))
+   [*vec3(gray), 1.0] |> lbgra_to_u8color(...)
+}
