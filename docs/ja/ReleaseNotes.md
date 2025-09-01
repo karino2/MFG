@@ -1,6 +1,6 @@
 # MFGStudio Release Notes
 
-更新履歴です。
+更新履歴です。[MFG Studioのダウンロードページ](https://modernfilterlanguageforgpu.org/download/)
 
 ## v1.0.04 2025-09-01
 

@@ -1,6 +1,6 @@
 # MFGStudio Release Notes
 
-Update history.
+Update history. [MFG Studio download page](https://modernfilterlanguageforgpu.org/download/)
 
 ## v1.0.04 2025-09-01
 
