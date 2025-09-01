@@ -54,7 +54,7 @@ Binary operations include the following, starting with the lowest priority:
 Only the powers are right-associative.
 
 Also, since `^` is used as a power, exclusive OR is a function rather than a binomial operation. 
-It's a function called `xor`. For more information, see [Built-in Functions](BultinFunctions.md).
+It's a function called `xor`. For more information, see [Built-in Functions](BuiltinFunctions.md).
 
 ### Vectorization of Binary Operations
 
