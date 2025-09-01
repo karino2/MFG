@@ -41,10 +41,10 @@ Binary operations include the following, starting with the lowest priority:
 
 | Operator | Description |
 | ---- | ---- |
-| `||` | Logical OR |
+| `\|\|` | Logical OR |
 | `&&` | Logical AND |
-| `==`, `!=`, `<` `<=` `>` `>=` `|>` | Comparison, Pipe Operations |
-| `|` | Bit OR |
+| `==`, `!=`, `<` `<=` `>` `>=` `\|>` | Comparison, Pipe Operations |
+| `\|` | Bit OR |
 | `&` | Bit AND |
 | `>>`, `<<` | Shift operator |
 | `+`, `-` | Addition, Subtraction |
@@ -52,6 +52,9 @@ Binary operations include the following, starting with the lowest priority:
 | `^` | Powers (right associative) |
 
 Only the powers are right-associative.
+
+Also, since `^` is used as a power, exclusive OR is a function rather than a binomial operation. 
+It's a function called `xor`. For more information, see [Built-in Functions](BultinFunctions.md).
 
 ### Vectorization of Binary Operations
 

@@ -2,6 +2,12 @@
 
 Update history.
 
+## v1.0.04 2025-09-01
+
+- Fixed a bug where a compile error occurred when touching global variables in user-defined functions 
+- xor support 
+- Unsigned hex literals
+
 ## v1.0.03 2025-08-18
 
 - Fixed random number seeds in preview and execution to make the same value 

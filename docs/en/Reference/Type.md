@@ -42,6 +42,8 @@ Any number of sizes is considered to be i32, and if you write 123 when requestin
 
 Decimal literals such as `123.0` are f32.
 
+There are also hexadecimal literals, starting with 0x. `0xff` etc. This is also an i32.
+
 There is also a literal for u32, which has a trailing u like `123u`,
 but it is not recommended to use it very often.
 Try to calculate integers with i32 as much as possible.

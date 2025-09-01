@@ -10,4 +10,4 @@ Under construction.
 - [Sampler](Sampler.md)
 - [trans and reduce](TransReduce.md)
 - [Attributes and Input Widgets](AttrWidget.md)
-- Bultin Functions (BuiltinFunctions.md)
+- User Defined and Bultin Functions (BuiltinFunctions.md)
