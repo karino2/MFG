@@ -2,6 +2,10 @@
 
 Update history. [MFG Studio download page](https://modernfilterlanguageforgpu.org/download/)
 
+## v1.0.05 2025-09-04
+
+- Fixed an issue where the trial version check that I forgot to delete stopped running after 8/31
+
 ## v1.0.04 2025-09-01
 
 - Fixed a bug where a compile error occurred when touching global variables in user-defined functions 
