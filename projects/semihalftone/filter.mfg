@@ -22,9 +22,9 @@ def result_u8 |x, y| {
    let fsize = f32(SIZE)
    let pscale =  2.0*PI / fsize * 680.0
 
-   let  src = input_u8(x, y) |> to_xyza(...).y
+   let  [src, org_a] = input_u8(x, y) |> to_xyza(...).yw
 
    let pat = sincos_pat(coord, pscale)
    let gray = smoothstep(THRESHOLD, 1.0, (pat*THRESHOLD+src))
-   [*vec3(gray), 1.0] |> lbgra_to_u8color(...)
+   [*vec3(gray), org_a] |> lbgra_to_u8color(...)
 }
