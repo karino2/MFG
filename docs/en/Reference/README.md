@@ -1,7 +1,6 @@
 # Reference
 
-Under construction.
-[Japanese Version](../../ja/Reference/README.md) is already available, you can use it with machine translation for a while. 
+[Japanese Version](../../ja/Reference/README.md).
 
 - [Tensor](Tensor.md)
 - [Type](Type.md)
