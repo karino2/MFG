@@ -53,6 +53,7 @@ MEPはMFG Enhanced Proposalの略。PythonのPEPなどのMFG版。
 ### ステータス、Proposed
 
 - [MEP 23: result_u8などをresultに](MEP/23.md)
+- [MEP 27: パイプライン演算子だけは次の行に書ける例外とするルール](MEP/27.md)
 
 ### ステータス、Declined
 
