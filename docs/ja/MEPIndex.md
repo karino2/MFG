@@ -50,10 +50,14 @@ MEPはMFG Enhanced Proposalの略。PythonのPEPなどのMFG版。
 
 - [MEP 26: ユーザー定義関数](MEP/26.md)
 
+**v1.0.06**
+
+- [MEP 27: パイプライン演算子だけは次の行に書ける例外とするルール](MEP/27.md)
+
+
 ### ステータス、Proposed
 
 - [MEP 23: result_u8などをresultに](MEP/23.md)
-- [MEP 27: パイプライン演算子だけは次の行に書ける例外とするルール](MEP/27.md)
 
 ### ステータス、Declined
 
