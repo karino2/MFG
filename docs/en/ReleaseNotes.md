@@ -2,26 +2,38 @@
 
 Update history. [MFG Studio download page](https://modernfilterlanguageforgpu.org/download/)
 
+## v1.0.06 2025-09-22
+
+- Implement cancellation during long running times
+- Implementing the `@version` attribute
+- If the beginning of the next line is a pipeline operator, it is considered a continuation line (MEP 27)
+- Bugfix
+  - Fixed a bug where variable name conflicts could occur when destructuring lets in user-defined functions
+  - Fixed the vectorization process for `!`.
+  - Fixed a compile error when `else` was a non-vector tuple, make itthe same constraint as ifel
+  - Fixed a bug where inline functions would crash when the number of inline functions reached a certain level.
+  - Fixed crash because of missing catch of exception of compilation errors in HLSL and Metal layers.
+
 ## v1.0.05 2025-09-04
 
 - Fixed an issue where the trial version check that I forgot to delete stopped running after 8/31
 
 ## v1.0.04 2025-09-01
 
-- Fixed a bug where a compile error occurred when touching global variables in user-defined functions 
-- xor support 
+- Fixed a bug where a compile error occurred when touching global variables in user-defined functions
+- xor support
 - Unsigned hex literals
 
 ## v1.0.03 2025-08-18
 
-- Fixed random number seeds in preview and execution to make the same value 
+- Fixed random number seeds in preview and execution to make the same value
 - Adding a user-defined function
 
 ## v1.0.02 2025-07-28
 
-- Adding `@param_f32v4` and COLOR_PICKER (see perlin noise in examples) 
-- Introducing `@param_f32v2` to deprecated `@param_pos` 
-- Supports textures of png images 
+- Adding `@param_f32v4` and COLOR_PICKER (see perlin noise in examples)
+- Introducing `@param_f32v2` to deprecated `@param_pos`
+- Supports textures of png images
 - Supports strings.json and internationalization using it. (Document is not yet ready.)
 - Improved error message for unexpected token parsing errors
 
