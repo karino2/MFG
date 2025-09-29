@@ -8,7 +8,7 @@ colorful_baloon.mdzに対してサイズ30でMFGStudioの出力で計測。
 
 ## ガウスぼかし、1パス版
 
-```swift
+```mfg
 @title "ガウスフィルタ 1pass"
 
 @param_i32 ar(SLIDER, label="サイズ", min=2, max=100, init=5)
@@ -48,7 +48,7 @@ Total: 10327 [ms]
 
 ## ガウスフィルタ、2パス版
 
-```swift
+```mfg
 @title "ガウスフィルタ、2パス"
 
 @param_i32 ar(SLIDER, label="サイズ", min=2, max=300, init=5)

@@ -6,7 +6,7 @@
 
 テンソルのロード方法をカスタマイズする機能として、サンプラーというものがあります。
 
-```swift
+```mfg
 let finput = sampler<input_u8>(address=.ClampToEdge, coord=.NormalizedLinear)
 ```
 
@@ -50,7 +50,7 @@ Enumを引数で使う時は`.`で始める事に注意。
 
 ClampToBorderValueの時だけborder_valueという追加の引数が必要になります。
 
-```swift
+```mfg
 let extend = sampler<input_u8>(address=.ClampToBorderValue, border_value=u8[0, 0, 0, 0])
 ```
 
@@ -69,7 +69,7 @@ f32にnormalizeされた座標では、間を指定した時の挙動により�
 
 NormalizedXXX系を指定すると、以下のように引数をf32で指定するようになります。
 
-```swift
+```mfg
 let finput = sampler<input_u8>(coord=.NormalizedLinear)
 finput(0.3, 0.7)
 ```
@@ -77,7 +77,7 @@ finput(0.3, 0.7)
 テンソル定義で現在の座標をこのf32にnormalizeされた座標に変換するためには、
 テンソルのto_ncoordが使えます。
 
-```swift
+```mfg
 let finput = sampler<input_u8>(coord=.NormalizedLinear)
 
 def result_u8 |x, y| {

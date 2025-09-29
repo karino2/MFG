@@ -19,7 +19,7 @@ In MFG, you use let to define constant variables.
 
 For example, you can define a variable with a let as follows:
 
-```swift
+```mfg
 let a = 123
 ```
 
@@ -28,7 +28,7 @@ Let defines a local variable that cannot be changed. In MFG, variables cannot be
 
 Using variables, you can write the filter I did last time, filling everything in red, as follows:
 
-```swift
+```mfg
 @title "All Red Filter 2"
 
 def result_u8 |x, y| {
@@ -56,7 +56,7 @@ There is no "return" operation.
 Note that r, g, and b are 8 bit values, so you can invert them by subtracting them from 0xff. 
 If you do the following, you will be filling it with 0x00FFFF in RGB, which means light blue.
 
-```swift
+```mfg
 @title "Fill with red inverted color"
 
 def result_u8 |x, y| {
@@ -76,7 +76,7 @@ Here, let's create a negative-positive inversion filter as a filter that require
 
 The script looks like this:
 
-```swift
+```mfg
 @title "Negative Positive Inversion"
 
 def result_u8 |x, y| {
@@ -99,7 +99,7 @@ BGRA values ​​can be obtained as vectors of unsigned 8-bit integers by funct
 
 For example, if you do the following, you can get the color of the pixel (32, 45).
 
-```swift
+```mfg
 input_u8(32, 45)
 ```
 
@@ -118,7 +118,7 @@ input_u8 treats the inputs as 8-bit tuples in the order B, G, R, A. This can be 
 
 Note that you can place `_` for any elements that are not used. For example, if you want `a` to be always 255, do the following:
 
-```swift
+```mfg
 def result_u8 |x, y| {
   let [b, g, r, _] = input_u8(x, y)
   u8[255-b, 255-g, 255-r, 255]
@@ -132,7 +132,7 @@ For the new ones that appear from the outside of bottom right, we decide to use 
 
 First, I'll write about the most primitive method of handwriting. It looks like this:
 
-```swift
+```mfg
 @title "Move 5px to top left, handwritten version"
 
 def result |x, y| {
@@ -150,7 +150,7 @@ Also the right hand side of first `let` is tuple, which is also new.
 
 The first let is as follows:
 
-```swift
+```mfg
   let [newx, newy] = [x+5, y+5]
 ```
 
@@ -158,7 +158,7 @@ This left side is the destructuring of the tuple as previous. On the right side,
 
 This will be the same code as below:
 
-```swift
+```mfg
 let newx = x+5
 let newy = y+5
 ```
@@ -172,7 +172,7 @@ If dim is 0, it is the width, and if 1, it is the height.
 
 So, for example, if you want to make the whole thing red gradation, you can write it as follows:
 
-```swift
+```mfg
 @title "Red gradation"
 
 def result_u8 |x, y| {
@@ -195,7 +195,7 @@ It's similar to R and Lisp. More precisely, it's a special function with shortcu
 
 The syntax is as follows:
 
-```swift
+```mfg
 ifel( COND, TRUE_VALUE, FALSE_VALUE )
 ```
 
@@ -203,7 +203,7 @@ If COND is true, TRUE_VALUE is returned, and if false, FALSE_VALUE is returned.
 
 The first example script is used as follows:
 
-```swift
+```mfg
   ifel(newx < input_u8.extent(0) && newy < input_u8.extent(1),
        input_u8(newx, newy),
        u8[0, 0, 0, 0])
@@ -220,7 +220,7 @@ There is a functionallity called ClampToBorderValue, which considers the color o
 Using this, the filter that moves to the top left can be fixed as follows:
 
 
-```swift
+```mfg
 @title "5px move to top left, ClampToBorderValue version"
 
 let extended = sampler<input_u8>(address=.ClampToBorderValue, border_value=u8[0, 0, 0, 0] )
@@ -235,7 +235,7 @@ Normally I would write this, but this is too easy for a tutorial.
 
 The sampler statement is as follows:
 
-```swift
+```mfg
 let extended = sampler<input_u8>(address=.ClampToBorderValue, border_value=u8[0, 0, 0, 0] )
 ```
 
@@ -253,13 +253,13 @@ This means that everything outside of range returns `u8[0, 0, 0, 0]`.
 
 If you want to always make it red, then it looks like this:
 
-```swift
+```mfg
 let extended = sampler<input_u8>(address=.ClampToBorderValue, border_value=u8[0, 0, 0xff, 0xff] )
 ```
 
 In addition to the commonly used address mode, ClampToBorderValue, there is also a ClampToEdge, which considers the edge value to continue as is.
 
-```swift
+```mfg
 let extended = sampler<input_u8>(address=.ClampToEdge)
 ```
 

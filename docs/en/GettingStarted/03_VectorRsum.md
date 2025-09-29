@@ -28,7 +28,7 @@ This can be achieved using the sampler, which I mentioned a little bit last time
 
 Here, the code below treat border as such:
 
-```swift
+```mfg
 let inputEx = sampler<input_u8>(address=.ClampToEdge)
 ```
 
@@ -38,7 +38,7 @@ This sampler treats pixels beyond border as edge color (`.ClampToEdge`).
 
 If you do the same processing as last time, it will look like following, but this will not work as it will exceed 8 bits.
 
-```swift
+```mfg
 @title "Horizontal blur trial(overflow)"
 
 let inputEx = sampler<input_u8>(address=.ClampToEdge)
@@ -55,7 +55,7 @@ def result_u8 |x, y| {
 
 In conclusion, the correct answer is to enclose the i32 as follows:
 
-```swift
+```mfg
   let [bm1, gm1, rm1, am1] = i32(inputEx(x-1, y))
   let [b0, g0, r0, a0] = i32(inputEx(x, y))
   let [b1, g1, r1, a1] = i32(inputEx(x+1, y))
@@ -74,7 +74,7 @@ But this time I will simply average without thinking about it.
 
 When you create variables like following:
 
-```swift
+```mfg
   let [bm1, gm1, rm1, am1] = inputEx(x-1, y)
 ```
 
@@ -82,7 +82,7 @@ The type of these variables are `u8`, which means unsigned 8bit integer.
 
 If you add up three variables like following:
 
-```swift
+```mfg
 bm1+b0+b1
 ```
 
@@ -91,7 +91,7 @@ The result might be overflow.
 So before doing the calculation, you need to cast it to i32.
 Cast can be done with `i32()`. Specifically, I will write it as follows:
 
-```swift
+```mfg
   let [bm1, gm1, rm1, am1] = i32(inputEx(x-1, y))
   let [b0, g0, r0, a0] = i32(inputEx(x, y))
   let [b1, g1, r1, a1] = i32(inputEx(x+1, y))
@@ -121,14 +121,14 @@ Therefore, it is better code which put the tuple itself in a variable.
 
 For example, following code:
 
-```swift
+```mfg
   let [bm1, gm1, rm1, am1] = i32(inputEx(x-1, y))
 ```
 
 can be change to use one variable only.
 
 
-```swift
+```mfg
   let colm1 = i32(inputEx(x-1, y))
 ```
 
@@ -136,13 +136,13 @@ This is a tuple of four elements.
 
 To access each element, you can use `destructuring` as follows,
 
-```swift
+```mfg
   let [bm1, gm1, rm1, am1] = colm1
 ```
 
 Or you can use swizzle operator to access elements.
 
-```swift
+```mfg
   let bm1 = colm1.x
   let gm1 = colm1.y
   let rm1 = colm1.z
@@ -151,13 +151,13 @@ Or you can use swizzle operator to access elements.
 
 The swizzle operator can also access multiple elements as tuple.
 
-```swift
+```mfg
   let [bm1, am1] = colm1.xw
 ```
 
 Using this you can write as follows:
 
-```swift
+```mfg
 def result_u8 |x, y| {
   let colm1 = i32(inputEx(x-1, y))
   let col0 = i32(inputEx(x, y))
@@ -175,13 +175,13 @@ It is often the same calculations are performed for each of the elements x, y, z
 
 For example, if you add two elements to create a new tuple, as follows:
 
-```swift
+```mfg
   let res = [colm1.x+col0.x, colm1.y+col0.y, colm1.z+col0.z, colm1.w+col0.w]
 ```
 
 You can do it at once like following:
 
-```swift
+```mfg
   let res = colm1+col0
 ```
 
@@ -190,7 +190,7 @@ This is called "Vectorized Operations".
 In addition to `+`, this can be done using functions that support addition, subtraction, multiplication, and division, some vectorized supported function, or ifel.
 Using this, the program above can be written in a compilation as follows:
 
-```swift
+```mfg
 @title "Horizontal Blur"
 
 let inputEx = sampler<input_u8>(address=.ClampToEdge)
@@ -215,7 +215,7 @@ A similar feature in MFG is called rsum.
 
 Using this you can write as follows:
 
-```swift
+```mfg
 def result_u8 |x, y| {
   let col = rsum(0..<3) |i| {
     i32(inputEx(x-2+i, y))
@@ -232,7 +232,7 @@ A new term called block has emerged, so let's take a closer look.
 
 rsum takes a range in the argument. Supported dimensions are: one dimension and two dimensions.
 
-```swift
+```mfg
 # 1D
 rsum (0..<3) |i| { i+2 }
 
@@ -245,7 +245,7 @@ If you write `0..<3` etc., the range is considered to be 0, 1, and 2 in order. P
 Runs a block to the specified range.
 The blocks are in the following form:
 
-```swift
+```mfg
 |i| {
   # Write expression here
 }
@@ -255,7 +255,7 @@ i is the block's formal argument, and in the case of rsum, numbers are comming i
 
 In the case of 2D, these are two.
 
-```swift
+```mfg
 |i, j| {
   # Write expression here
 }
@@ -273,7 +273,7 @@ This is designed in line with the actual GPU mechanism.
 Incidentally, the range does not need to be from 0.
 You can also start with -1 as follows:
 
-```swift
+```mfg
   let col = rsum(-1..<2) |i| {
     i32(inputEx(x+i, y))
   }
@@ -285,7 +285,7 @@ Note that the ending specification is 2 even though the actual value range is fr
 
 Using the above, we will also perform calculations to calculate the sum in the vertical direction.
 
-```swift
+```mfg
 @title "Simple Blur"
 
 let inputEx = sampler<input_u8>(address=.ClampToEdge)

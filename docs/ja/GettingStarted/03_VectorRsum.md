@@ -29,7 +29,7 @@
 
 ここで、最初の以下の部分は、前回やったサンプラーというもので、
 
-```swift
+```mfg
 let inputEx = sampler<input_u8>(address=.ClampToEdge)
 ```
 
@@ -39,7 +39,7 @@ let inputEx = sampler<input_u8>(address=.ClampToEdge)
 
 前回と同じような処理をすると、以下のようになりそうですが、これは8ビットを超えてしまうのでうまくいきません。
 
-```swift
+```mfg
 @title "水平ぼかし（オーバーフロー）"
 
 let inputEx = sampler<input_u8>(address=.ClampToEdge)
@@ -56,7 +56,7 @@ def result_u8 |x, y| {
 
 結論としてはi32で以下のように囲むのが正解となります。
 
-```swift
+```mfg
   let [bm1, gm1, rm1, am1] = i32(inputEx(x-1, y))
   let [b0, g0, r0, a0] = i32(inputEx(x, y))
   let [b1, g1, r1, a1] = i32(inputEx(x+1, y))
@@ -73,14 +73,14 @@ def result_u8 |x, y| {
 
 以下のように作られた変数は、
 
-```swift
+```mfg
   let [bm1, gm1, rm1, am1] = inputEx(x-1, y)
 ```
 
 u8型、つまり符号無し8bit整数となります。
 これを以下のように3つ足すと、
 
-```swift
+```mfg
 bm1+b0+b1
 ```
 
@@ -88,7 +88,7 @@ bm1+b0+b1
 
 そこで計算の前にi32にキャストして計算する必要があります。キャストは`i32()`で行えます。具体的には以下のように書きます。
 
-```swift
+```mfg
   let [bm1, gm1, rm1, am1] = i32(inputEx(x-1, y))
   let [b0, g0, r0, a0] = i32(inputEx(x, y))
   let [b1, g1, r1, a1] = i32(inputEx(x+1, y))
@@ -118,26 +118,26 @@ GPUは基本的にはレジスタが32bitなので、整数はi32、浮動小数
 
 例えば以下を、
 
-```swift
+```mfg
   let [bm1, gm1, rm1, am1] = i32(inputEx(x-1, y))
 ```
 
 以下のように一つの変数に入れられます。
 
-```swift
+```mfg
   let colm1 = i32(inputEx(x-1, y))
 ```
 
 これは要素が4つのタプルとなります。
 それぞれの要素は以下のようにdestructuringするか、
 
-```swift
+```mfg
   let [bm1, gm1, rm1, am1] = colm1
 ```
 
 またはswizzle演算子を使ってアクセス出来ます。
 
-```swift
+```mfg
   let bm1 = colm1.x
   let gm1 = colm1.y
   let rm1 = colm1.z
@@ -146,13 +146,13 @@ GPUは基本的にはレジスタが32bitなので、整数はi32、浮動小数
 
 swizzle演算子は複数の要素を並べたベクトルにアクセスする事も出来ます。
 
-```swift
+```mfg
   let [bm1, am1] = colm1.xw
 ```
 
 これを使うと、以下のように書けます。
 
-```swift
+```mfg
 def result_u8 |x, y| {
   let colm1 = i32(inputEx(x-1, y))
   let col0 = i32(inputEx(x, y))
@@ -170,13 +170,13 @@ x, y, z, wのそれぞれの要素について同じ計算を行う事が良く�
 
 例えば、以下のように、２つの要素をそれぞれ足して新しいタプルを作る場合、
 
-```swift
+```mfg
   let res = [colm1.x+col0.x, colm1.y+col0.y, colm1.z+col0.z, colm1.w+col0.w]
 ```
 
 以下のようにまとめて行う事が出来ます。
 
-```swift
+```mfg
   let res = colm1+col0
 ```
 
@@ -184,7 +184,7 @@ x, y, z, wのそれぞれの要素について同じ計算を行う事が良く�
 
 これを用いると、先程のプログラムは、以下のようにまとめて書けます。
 
-```swift
+```mfg
 @title "水平ぼかし"
 
 let inputEx = sampler<input_u8>(address=.ClampToEdge)
@@ -207,7 +207,7 @@ MFGでも似たような処理として、rsumというものがあります。
 
 これを使うと以下のように書けます。
 
-```swift
+```mfg
 def result_u8 |x, y| {
   let col = rsum(0..<3) |i| {    
     i32(inputEx(x-2+i, y))
@@ -224,7 +224,7 @@ rsumはreduce sumの略で、指定された範囲ブロックを実行し、そ
 
 rsumは引数に範囲を取ります。範囲は1次元、2次元の二通りがあります。
 
-```swift
+```mfg
 # 一次元
 rsum (0..<3) |i| { i+2 }
 
@@ -237,7 +237,7 @@ rsum(0..<3, 0..<5) |i, j| { i+j+5 }
 指定された範囲を、ブロックを実行します。
 ブロックは以下の形です。
 
-```swift
+```mfg
 |i| { 
   # ここに式を書く
 }
@@ -247,7 +247,7 @@ iはブロックの仮引数で、rsumの場合は順番に数字が入ります
 
 ２次元の場合はこれが２つになります。
 
-```swift
+```mfg
 |i, j| {
   # ここに式を書く
 }
@@ -265,7 +265,7 @@ rsumは普通の言語のループに近いものですが、いくつか制約�
 ちなみに、範囲は0からである必要はありません。
 以下のように-1から始める事も出来ます。
 
-```swift
+```mfg
   let col = rsum(-1..<2) |i| {    
     i32(inputEx(x+i, y))
   }
@@ -277,7 +277,7 @@ rsumは普通の言語のループに近いものですが、いくつか制約�
 
 以上を使って、垂直方向にも和を求める計算を行ってみます。
 
-```swift
+```mfg
 @title "単純なぼかし"
 
 let inputEx = sampler<input_u8>(address=.ClampToEdge)

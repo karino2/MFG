@@ -53,7 +53,7 @@ GPU実装のために最大のサイズを決めてしまう事にします。
 
 ガンマ補正をリニアライズした色をLのsuffixで表すと、x, yの点の色は
 
-```swift
+```mfg
    let col0 = to_ncolor(input_u8(x, y))
    let col0L = [*gamma2linear(col0.xyz), col0.w]
 ```
@@ -61,7 +61,7 @@ GPU実装のために最大のサイズを決めてしまう事にします。
 のように表せる。
 これを用いると、以下のようになる。
 
-```swift
+```mfg
 let DIFF_THRESHOLD= 1.0/12.0 # これ以上RGB距離があればedgeとみなす。
 
 # u8[bottom, right, 0, 0]を返す。

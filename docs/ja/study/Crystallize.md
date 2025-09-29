@@ -23,7 +23,7 @@
 
 [ウォークスルー](../Walkthrough.md)のパーリンノイズと似たような処理で目的の格子は作れそうか？
 
-```swift
+```mfg
 @param_i32 GRID_INTERVAL(SLIDER, label="グリッドサイズ", min=10, max=256, init=50)
 
 let [GRID_WIDTH, GRID_HEIGHT] = (input_u8.extent() -1)/GRID_INTERVAL + 1
@@ -36,7 +36,7 @@ def gridOffset |x, y|{
 
 とりあえずこれをデバッグ表示してみよう。
 
-```swift
+```mfg
 @title "クリスタライズフィルタ"
 @param_i32 GRID_INTERVAL(SLIDER, label="グリッドサイズ", min=10, max=256, init=50)
 
@@ -76,7 +76,7 @@ def result_u8 |x, y| {
 ランダムさは格子が大きくなると大きすぎる気がするな。
 ランダムさの強さも選べるようにしておくか。
 
-```swift
+```mfg
 @param_f32 STRENGTH(SLIDER, label="ランダムの強さ", min=0.1, max=1.0, init=1.0)
 
 @bounds(GRID_WIDTH, GRID_HEIGHT)
@@ -106,7 +106,7 @@ def gridOffset |x, y|{
 ほとんどは先程の母点を表示するプログラムと同じようなアルゴリズムでできそうだな。
 最近接の格子座標のx, yを返すか。
 
-```swift
+```mfg
 @bounds(input_u8.extent(0), input_u8.extent(1))
 def nn |x, y| {
    let go_xy = [x, y]/GRID_INTERVAL # グリッド座標のx, y、左上
@@ -127,7 +127,7 @@ def nn |x, y| {
 結果をデバッグ表示してみる。本当はいい感じの色に色分けしたいところだが、単なる動作確認なので色が違えばいいだろう。
 母点もついでに表示しておく方がいいだろう、という事で元のコードに追加する感じにする。
 
-```swift
+```mfg
 def result_u8 |x, y| {
   let g_xy0 = [x, y]/GRID_INTERVAL # グリッド座標のx, y、左上
   let gs_xy0 = g_xy0 * GRID_INTERVAL # 左上のグリッドの座標をresult_u8スペースに直したもの
@@ -168,7 +168,7 @@ def result_u8 |x, y| {
 母点がそれぞれ何かの色を表すようになるので、前回の色分けを、まずはgridごとの色にしてみる。
 
 
-```swift
+```mfg
 @bounds(GRID_WIDTH, GRID_HEIGHT)
 def gridCol |x, y|{
   let b = (x*123456+y*7891234)/255
@@ -180,7 +180,7 @@ def gridCol |x, y|{
 
 これでresult_u8の最後を以下にする。
 
-```swift
+```mfg
   # ここまで上の母点表示のコード。
   # ここから近接点による色分け
 
@@ -207,7 +207,7 @@ def gridCol |x, y|{
 各母点について、この外側の破線の範囲をモザイクの計算をするように平均を取ればいいか。
 スクリーン座標系としては、-1.5 gridIntervalから +1.5 gridIntervalの範囲を計算すればいいかな。
 
-```swift
+```mfg
 let inputEx = sampler<input_u8>(address=.ClampToEdge)
 
 @bounds(GRID_WIDTH, GRID_HEIGHT)
@@ -238,7 +238,7 @@ def gridCol |x, y|{
 
 最後に全体のスクリプトを載せておく。
 
-```swift
+```mfg
 @title "クリスタライズフィルタ"
 
 @param_i32 GRID_INTERVAL(SLIDER, label="グリッドサイズ", min=10, max=256, init=50)

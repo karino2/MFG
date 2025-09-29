@@ -18,7 +18,7 @@
 
 コードとしては以下のようになります。
 
-```swift
+```mfg
 let inputEx = sampler<input_u8>(address=.ClampToEdge)
 
 @bounds(input_u8.extent(0), input_u8.extent(1))
@@ -35,7 +35,7 @@ sumColはi32の4要素のベクトルとなるので、xblurもi32の4要素の�
 
 なお、input_u8.extentを二回書く代わりに、以下のようにも出来ます。
 
-```swift
+```mfg
 
 let inputEx = sampler<input_u8>(address=.ClampToEdge)
 
@@ -56,7 +56,7 @@ def xblur |x, y| {
 
 まずテンソルの定義は、幅と高さを指定する `@bounds` で始まります。
 
-```swift
+```mfg
 @bounds(W, H)
 def xblur 
 ```
@@ -66,7 +66,7 @@ def xblur
 テンソルの定義はほとんどresult_u8と同様ですが、結果の型は自由に選べます。
 コードとしては以下のようになっています。
 
-```swift
+```mfg
 def xblur |x, y| {
   let sumCol = rsum(0..<3) |rx| {
     i32(inputEx(x+rx-1, y))
@@ -92,7 +92,7 @@ xblurは内部的にはグローバルなDRAMのメモリが確保されて、�
 
 xblurを足し合わせるのに境界の外をClampToEdgeにしておくと良い事に注意すれば、以下のようになります。
 
-```swift
+```mfg
 @title "中間バッファを使ったぼかし"
 
 let inputEx = sampler<input_u8>(address=.ClampToEdge)
@@ -130,7 +130,7 @@ def result_u8 |x, y| {
 スライダーウィジェットを使うには、`@param_i32`というものに`SLIDER`を指定します。
 以下のように使います。
 
-```swift
+```mfg
 @param_i32 BLUR_WIDTH(SLIDER, label="サイズ", min=2, max=100, init=5)
 ```
 
@@ -141,7 +141,7 @@ min, max, initなどいろいろ指定出来ますが、まずはそのまま使
 
 結果だけ書くと以下のようになります。
 
-```swift
+```mfg
 @title "中間バッファを使ったぼかし"
 
 @param_i32 BLUR_WIDTH(SLIDER, label="サイズ", min=2, max=100, init=5)

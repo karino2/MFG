@@ -10,7 +10,7 @@
 
 ユーザー定義関数は、`fn`というキーワードで始めて、仮引数に型指定を書いたブロックを続ける、というものになっています。
 
-```
+```mfg
 fn add2|x:i32, y:i32| {
   x+y
 }
@@ -21,7 +21,7 @@ fn add2|x:i32, y:i32| {
 
 こうして定義した関数は通常の組み込み関数と同様にカッコで呼び出す事で使う事が出来ます。
 
-```
+```mfg
 def result_u8 |x, y| {
   let res = add2(x, y)
   u8[res, 0, 0, 0]
@@ -31,7 +31,7 @@ def result_u8 |x, y| {
 使える引数はスカラーとベクトルのみです。タプルやテンソルは使えません。
 ベクトルは`f32v2`などの表記で表します。
 
-```
+```mfg
 fn adder |v:f32v2| {
   v.x+v.y
 }
@@ -50,14 +50,14 @@ fn adder |v:f32v2| {
 
 関数名の前に戻りの型を、引数の名前のあとにコロンで引数の型を書きます。
 
-```rust
+```mfg
 f32 sin |x:f32|
 ```
 
 これは、引数一つで型はf32、戻りはf32である事を表します。
 複数の引数はカンマで区切ります。
 
-```rust
+```mfg
 f32 clamp|x:f32, minVal:f32, maxVal:f32|
 ```
 
@@ -72,7 +72,7 @@ MFGでは、ベクトルまたはスカラーのどちらかをサポートす�
 
 例えばlengthなどが典型的なベクトルをサポートした関数です。
 
-```swift
+```mfg
 length([1.0, 2.0, 3.0])
 ```
 
@@ -88,7 +88,7 @@ lengthは引数が2から4要素までのベクトルしかサポートしてい
 
 ２つのベクトルの間の距離を求めるdistanceなどはその一例です。
 
-```swift
+```mfg
 
 # OK
 distance([1.0, 1.0], [2.0, 2.0])
@@ -107,7 +107,7 @@ distance([1.0, 1.0], [2.0, 2.0, 2.0])
 こういう言葉にするとややこしい事情を表記するために、
 f32のベクトルをTという表記で書き、同じTは同じ次元のベクトル、という事を表す事にします。
 
-```rust
+```mfg
 f32 distance|x:T, y:T|
 ```
 
@@ -127,7 +127,7 @@ R言語のベクトライズを知っている人なら、同じものと思っ�
 
 例えばsinは以下のような関数ですが、
 
-```rust
+```mfg
 f32 sin |x:f32|
 ```
 
@@ -135,13 +135,13 @@ f32 sin |x:f32|
 
 ベクトライズは、タプルを渡すとその個々の要素に関数を呼び出したかのように振る舞う機能です。
 
-```swift
+```mfg
 let res = sin([1.0, 2.0, 3.0, 4.0, 5.0])
 ```
 
 これはシンタックスシュガーで、内部では以下のように変換されます。
 
-```swift
+```mfg
 let res = [sin(1.0) sin(2.0), sin(3.0), sin(4.0), sin(5.0)]
 ```
 
@@ -170,21 +170,21 @@ MFGでは、必要な計算に応じてガンマ補正をしたりCIE XYZカラ�
 u8color以外は基本的にはアルファがなければf32v3、アルファがあればf32v4となります。
 `lbgr_to_xyz`などはf32v3を引数にf32v3を返します。
 
-```rust
+```mfg
 f32v3 lbgr_to_xyz |col:f32v3|
 u8v4 xyza_to_u8color |col:f32v4|
 ```
 
 また、元のカラー名がu8colorの時は省略されます。
 
-```rust
+```mfg
 f32v4 to_xyza |col:u8v4|
 f32v4 to_lbgra |col:u8v4|
 ```
 
 ### to_ncolor
 
-```rust
+```mfg
 f32v4 to_ncolor |col:u8v4|
 ```
 
@@ -193,13 +193,13 @@ f32は0.0〜1.0の範囲。
 
 **例**
 
-```swift
+```mfg
 let ncolor = to_ncolor(input_u8(x, y))
 ```
 
 ### to_u8color
 
-```rust
+```mfg
 u8v4 to_u8color| col:f32v4 |
 ```
 
@@ -210,7 +210,7 @@ to_u8colorは0.0〜1.0にclampしてu8にするので、1.0より大きな値は
 
 **例**
 
-```swift
+```mfg
 let u8_bgra = to_u8color(ncolor)
 ```
 
@@ -219,14 +219,14 @@ let u8_bgra = to_u8color(ncolor)
 
 ガンマ補正済みのリニア化されたBGRA関連の関数としては以下があります。(v1.0.01にて実装)
 
-```rust
+```mfg
 f32v4 to_lbgra|col:u8v4|
 u8v4 lbgra_to_u8color|col:f32v4|
 ```
 
 **例**
 
-```swift
+```mfg
 def result_u8 |x, y| {
   let lcol = to_lbgra(input_u8(x, y))
   lbgra_to_u8color(lcol)
@@ -237,7 +237,7 @@ def result_u8 |x, y| {
 
 以下の関数があります。(v1.0.01にて実装)
 
-```rust
+```mfg
 f32v4 to_xyza| col:u8v4 |
 u8v4 xyza_to_u8color| col:f32v4 |
 
@@ -248,7 +248,7 @@ f32v3 xyz_to_lbgr| col:f32v3 |
 
 **例**
 
-```swift
+```mfg
 def result_u8 |x, y| {
   let xcol = to_xyza(input_u8(x, y))
   xyza_to_u8color(xcol)
@@ -277,7 +277,7 @@ Tはf32のベクトル、またはスカラーです。
 
 典型的には以下のようなコードになります。
 
-```
+```mfg
 let bgra = to_ncolor(input_u8(x, y))
 let lin_bgr = gamma2linear(bgra.xyz)
 let alpha = bgra.w
@@ -290,7 +290,7 @@ to_u8color([*linear2gamma(lin_bgr), alpha])
 
 現在では以下のように書いて、直接lbgrを取得する方が簡単で同じ挙動になります。
 
-```
+```mfg
 let lbgra = to_lbgra(input_u8(x, y))
 let lin_bgr = lbgra.xyz
 let alpha = lbgra.w
@@ -307,14 +307,14 @@ lbgra_to_u8color(lbgra)
 
 この場合は4次元固定です。以下の２つは同じ意味になります。
 
-```swift
+```mfg
 let lcol1 = gamma2linearA(ncol)
 let lcol2 = [*gamma2linear(ncol.xyz), ncol.w]
 ```
 
 ### gamma2linear
 
-```rust
+```mfg
 # Tはf32のスカラーでもOK
 
 T gamma2linear| ncolor:T |
@@ -326,7 +326,7 @@ input_u8はガンマ補正された状態の値です。
 
 ### linear2gamma
 
-```rust
+```mfg
 # Tはf32のスカラーでもOK
 
 T linear2gamma| ncolor:T |
@@ -339,7 +339,7 @@ result_u8に戻す前にはガンマ補正された値にする必要がある�
 
 ## rand
 
-```rust
+```mfg
 f32 rand| |
 ```
 
@@ -407,7 +407,7 @@ atan2は引数が２つなのでベクトライズは出来ず、Tだけサポ�
 smoothstepはシェーダーで一般的な関数です。
 smoothstepの補完は以下の計算式で行います。
 
-```swift
+```mfg
 let t = clamp((x – edge0)/(edge1 –edge0), 0.0, 1.0)
 t * t * (3.0 – 2.0 * t);
 ```
@@ -425,7 +425,7 @@ t * t * (3.0 – 2.0 * t);
 
 **例**
 
-```swift
+```mfg
 let fvec = vec3(3.0)
 let ivec = vec4(1)
 ```
@@ -439,7 +439,7 @@ MFGではこれはサポートしていません。
 
 MFGではただのタプルが同じ意味なのでそちらを使ってください。
 
-```swift
+```mfg
 # let fvec = vec3(1.0, 2.0, 3.0) はサポートしてない。以下が同じ意味
 let fvec = [1.0, 2.0, 3.0]
 ```
@@ -458,7 +458,7 @@ clampはスカラーとベクトルが使えて、さらにi32とf32のどちら
 
 厳密に書けば、以下の4通りがあるという事です。
 
-```rust
+```mfg
 f32 clamp|x:f32, minVal:f32, maxVal:f32|
 i32 clamp|x:i32, minVal:i32, maxVal:i32|
 T clamp|x:T, minVal:T, maxVal:T|
@@ -473,14 +473,14 @@ minとmaxは可変長引数で個々の要素が全て同じ型のケースを�
 
 可変長引数というのは、以下のようになっているという事です。
 
-```swift
+```mfg
 min(1.5, 3.2, 2.0)
 max(3, 2, 5, 7)
 ```
 
 これは一見するとベクトライズのように見えますが、タプルでない所が違います。
 
-```swift
+```mfg
 # ベクトライズ。引数は1つだがタプルの要素数が任意
 sin([1.0, 2.0, 3.0, 4.0])
 
@@ -492,7 +492,7 @@ min(1.5, 3.2, 2.0, 4.0)
 
 だから、以下のような事が出来ます。
 
-```swift
+```mfg
 # 結果は[3, 3, 3]
 max([1, 2, 3], [3, 2, 1], [1, 3, 2])
 ```
@@ -501,7 +501,7 @@ max([1, 2, 3], [3, 2, 1], [1, 3, 2])
 
 これまでの書き方だと、
 
-```rust
+```mfg
 T max|x1:T, x2:T, ...|
 T min|x1:T, x2:T, ...|
 ```

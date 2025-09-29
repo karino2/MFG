@@ -55,7 +55,7 @@ You can think of it as calling the same function as the type name.
 
 For example:
 
-```swift
+```mfg
 let a = i32(12.0)
 ```
 
@@ -63,7 +63,7 @@ let a = i32(12.0)
 
 The cast operator is vectorized for the tuple.
 
-````swift
+````mfg
 let a = i32([12.0, 3u, 1])
 ````
 
@@ -84,7 +84,7 @@ Tuple elements can be of different types.
 
 Tuples are created by separating elements with brackets with commas.
 
-```swift
+```mfg
 let tup = [1, 12.0, 3u]
 ```
 
@@ -96,7 +96,7 @@ Access to tuple elements includes destructuring, swize operators, and index acce
 
 There is destructuring, which directly retrieves the contents of a tuple into a variable.
 
-```swift
+```mfg
 let tup = [1, 12.0, 3u]
 
 # Destructuring
@@ -107,7 +107,7 @@ In the example above, we can create variables a, b, and c. The types are i32, f3
 
 You can use an underscore for elements that you do not use. If you want to use only the first and third elements, you can see the following:
 
-```swift
+```mfg
 let [a, _, c] = tup
 ```
 
@@ -119,7 +119,7 @@ Tuples support the swizzle operator.
 - Only rvalues ​​(mutation of tuples itself is not supported)
 - It doesn't have to be a vector
 
-```swift
+```mfg
 let a = [1, 2, 3].xxyy
 ```
 
@@ -133,7 +133,7 @@ I mainly use destructuring and swizzle, but you can also specify a numeric index
 
 You can retrive element with dot and numbers. 0 origin.
 
-```swift
+```mfg
 let tup = [1, 2, 3, 4, 5, 6]
 
 # Access by numeric index, 0 origin, so a is 5
@@ -172,25 +172,25 @@ This is noted for each function item in [Builtin Functions](BultinFunctions.md).
 MFG treats tuple as vector automatically if you only meet the conditions.
 For example, normalize, a function that normalizes a vector, can be called as follows:
 
-```swift
+```mfg
 normalize([1.2, 3.2])
 ```
 
 You can use results as tuples.
 
-```swift
+```mfg
 let [x0, y0] = normalize([1.2, 3.2])
 ```
 
 It can also be used for arguments to other functions as follows:
 
-```swift
+```mfg
 let len = length(normalize([1.2, 3.2]))
 ```
 
 However, since vector-compatible functions only support up to 4 dimensions, the following code will not work.
 
-```swift
+```mfg
 # NG! 5th dimension cannot be used as a vector
 normalize([1.0, 2,0, 3.0, 4.0, 5.0])
 ```
@@ -206,7 +206,7 @@ Another example is like `i32v2`.
 
 There are functions called vec2, which creates two-dimensional vectors from scalars, vec3, which creates three-dimensional vectors, and vec4, which creates four-dimensional vectors.
 
-```swift
+```mfg
 let fvec = vec3(3.0)
 let ivec = vec4(1)
 ```
@@ -226,7 +226,7 @@ Specifically, you can omit the parenthesis after the type name and write square 
 
 For example, the following two codes have the same meaning:
 
-```swift
+```mfg
 u8([0, 0, 0xff, 0xff])
 u8[0, 0, 0xff, 0xff]
 ```
@@ -234,7 +234,7 @@ u8[0, 0, 0xff, 0xff]
 Even though this syntax sugar was introduced to allow it to be read as if it were a literal of a vector in u8,
 you can also use it with variables (non literals).
 
-```swift
+```mfg
 u8[b, g, r, a]
 ```
 
@@ -245,7 +245,7 @@ This behaves as if you wrote down each element of tuple under splat operator.
 
 For example:
 
-```swift
+```mfg
 
 let tup1 = [1, 2, 3]
 
@@ -257,7 +257,7 @@ Since it appears to be arranging tup1 with expanded elements, a1 is a tuple of f
 
 It is often used when processing BGR only in BGRA, in combination with the swizzle operator.
 
-```swift
+```mfg
 let col = input_u8(x, y)
 let bgr = col.xyz
 let a = col.a
@@ -273,7 +273,7 @@ Currently, Enum can only be used as arguments to some functions.
 
 A common use is the sampler argument.
 
-```swift
+```mfg
 let finput = sampler<input_u8>(address=.ClampToEdge, coord=.NormalizedLinear)
 ```
 
@@ -291,7 +291,7 @@ However, this is also a special type that can only be used in special places.
 
 The Range type is used as arguments to loop-based functions such as rsum.
 
-```swift
+```mfg
 let s = rsum(0..<5) |i| { i*2 }
 ```
 

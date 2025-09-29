@@ -68,7 +68,7 @@ reduce have four syntax part:
 
 The syntax is as follows:
 
-```swift
+```mfg
 reduce<TENSOR_NAME>.METHOD_NAME(...) |...| {...}
 ```
 
@@ -89,7 +89,7 @@ If it cannot be found, it's -1.
 
 `find_first_index` can be used as follows:
 
-```swift
+```mfg
   # The tensor literal for local tensors is NYI, so the usual way to make it
   # [[1, 2, 1],
   #  [2, 3, 2],
@@ -150,7 +150,7 @@ If you understand the meanings of "aggregate along one axis", you will understan
 
 Following is the example of `accumulate`:
 
-```swift
+```mfg
 	def median by reduce<histCumSum>.accumulate(dim=0, init=-1) |i, rgb, val, accm| {
     ifel(accm != -1, accm, ...)
     elif(val < histCumSum(255, rgb)/2, -1, i)
@@ -196,7 +196,7 @@ In this case, the tensor reduce can be used as an expression, and can be put res
 When you want to find a place larger than a certain index from the cumulative sum of one-dimensional weights called wcumsum,
 the following two expressions are the same:
 
-```swift
+```mfg
   # Definition by def. The result is 0 dimensions, so i3 is just a value
   def i3 by reduce<wcumsum>.find_first_index(dim=0) |_, val| { index < val }
 
@@ -225,7 +225,7 @@ This is one of the few features in MFG that has the side effect of changing exis
 
 For example, if you calculate the cumulative sum of tensors called hist, then it would be as follows:
 
-```swift
+```mfg
   mut! trans<hist>.cumsum!(dim=0)
 ```
 
@@ -242,7 +242,7 @@ On the other hand, the code tends to be difficult to read as the contents of ten
 
 The tensor trans syntax is as follows:
 
-```swift
+```mfg
   mut! trans<TENSOR_NAME>.METHOD_NAME!(...)
 ```
 
@@ -264,7 +264,7 @@ Methods of `trans` include the following:
 
 `sort` sorts from small to large values ​​along the specified axis.
 
-```swift
+```mfg
   mut! trans<wmat>.sort!(dim=0)
 ```
 
@@ -283,7 +283,7 @@ Please note that it will be in the same dimension as the original.
 
 Use it as follows:
 
-```swift
+```mfg
   mut! trans<wcumsum>.cumsum!(dim=0)
 ```
 
@@ -302,7 +302,7 @@ In principle, the only way to use it is with `+=`, so I would like to explain it
 
 Weighted histograms can be calculated in the 3x3 range of each pixel, as follows:
 
-```swift
+```mfg
 def weight by [[1, 2, 1],
                [2, 3, 2],
                [1, 2, 1]]
@@ -330,7 +330,7 @@ This article covers `weight.for_each` and four sentences starting with `mut!`.
 The tensor's for_each method executes a block argument on each element.
 No return value, just run the block.
 
-```swift
+```mfg
 ts.for_each | INDEX, TS_ELEMENT_AT_THAT_INDEX | { ... }
 ```
 
@@ -349,7 +349,7 @@ We would like to reduce the number of functions related to side effects as much 
 
 Use `+=` as follows:
 
-```swift
+```mfg
   mut! hist(b, 0) += wval
 ```
 

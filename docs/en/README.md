@@ -9,7 +9,7 @@ The design incorporates many of the features of modern programming languages, wh
 
 A mosaic filter with multiple kernels and intermediate buffers can be written easily as follows:
 
-```swift
+```mfg
 @title "Mosaic Filter"
 @param_i32 MOSAIC_WIDTH(SLIDER, label="Size", min=2, max=256, init=16)
 

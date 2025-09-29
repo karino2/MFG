@@ -16,7 +16,7 @@ Below is an example of a typical tensor:
 
 **Result_u8 Example**
 
-```swift
+```mfg
 def result_u8 |x, y|{
   u8[0, 0, 0xff, 0xff]
 }
@@ -24,7 +24,7 @@ def result_u8 |x, y|{
 
 **Example of intermediate tensor**
 
-```swift
+```mfg
 @bounds(640, 480)
 def red_tensor |x, y| {
   u8[0, 0, 0xff, 0xff]
@@ -38,7 +38,7 @@ Tensors usually have two aspects: definition and reference (the exception is inp
 A definition describes the rules that create tensors, and the MFG actually constructs the tensor data based on those rules.
 The definition of a tensor is, for example, as follows:
 
-```swift
+```mfg
 @bounds(640, 480)
 def red_tensor |x, y| {
   u8[0, 0, 0xff, 0xff]
@@ -52,7 +52,7 @@ A reference is accessing elements contained in the target tensor.
 
 Tensor references are made in brackets.
 
-```swift
+```mfg
   let v = red_tensor(10, 20)
 ```
 
@@ -72,7 +72,7 @@ The value which obtained by out of bounds indexing may change in future implemen
 You can use the splat operator `*` to reference elements of tensors.
 The following v1 and v2 have the same meaning.
 
-```swift
+```mfg
   let tup = [10, 20]
 
   let v1 = red_tensor(10, 20)
@@ -111,7 +111,7 @@ The top left is 0 and the positive coordinate system towards the bottom right.
 
 **example**
 
-```swift
+```mfg
 let [b, g, r, a] = input_u8(32, 24)
 ```
 
@@ -127,7 +127,7 @@ Other than that, it is the same as input_u8.
 In MFG, in addition to the target layer, you can refer to the above and below layers relatively.
 Other layers are specified in square brackets.
 
-```swift
+```mfg
 # One layer below
 input_u8[-1](x, y)
 
@@ -160,7 +160,7 @@ The element type must be u8v4.
 
 The following is an example of result_u8 that turns everything red.
 
-```swift
+```mfg
 def result_u8 |x, y|{
   u8[0, 0, 0xff, 0xff]
 }
@@ -202,7 +202,7 @@ Such things can be defined using the tensor literal notation.
 
 Below is an example of a tensor literal:
 
-```swift
+```mfg
 def tensorName by [[1, 2, 3],
                [4, 5, 6],
                [7, 8, 9]]
@@ -220,7 +220,7 @@ It will be used as an intermediate tensor.
 
 A regular tensor must be sized at the definition with `@bounds`.
 
-```swift
+```mfg
 @bounds(640, 480)
 def red_tensor |x, y| {
   u8[0, 0, 0xff, 0xff]
@@ -237,7 +237,7 @@ Also, at present, local tensor is the only one that can update the value as a si
 A typical example of use local tensor is to find a histogram.
 In following code, `_hist` is the local tensor:
 
-```swift
+```mfg
 def weight by [[1, 2, 1],
                [2, 3, 2],
                [1, 2, 1]]
@@ -267,7 +267,7 @@ Below we'll look at the details of this code.
 
 The definition is almost the same as regular tensor, as follows:
 
-```swift
+```mfg
   @bounds(256, 4)
   def _hist |i, col| { 0 }
 ```
@@ -294,7 +294,7 @@ Side effects always start with `mut!` to make them look syntax-specific.
 
 In the previous example, the following `+=` is an update due to side effects:
 
-```swift
+```mfg
   mut! _hist(b, 0) += wval
 ```
 
@@ -338,7 +338,7 @@ Tensors are defined using `def` keyword.
 
 A standard tensor definition specifies the width and height with `@bouds` and returns the elements at each position in a block.
 
-```swift
+```mfg
 @bounds(640, 480)
 def red_tensor |x, y| {
   u8[0, 0, 0xff, 0xff]
@@ -358,7 +358,7 @@ This is a feature that can only be used with local tensors.
 
 The syntax is as follows:
 
-```swift
+```mfg
 def TENSOR_NAME by reduce<SOURCE_TENSOR>.METHOD_NAME(ARGUMENTS) BLOCK
 ```
 
@@ -366,7 +366,7 @@ The argument part can be a "named argument" and the content of the argument is d
 
 Examples include the following:
 
-```swift
+```mfg
   def med by reduce<hist>.accumulate(dim=0, init=-1) |i, col, val, accm| {
     ifel(accm != -1, accm, ...)
     elif(val < _hist(255, col)/2, -1, i)
@@ -380,7 +380,7 @@ This is a feature for advanced users, so it will be explained separately in deta
 You can use a number and its tuple as the tensor value.
 A tuple does not need to be a vector, and for example, it can be returned as a mixture of i32 and f32.
 
-```swift
+```mfg
 @bounds(640, 480)
 def red_tensor |x, y| {
   # Returns i32 and f32 tuples
@@ -430,7 +430,7 @@ sum and for_each methods provide loop-based functionality that takes block argum
 
 Gets the width and height of the tensor. Specify the dimension as an argument.
 
-```swift
+```mfg
 let w = input_u8.extent(0)
 let h = input_u8.extent(1)
 ```
@@ -439,7 +439,7 @@ w and h are the "maximum index +1" of input_u8 (since it is 0 origin).
 
 If no argument is specified, all values ​​will be returned as a vector.
 
-```swift
+```mfg
 let [w, h] = input_u8.extent()
 ```
 
@@ -449,7 +449,7 @@ Returns non-zero if x and y are within the range of ts, and 0 if out of the rang
 
 The same as below.
 
-```swift
+```mfg
  x < ts.extent(0) && y < ts.extent(1)
 ```
 
@@ -459,7 +459,7 @@ For one dimension tensor, there is one argument.
 
 Used within tensor definitions, returns coordinates normalized between 0.0 and 1.0. The argument is a 2D tuple.
 
-```swift
+```mfg
 def result_u8 |x, y| {
    let [fx, fy] = to_ncoord([x, y])
    ...
@@ -489,7 +489,7 @@ Since it does not return a value, this is always used in conjunction with featur
 
 `ts.for_each` executes a block for each element of ts.
 
-```swift
+```mfg
   weight.for_each |ix, iy, wval| {
      let [b, g, r, a] = input_u8(ix+x, iy+y)
      mut! _hist(b, 0) += wval
@@ -511,7 +511,7 @@ At the moment, tensors only support 1D and 2D.
 Outside the definition of a global tensor is an area called a global block.
 You can also perform calculations here.
 
-```swift
+```mfg
 
 # This is the global block
 let a = 3*2

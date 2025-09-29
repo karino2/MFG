@@ -9,7 +9,7 @@ MFGはGPU上で動作する画像処理フィルタを開発するために、1�
 
 複数のカーネルと中間バッファを使用したモザイクフィルタも、以下のように簡単に書けます。
 
-```swift
+```mfg
 @title "モザイクフィルター"
 @param_i32 MOSAIC_WIDTH(SLIDER, label="サイズ", min=2, max=256, init=16)
 

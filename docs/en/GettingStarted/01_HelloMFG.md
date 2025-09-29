@@ -50,7 +50,7 @@ If you select a blank space in the template, the code for the negative positive 
 
 The content is like following:
 
-```swift
+```mfg
 @title "(New Filter)"
 
 def result_u8 |x, y| {
@@ -74,7 +74,7 @@ Here, let's write a filter that will fill in all red.
 
 Here's what the code:
 
-```swift
+```mfg
 def result_u8 |x, y| {
   u8[0, 0, 0xff, 0xff]
 }
@@ -96,7 +96,7 @@ And the filter in MFG always needs to eventually generate a tensor named "result
 
 The tensor is defined as follows:
 
-```swift
+```mfg
 def result_u8 |x, y| {
   Some kind of expression here
 }
@@ -113,7 +113,7 @@ In this case, the coordinates are in x and y, but this time, since the whole thi
 
 Red is as follows:
 
-```swift
+```mfg
 u8[0, 0, 0xff, 0xff]
 ```
 
@@ -124,7 +124,7 @@ The order is BGRA. In this case, red and alpha sentences mean 0xff and the rest 
 
 Comment is sharp, and after Sharp it will be ignored until the end of the line. So if you do the following, the color will be green:
 
-```swift
+```mfg
 def result_u8 |x, y| {
   # u8[0, 0, 0xff, 0xff]
   u8[0, 0xff, 0, 0xff]
@@ -138,7 +138,7 @@ I haven't used x and y up until now.
 Since we're going to have it, let's try using x and y.
 For now, let's try to increase the degree of redness, like a gradient, with x being 100 pixels interval.
 
-```swift
+```mfg
 def result_u8 |x, y| {
   u8[0, 0, (0xff*x)/100, 0xff]
 }
@@ -152,7 +152,7 @@ Then it becomes as follows:
 
 What happens if you also use y as the returned color as shown below?
 
-```swift
+```mfg
 u8[0, (0xff*y)/100, (0xff*x)/100, 0xff]
 ```
 
@@ -164,14 +164,14 @@ To specify a filter dialog, use `@title`.
 
 The following parts
 
-```swift
+```mfg
 @title "(New Filter)"
 ```
 
 Let's change it as follows:
 
 
-```swift
+```mfg
 @title "All Red Filter"
 ```
 

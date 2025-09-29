@@ -50,7 +50,7 @@ it is also used in the title of a dialog at runtime.
 
 `@bounds` is used prior to the tensor definition. It specifis the width and height of the tensor.
 
-```swift
+```mfg
 @bounds(50, 50)
 def gridNoise |x, y| {
   [2.0*rand()-1.0, 2.0*rand()-1.0]
@@ -69,7 +69,7 @@ It can only be used in global blocks. (Cannot be used in blocks in tensor defini
 
 The values you put inside will be output to the output window.
 
-```swift
+```mfg
 @print_expr(sin(3.2)/2.0)
 ```
 
@@ -85,7 +85,7 @@ That's why it's very different from other attributes.
 
 Typically, the following are param-based attributes:
 
-```swift
+```mfg
 @param_f32 radius(SLIDER, label="Radius", min=0.5, max=300.0, init=3.0)
 ```
 
@@ -97,7 +97,7 @@ Param-based attributes create variables. The result of the user's input is then 
 
 Let's take a look at the example above.
 
-```swift
+```mfg
 @param_f32 radius(SLIDER, label="Radius", min=0.5, max=300.0, init=3.0)
 ```
 

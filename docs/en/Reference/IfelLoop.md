@@ -17,7 +17,7 @@ we will cover them here to make comparisons with other languages easy.
 
 Condition selection using MFG is achieved as a simple function.
 
-```swift
+```mfg
 let s = ifel(x > 0, 1, 2)
 ```
 
@@ -25,7 +25,7 @@ s contains 1 if x is greater than 0, and 2 if it is less than 0.
 
 The syntax is as follows:
 
-```swift
+```mfg
 ifel( COND, TRUE_VALUE, FALSE_VALUE )
 ```
 
@@ -52,14 +52,14 @@ In this case, TRUE_VALUE must be a tuple of three elements.
 The number of elements is important, and the types of each elements are arbitrary.
 But TRUE_VALUE types and FALSE_VALUE types must match.
 
-```swift
+```mfg
 ifel([0, 1, 2], [3, 3.0, 3u], [5, 0.0, 1u])
 ```
 
 This is the same meaning to following code,
 which execute ifel for each elements and combine result to tuple at the end:
 
-```swift
+```mfg
 [ifel(0, 3, 5),
  ifel(1, 3.0, 0.0),
  ifel(2, 3u, 1u)]
@@ -71,7 +71,7 @@ The resulting value in this case is `[5, 3.0, 3u]`.
 When combined with the vectorization of binary operations explained in [Expression and Vectorization Operations](Expression.md),
 it may be possible to write the code concisely.
 
-```swift
+```mfg
 let flag = [1, 2, 3]
 
 ifel(flag%2 == 0, [3, 3.0, 3u], [5, 0.0, 1u])
@@ -90,7 +90,7 @@ It may be helpful to paying attention to the fact that the result type of ifel a
 `ifel` often does the process of "If it's condition A, then do this, if it's condition B, then do that, if it's condition C if it's condition D, etc."
 In this case, the calls will become deep nested, making parallel structures difficult to understand.
 
-```swift
+```mfg
 ifel(aCond, aVal,
   ifel(bCond, bVal,
     ifel(cCond, cVal,
@@ -99,7 +99,7 @@ ifel(aCond, aVal,
 
 Therefore, by using the feature "If the last argument is set to `...`, the next expression in parenthesis becomes the last argument", you can write as follows:
 
-```swift
+```mfg
 ifel(aCond, aVal, ...)
 ifel(bCond, bVal, ...)
 ifel(cCond, cVal, ...)
@@ -121,7 +121,7 @@ However, for convenience to the writer, `ifel` is used for the first condition, 
 This is for reader's convinience and becomes similar to other languages.
 Together with the aforementioned `...`, use it as follows:
 
-```swift
+```mfg
 ifel(aCond, aVal, ...)
 elif(bCond, bVal, ...)
 elif(cCond, cVal, ...)
@@ -130,7 +130,7 @@ elif(dCond, dVal, otherVal)
 
 Here is the real code from MLAA (morphological antialiasing):
 
-```swift
+```mfg
 ifel(alreadyEnd,
     accm2,
     ...)
@@ -155,7 +155,7 @@ because it is used to mean something like that, it is misleading to be found ins
 
 So, you can write following by using `else`:
 
-```swift
+```mfg
 ifel(aCond, aVal, ...)
 elif(bCond, bVal, ...)
 elif(cCond, cVal, ...)
@@ -195,7 +195,7 @@ and the code looks and the actual GPU hardware behavior match naturally.
 
 Below is an example using rsum.
 
-```swift
+```mfg
 let s = rsum(0..<4) |i| { i*2 }
 ```
 
@@ -205,7 +205,7 @@ This result is `0*2+1*2+2*2+3*2`, which means `12`.
 
 As will be explained later, rsum supports 1 and 2D. The syntax is as follows:
 
-```swift
+```mfg
 # 1D rsum
 rsum(RANGE) |i| {...}
 
@@ -245,7 +245,7 @@ The block has the syntax `|Formal Argument List| { BODY }`, and
 The last part of this BODY must be an expression.
 This last expression becomes the value (and type) of this block.
 
-```swift
+```mfg
 let a = rsum(0..<5) |i| {
   let col = inputEx(x+i, y)
   col.x+col.y # This last expression is the value that results when evaluating this block.
@@ -259,7 +259,7 @@ In the case of rsum, the number of range arguments determines the number of form
 
 In 1D, it has one argument list, and in 2D, it has two formal arguments list, both of which have a type of i32.
 
-```swift
+```mfg
 let a = rsum(0..<5, 0..<5) |i, j| {
   let col = inputEx(x+i, y+j)
   col.x+col.y
@@ -283,7 +283,7 @@ This is different from tensor reduce.
 The dimension is determined by the number of ranges of rsum arguments.
 Additionally, the formal argument list for block arguments must be coincide with the dimension of rsum.
 
-```swift
+```mfg
 let sum = rsum(0..<3, 0..<3) | i, j | {
             i*3+j
           }
@@ -302,7 +302,7 @@ The reduce function is more powerful than rsum, and is more complicated. Everyth
 
 The `reduce` function is used as follows:
 
-```swift
+```mfg
 let sum = reduce(init=1, 0..<4) | index, accm | {
             accm+index*2
           }
@@ -322,7 +322,7 @@ The final value is 13, and the variable `sum` contains 13.
 
 The reduce function has the following syntax:
 
-```swift
+```mfg
 # 1D
 reduce(init=INIT_VALUE, RANGE) |i, accm| {...}
 
@@ -352,7 +352,7 @@ it depends on the order in which the loop is executed.
 
 Consider the following example for the 2D case:
 
-```swift
+```mfg
 let sum = reduce(init=1, 0..<3, 0..<3) | i, j, accm | {
             accm+i*3+j
           }
@@ -380,7 +380,7 @@ ts.sum is a similar function to rsum, so I'll take a look here.
 
 ts.sum executes blocks on each element of the tensor and returns the sum of the results.
 
-```swift
+```mfg
 def weight by [
   [1.0, 2.0, 1.0],
   [2.0, 3.0, 2.0],
@@ -395,7 +395,7 @@ The types of i and j are i32, and in this case elem is f32.
 
 In this case, i and j are not used, so you can replace it with underscores.
 
-```swift
+```mfg
 def weight by [
   [1.0, 2.0, 1.0],
   [2.0, 3.0, 2.0],

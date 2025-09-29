@@ -19,7 +19,7 @@ MFGでは定数を定義するのにletを使います。
 
 例えば以下のようにletで変数を定義する事が出来ます。
 
-```swift
+```mfg
 let a = 123
 ```
 
@@ -27,7 +27,7 @@ letは変更不可のローカル変数を定義するものです。MFGでは�
 
 変数を使って、前回やった、すべて赤で塗りつぶすというフィルタを以下のように書く事が出来ます。
 
-```swift
+```mfg
 @title "赤で塗りつぶす2"
 
 def result_u8 |x, y| {
@@ -54,7 +54,7 @@ MFGでは文の終わりは改行でセミコロンなどはありません。
 なお、r, g, bは8ビットの値なので、0xffから引く事で反転させる事が出来ます。
 以下のようにすると、RGBでいう所の0x00FFFF、つまり水色っぽい色で塗りつぶす事になります。
 
-```swift
+```mfg
 @title "赤を反転した色で塗りつぶす"
 
 def result_u8 |x, y| {
@@ -73,7 +73,7 @@ def result_u8 |x, y| {
 
 スクリプトとしては以下のようになります。
 
-```swift
+```mfg
 @title "ネガポジ反転"
 
 def result_u8 |x, y| {
@@ -96,7 +96,7 @@ input_u8というのは最初から定義されているテンソルの一つで
 
 例えば、以下のようにすれば、(32, 45)の点の色が取れます。
 
-```swift
+```mfg
 input_u8(32, 45)
 ```
 
@@ -115,7 +115,7 @@ input_u8は入力を、B, G, R, Aの順番で、それぞれが8ビットのタ�
 
 なお、使わない要素は `_` を置きます。例えばaはいつも255にしたい場合は以下のようにします。
 
-```swift
+```mfg
 def result_u8 |x, y| {
   let [b, g, r, _] = input_u8(x, y)
   u8[255-b, 255-g, 255-r, 255]
@@ -130,7 +130,7 @@ def result_u8 |x, y| {
 
 まずは、一番原始的な方法で手書きする方法を書いてみます。以下のようになります。
 
-```swift
+```mfg
 @title "左上に5px移動、手書きバージョン"
 
 def result_u8 |x, y| {
@@ -147,7 +147,7 @@ def result_u8 |x, y| {
 
 最初のletは以下のようになっています。
 
-```swift
+```mfg
   let [newx, newy] = [x+5, y+5]
 ```
 
@@ -155,7 +155,7 @@ def result_u8 |x, y| {
 
 これは以下と同じコードになります。
 
-```swift
+```mfg
 let newx = x+5
 let newy = y+5
 ```
@@ -168,7 +168,7 @@ input_u8の画像の幅は、 `input_u8.extent(dim)` で取れます。dimは0�
 
 だから例えば、全体を赤のグラデーションにしたい場合は以下のように書けます。
 
-```swift
+```mfg
 @title "赤のグラデーション"
 
 def result_u8 |x, y| {
@@ -190,7 +190,7 @@ def result_u8 |x, y| {
 
 シンタックスは以下となります。
 
-```swift
+```mfg
 ifel( COND, TRUE_VALUE, FALSE_VALUE )
 ```
 
@@ -198,7 +198,7 @@ CONDがtrueの時はTRUE_VALUEが、falseの時はFALSE_VALUEが返ります。
 
 最初のスクリプトの例では、以下のように使われています。
 
-```swift
+```mfg
   ifel(newx < input_u8.extent(0) && newy < input_u8.extent(1),
        input_u8(newx, newy),
        u8[0, 0, 0, 0])
@@ -212,7 +212,7 @@ CONDがtrueの時はTRUE_VALUEが、falseの時はFALSE_VALUEが返ります。
 
 それを用いると左上に移動するフィルタは以下のように直せます。
 
-```swift
+```mfg
 @title "左上に5px移動、ClampToBorderValueバージョン"
 
 let extended = sampler<input_u8>(address=.ClampToBorderValue, border_value=u8[0, 0, 0, 0] )
@@ -226,7 +226,7 @@ newx, newyを用いるまでも無くなってしまったのでそのままx+5,
 
 samplerの文は以下のようになっています。
 
-```swift
+```mfg
 let extended = sampler<input_u8>(address=.ClampToBorderValue, border_value=u8[0, 0, 0, 0] )
 ```
 
@@ -238,13 +238,13 @@ samplerは内部的には関数では無く、テンソルを角括弧の引数�
 
 いつも赤にしたければ以下のようになります。
 
-```swift
+```mfg
 let extended = sampler<input_u8>(address=.ClampToBorderValue, border_value=u8[0, 0, 0xff, 0xff] )
 ```
 
 なお、良く使うアドレスモードとしてはClampToBorderValueの他に、端の値がずっとそのまま続くとみなす、ClampToEdgeというのがあります。
 
-```swift
+```mfg
 let extended = sampler<input_u8>(address=.ClampToEdge)
 ```
 

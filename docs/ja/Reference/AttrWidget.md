@@ -50,7 +50,7 @@ MFGには型としては文字列型は存在せず、文字列の変数とい�
 
 テンソルの定義の前につき、テンソルの幅と高さを指定します。
 
-```swift
+```mfg
 @bounds(50, 50)
 def gridNoise |x, y| {
   [2.0*rand()-1.0, 2.0*rand()-1.0]
@@ -69,7 +69,7 @@ def gridNoise |x, y| {
 
 中に入れた値が出力ウィンドウに出力されます。
 
-```swift
+```mfg
 @print_expr(sin(3.2)/2.0)
 ```
 
@@ -85,7 +85,7 @@ param系のアトリビュートは、アトリビュートでありながら、
 
 典型的には以下のようなものがparam系のアトリビュートになります。
 
-```swift
+```mfg
 @param_f32 radius(SLIDER, label="半径", min=0.5, max=300.0, init=3.0)
 ```
 
@@ -97,7 +97,7 @@ param系アトリビュートは変数が作られます。そしてユーザー
 
 先程の例を見てみましょう。
 
-```swift
+```mfg
 @param_f32 radius(SLIDER, label="半径", min=0.5, max=300.0, init=3.0)
 ```
 

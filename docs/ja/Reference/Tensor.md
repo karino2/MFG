@@ -16,7 +16,7 @@ GPUプログラムの重要な要素であるカーネルとグローバルメ�
 
 **result_u8の例**
 
-```swift
+```mfg
 def result_u8 |x, y|{
   u8[0, 0, 0xff, 0xff]
 }
@@ -24,7 +24,7 @@ def result_u8 |x, y|{
 
 **中間テンソルの例**
 
-```swift
+```mfg
 @bounds(640, 480)
 def red_tensor |x, y| {
   u8[0, 0, 0xff, 0xff]
@@ -38,7 +38,7 @@ def red_tensor |x, y| {
 定義というのはテンソルを作るルールを記述して、MFGがそのルールをもとに実際にテンソルのデータを構成します。
 テンソルの定義は例えば以下になります。
 
-```swift
+```mfg
 @bounds(640, 480)
 def red_tensor |x, y| {
   u8[0, 0, 0xff, 0xff]
@@ -52,7 +52,7 @@ def red_tensor |x, y| {
 
 テンソルの参照はカッコで行います。
 
-```swift
+```mfg
   let v = red_tensor(10, 20)
 ```
 
@@ -72,7 +72,7 @@ GPUプログラムでは結局その値は使われないが値を参照して�
 テンソルの要素の参照にはsplat演算子`*`を使えます。
 以下のv1とv2は同じ意味になります。
 
-```swift
+```mfg
   let tup = [10, 20]
 
   let v1 = red_tensor(10, 20)
@@ -111,7 +111,7 @@ u8の4次元ベクトルとu16の4次元ベクトルは良く使われるので�
 
 **例**
 
-```swift
+```mfg
 let [b, g, r, a] = input_u8(32, 24)
 ```
 
@@ -127,7 +127,7 @@ input_u16はBGRAをu16の4次元ベクトルとして保持するテンソルで
 MFGでは、対象とするレイヤーの他に、その上、下のレイヤーを相対的に参照出来ます。
 他のレイヤーは大括弧で指定します。
 
-```swift
+```mfg
 # 1つ下のレイヤー
 input_u8[-1](x, y)
 
@@ -160,7 +160,7 @@ resultテンソルも、プログラムに一つだけ存在する、という�
 
 例えば以下が、すべてを赤にするresult_u8の例です。
 
-```swift
+```mfg
 def result_u8 |x, y|{
   u8[0, 0, 0xff, 0xff]
 }
@@ -202,7 +202,7 @@ u8かu16のどちらかで書いておけば、32bppのレイヤーでも64bpp�
 
 以下がテンソルリテラルの例です。
 
-```swift
+```mfg
 def tensorName by [[1, 2, 3],
                [4, 5, 6],
                [7, 8, 9]]
@@ -220,7 +220,7 @@ byとタプルのネストのような記法で表現します。
 
 通常のテンソルは定義の所で `@bounds` でサイズを指定する必要があります。
 
-```swift
+```mfg
 @bounds(640, 480)
 def red_tensor |x, y| {
   u8[0, 0, 0xff, 0xff]
@@ -236,7 +236,7 @@ def red_tensor |x, y| {
 
 典型的な使用例としては、ヒストグラムなどを求めるのに使います。例えば以下の `_hist` がローカルテンソルです。 
 
-```swift
+```mfg
 def weight by [[1, 2, 1],
                [2, 3, 2],
                [1, 2, 1]]
@@ -266,7 +266,7 @@ def median |x, y| {
 
 定義は通常のテンソルと同様で、以下のようになります。
 
-```swift
+```mfg
   @bounds(256, 4)
   def _hist |i, col| { 0 }
 ```
@@ -290,7 +290,7 @@ MFGでは副作用はなるべく存在しないように設計されていま�
 
 先ほどの例では、以下の `+=` が副作用での更新です。
 
-```swift
+```mfg
   mut! _hist(b, 0) += wval
 ```
 
@@ -334,7 +334,7 @@ MFGでは副作用はなるべく存在しないように設計されていま�
 
 通常のテンソル定義は、`@bouds`で幅と高さを指定し、ブロックで各位置の要素を返します。
 
-```swift
+```mfg
 @bounds(640, 480)
 def red_tensor |x, y| {
   u8[0, 0, 0xff, 0xff]
@@ -354,7 +354,7 @@ defの次はテンソルの名前です。その次には各位置を表す値�
 
 シンタックスは以下になります。
 
-```swift
+```mfg
 def テンソル名 by reduce<元となるテンソル>.メソッド名(引数) ブロック
 ```
 
@@ -362,7 +362,7 @@ def テンソル名 by reduce<元となるテンソル>.メソッド名(引数) 
 
 具体例としては、例えば以下があります。
 
-```swift
+```mfg
   def med by reduce<hist>.accumulate(dim=0, init=-1) |i, col, val, accm| {
     ifel(accm != -1, accm, ...)
     elif(val < _hist(255, col)/2, -1, i)
@@ -376,7 +376,7 @@ def テンソル名 by reduce<元となるテンソル>.メソッド名(引数) 
 テンソルの値としては、数値とそのタプルを使う事が出来ます。
 タプルはベクトルでなくても構わず、例えばi32とf32を混ぜたものを返す事が出来ます。
 
-```swift
+```mfg
 @bounds(640, 480)
 def red_tensor |x, y| {
   # i32とf32のタプルを返す
@@ -425,7 +425,7 @@ sumとfor_eachはブロック引数を取る、ループ系の機能を提供し
 
 テンソルの幅や高さを取得します。引数で次元を指定します。
 
-```swift
+```mfg
 let w = input_u8.extent(0)
 let h = input_u8.extent(1)
 ```
@@ -434,7 +434,7 @@ wやhはinput_u8の「最大のインデックス+1」となります（0オリ�
 
 なお、引数を指定しないと全ての値をベクトルで返します。
 
-```swift
+```mfg
 let [w, h] = input_u8.extent()
 ```
 
@@ -444,7 +444,7 @@ x, yがtsの範囲内ならノンゼロを、範囲外なら0を返します。
 
 以下と同様です。
 
-```swift
+```mfg
  x < ts.extent(0) && y < ts.extent(1)
 ```
 
@@ -454,7 +454,7 @@ x, yがtsの範囲内ならノンゼロを、範囲外なら0を返します。
 
 テンソルの定義内で使われて、0.0〜1.0にノーマライズされた座標を返します。引数は2次元のタプル。
 
-```swift
+```mfg
 def result_u8 |x, y| {
    let [fx, fy] = to_ncoord([x, y])
    ...
@@ -484,7 +484,7 @@ let wsum = weight.sum |_, _, val| { val }
 
 `ts.for_each` はtsの各要素に対してブロックを実行します。
 
-```swift
+```mfg
   weight.for_each |ix, iy, wval| {
      let [b, g, r, a] = input_u8(ix+x, iy+y)
      mut! _hist(b, 0) += wval
@@ -506,7 +506,7 @@ let wsum = weight.sum |_, _, val| { val }
 グローバルなテンソルの定義の外側は、グローバルブロックと呼ばれる領域で、
 ここでも計算を行う事が出来ます。
 
-```swift
+```mfg
 
 # ここがグローバルブロック
 let a = 3*2

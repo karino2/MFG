@@ -26,7 +26,7 @@ There are two unary operations in arithmetic operations:
 
 Example:
 
-```swift
+```mfg
 let b = -a
 let c = !a
 ```
@@ -66,7 +66,7 @@ This section covers vectorization of binary operations.
 
 The following a1 and a2 have the same meaning.
 
-```swift
+```mfg
 let tup1 = [1.0, 2]
 let tup2 = [3.0, 4]
 
@@ -84,7 +84,7 @@ vectorization can be done even if the types of tup1.x and tup1.y are different.
 
 Note that the results of binary operations are also tuples, so they can be stitched together.
 
-```swift
+```mfg
 let tup1 = [1.0, 2.0]
 let tup2 = [3.0, 4.0]
 let tup3 = [5.0, 5.0]
@@ -96,7 +96,7 @@ It can do things like mathematical vector operations.
 
 Equivalence operator `==` can also be used in Vectorization.
 
-```swift
+```mfg
 
 let tup1 = [1, 2, 1]
 let tup2 = [3, 2, 1]
@@ -116,7 +116,7 @@ In this case, it is called broadcast, and the result is the same as scalar opera
 
 For example, the following three results have the same result:
 
-```swift
+```mfg
 let tup = [3.0, 4.0]
 
 let m1 = [tup.x*2.0, tup.y*2.0]
@@ -127,7 +127,7 @@ let m3 = tup*2.0
 Multiplication is the same as scalars and vectors in mathematics, but the same can be done with addition.
 Below a1, a2, and a3 have the same values.
 
-```swift
+```mfg
 let tup = [3.0, 4.0]
 
 let a1 = 5.0+tup
@@ -149,7 +149,7 @@ it becomes as if the elements of tuple have been expanded in place as arguments.
 
 **Tensor Example:**
 
-```swift
+```mfg
   let tup = [10, 20]
 
   # The same as: input_u8(10, 20)
@@ -158,7 +158,7 @@ it becomes as if the elements of tuple have been expanded in place as arguments.
 
 **Tuple Literal Example:**
 
-```swift
+```mfg
   let red = [0, 0, 0xff]
 
   # The same as: let bgra = [0, 0, 0xff, 0x88]
@@ -167,7 +167,7 @@ it becomes as if the elements of tuple have been expanded in place as arguments.
 
 **Function Call Exaple:**
 
-```swift
+```mfg
 let a = 0.7
 let b = 0.6
 let ratio = 0.3
@@ -190,7 +190,7 @@ For example, `sin(1.5)` is a function call.
 Single-argument functions such as trigonometric functions can be used in vectorization, just like binary operators.
 The following s1 and s2 have the same meaning.
 
-```swift
+```mfg
 let tup = [1.0, 2.0]
 
 # sin for each element
@@ -212,7 +212,7 @@ For details, see the "splat operator" section above.
 If the last argument of a function is set to `...`, the next expression in that call is considered to be the last argument,
 There is a syntax sugar called.
 
-```swift
+```mfg
   # the same as: let d = distance( [1.2, 2.3], [4.5, 3.2])
   let d = distance( [1.2, 2.3], ...) [4.5, 3.2]
 ```
@@ -227,7 +227,7 @@ For more information, see [ifel and Loops](IfelLoop.md).
 
 In other words, the following three expressions have the same meaning:
 
-```swift
+```mfg
 f(a, b, c)
 f(a, b, ...) c
 c |> f(a, b, ...)
@@ -235,7 +235,7 @@ c |> f(a, b, ...)
 
 This allows pipelining to be performed as follows:
 
-```swift
+```mfg
 let col = input_u8(x, y) |>
           to_ncolor(...) |>
           gamma2linearA(...)
@@ -249,7 +249,7 @@ the pipe operator must be written on the previous line or escape the line break.
 Some functions have named arguments.
 For example, the following `init` of reduce is the case.
 
-```swift
+```mfg
 reduce(init=[0, 0], 0..<10) | index, accm | {
   let [a, b] = accm
   [a+index, b+index*2]

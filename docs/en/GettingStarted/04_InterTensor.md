@@ -19,7 +19,7 @@ Creating an intermediate tensor is almost the same as how you create result_u8, 
 
 The code is as follows:
 
-```swift
+```mfg
 let inputEx = sampler<input_u8>(address=.ClampToEdge)
 
 @bounds(input_u8.extent(0), input_u8.extent(1))
@@ -36,7 +36,7 @@ Since sumCol is a vector of four elements of i32, xblur is also a vector of four
 
 Instead of writing input_u8.extent twice, you can also do the following:
 
-```swift
+```mfg
 
 let inputEx = sampler<input_u8>(address=.ClampToEdge)
 
@@ -57,7 +57,7 @@ Now let's take a look at the code for generating intermediate tensors.
 
 First, the tensor definition begins with `@bounds`, which specifies the width and height.
 
-```swift
+```mfg
 @bounds(W, H)
 def xblur
 ```
@@ -67,7 +67,7 @@ These W and H becomes width and height of xblur tensor.
 The tensor definition is almost the same as result_u8, but you can choose the type of element you want (Unlike results_u8 which is fixed to u8 4D vector).
 The xblur code is as follows:
 
-```swift
+```mfg
 def xblur |x, y| {
   let sumCol = rsum(0..<3) |rx| {
     i32(inputEx(x+rx-1, y))
@@ -94,7 +94,7 @@ Let's actually do that process.
 
 If you note that it's enough to just set the ClampToEdge and add outside of the boundary just as inside, the code becomes following:
 
-```swift
+```mfg
 @title "Blur using intermediate tensor"
 
 let inputEx = sampler<input_u8>(address=.ClampToEdge)
@@ -132,7 +132,7 @@ So, try using the slider widget to receive user input.
 To use the slider widget, specify `SLIDER` in `@param_i32`.
 THe code is as follows:
 
-```swift
+```mfg
 @param_i32 BLUR_WIDTH(SLIDER, label="Size", min=2, max=100, init=5)
 ```
 
@@ -143,7 +143,7 @@ If you use this to enter the width of the blur into the variable BLUR_WIDTH, you
 
 If I write just the results, it looks like this:
 
-```swift
+```mfg
 @title "Blur using intermediate tensor"
 
 @param_i32 BLUR_WIDTH(SLIDER, label="Size", min=2, max=100, init=5)

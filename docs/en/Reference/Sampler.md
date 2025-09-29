@@ -6,7 +6,7 @@
 
 A sampler is a feature that allows you to customize how tensors are loaded.
 
-```swift
+```mfg
 let finput = sampler<input_u8>(address=.ClampToEdge, coord=.NormalizedLinear)
 ```
 
@@ -50,7 +50,7 @@ Note that you need to prefix `.` to enum symbol when using as an arguments.
 
 Only when ClampToBorderValue requires an additional argument called border_value.
 
-```swift
+```mfg
 let extend = sampler<input_u8>(address=.ClampToBorderValue, border_value=u8[0, 0, 0, 0])
 ```
 
@@ -69,7 +69,7 @@ With coordinates normalized to f32, there are two types of Enum depending on the
 
 If you specify the NormalizedXXX, the argument will be specified with f32 as follows:
 
-```swift
+```mfg
 let finput = sampler<input_u8>(coord=.NormalizedLinear)
 finput(0.3, 0.7)
 ```
@@ -77,7 +77,7 @@ finput(0.3, 0.7)
 To convert the current coordinates to the coordinates normalized to this f32 in the tensor definition,
 you can use tensor to_ncoord.
 
-```swift
+```mfg
 let finput = sampler<input_u8>(coord=.NormalizedLinear)
 
 def result_u8 |x, y| {

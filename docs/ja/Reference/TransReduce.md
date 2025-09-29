@@ -71,7 +71,7 @@ reduceは
 
 シンタックスとしては、以下のようになります。
 
-```swift
+```mfg
 reduce<テンソル名>.メソッド名(...) |...| {...}
 ```
 
@@ -92,7 +92,7 @@ dimの軸にそってブロックを実行していき、0以外を返した最�
 
 find_first_indexは以下のような使い方です。
 
-```swift
+```mfg
   # ローカルテンソルのテンソルリテラルはNYIなので、通常の作り方  
   # [[1, 2, 1],
   #  [2, 3, 2],
@@ -153,7 +153,7 @@ accumulateはより高機能なreduceです。find_first_indexはシンタック
 
 例としては以下のようなものになります。
 
-```swift
+```mfg
 	def median by reduce<histCumSum>.accumulate(dim=0, init=-1) |i, rgb, val, accm| {
     ifel(accm != -1, accm, ...)
     elif(val < histCumSum(255, rgb)/2, -1, i)
@@ -198,7 +198,7 @@ reduceは元となるテンソルの次元を一つ減らす操作となりま�
 wcumsumという1次元の重みの累積和から、あるindexより大きな場所を求めたい時、
 以下の２つの式は同じです。
 
-```swift
+```mfg
   # defによる定義。結果は0次元となるのでi3は単なる値となる
   def i3 by reduce<wcumsum>.find_first_index(dim=0) |_, val| { index < val }
 
@@ -226,7 +226,7 @@ reduceは元となるテンソルから新しいテンソルを作る処理で�
 
 例えばhistというテンソルの累積和を求めるなら以下のようになります。
 
-```swift
+```mfg
   mut! trans<hist>.cumsum!(dim=0)
 ```
 
@@ -243,7 +243,7 @@ transは副作用で既にある値を書き換える事になります。
 
 テンソルのtransのシンタックスは以下となります。
 
-```swift
+```mfg
   mut! trans<テンソル名>.メソッド名!(...)
 ```
 
@@ -263,7 +263,7 @@ transのメソッドとしては以下があります。
 
 sortは指定した軸にそって、小さい値から大きい値へとソートします。
 
-```swift
+```mfg
   mut! trans<wmat>.sort!(dim=0)
 ```
 
@@ -282,7 +282,7 @@ sortは指定した軸にそって、小さい値から大きい値へとソー�
 
 以下のように使います。
 
-```swift
+```mfg
   mut! trans<wcumsum>.cumsum!(dim=0)
 ```
 
@@ -300,7 +300,7 @@ transでもreduceでも無いのですが、transと類似な機能として `+=
 
 以下のように、各ピクセルの3x3の範囲で、重み付けヒストグラムを求める事が出来ます。
 
-```swift
+```mfg
 def weight by [[1, 2, 1],
                [2, 3, 2],
                [1, 2, 1]]
@@ -328,7 +328,7 @@ def result_u8 |x, y| {
 テンソルのfor_eachメソッドは、引数のブロックを各要素に対して実行する、という事をします。
 結果は返さずブロックを実行するだけです。
 
-```swift
+```mfg
 ts.for_each | インデックス, そのインデックスのtsの値 | { ... }
 ```
 
@@ -347,7 +347,7 @@ ts.for_each | インデックス, そのインデックスのtsの値 | { ... }
 
 `+=` は、以下のように使います。
 
-```swift
+```mfg
   mut! hist(b, 0) += wval
 ```
 

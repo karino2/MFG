@@ -50,7 +50,7 @@ Write the return type before the function name, and the parameter type with a co
 
 For example:
 
-```rust
+```mfg
 f32 sin |x:f32|
 ```
 
@@ -58,7 +58,7 @@ This means that there is a single parameter, and the type is f32 and the return 
 
 Separate multiple arguments with commas.
 
-```rust
+```mfg
 f32 clamp|x:f32, minVal:f32, maxVal:f32|
 ```
 
@@ -73,7 +73,7 @@ The reason for the constraint of up to four elements is the constraints of the u
 
 For example, length is a typical function that supports vectors.
 
-```swift
+```mfg
 length([1.0, 2.0, 3.0])
 ```
 
@@ -88,7 +88,7 @@ Furthermore, in some functions, although the dimensions of the vector can be fro
 
 A distance, which determines the distance between two vectors, is an example.
 
-```swift
+```mfg
 
 # OK
 distance([1.0, 1.0], [2.0, 2.0])
@@ -106,7 +106,7 @@ Most of these types of functions have several vector arguments and return types,
 To describe the confusing circumstances like this,
 write the vector of f32 in the notation T, and the same T represents a vector of the same dimension.
 
-```rust
+```mfg
 f32 distance|x:T, y:T|
 ```
 
@@ -126,7 +126,7 @@ Anyone who knows about vectorization in the R language should think of it as the
 
 For example, sin is the following type:
 
-```rust
+```mfg
 f32 sin |x:f32|
 ```
 
@@ -134,13 +134,13 @@ This can be used with Vectorize.
 
 Vectorizing is a feature that acts as if you called a function on the individual elements of a tuple when you pass tuple as an argument.
 
-```swift
+```mfg
 let res = sin([1.0, 2.0, 3.0, 4.0, 5.0])
 ```
 
 This is a syntax sugar, and internally translates as follows:
 
-```swift
+```mfg
 let res = [sin(1.0) sin(2.0), sin(3.0), sin(4.0), sin(5.0)]
 ```
 
@@ -169,21 +169,21 @@ Basically, you convert it with the function name `[original color name]_to_[resu
 Except for u8color, it is basically f32v3 if there is no alpha, and f32v4 if there is alpha.
 `lbgr_to_xyz` etc. returns f32v3 with f32v3 as the argument.
 
-```rust
+```mfg
 f32v3 lbgr_to_xyz |col:f32v3|
 u8v4 xyza_to_u8color |col:f32v4|
 ```
 
 Also, it is omitted if the original color name is u8color.
 
-```rust
+```mfg
 f32v4 to_xyza |col:u8v4|
 f32v4 to_lbgra |col:u8v4|
 ```
 
 ### to_ncolor
 
-```rust
+```mfg
 f32v4 to_ncolor |col:u8v4|
 ```
 
@@ -192,13 +192,13 @@ f32 ranges from 0.0 to 1.0
 
 **Example**
 
-```swift
+```mfg
 let ncolor = to_ncolor(input_u8(x, y))
 ```
 
 ### to_u8color
 
-```rust
+```mfg
 u8v4 to_u8color| col:f32v4 |
 ```
 
@@ -209,7 +209,7 @@ Since to_u8color is clamped from 0.0 to 1.0 to u8, values ​​greater than 1.0
 
 **Example**
 
-```swift
+```mfg
 let u8_bgra = to_u8color(ncolor)
 ```
 
@@ -217,14 +217,14 @@ let u8_bgra = to_u8color(ncolor)
 
 The gamma-corrected linearized BGRA-related functions are: (Implemented in v1.0.01)
 
-```rust
+```mfg
 f32v4 to_lbgra|col:u8v4|
 u8v4 lbgra_to_u8color|col:f32v4|
 ```
 
 **Example**
 
-```swift
+```mfg
 def result_u8 |x, y| {
   let lcol = to_lbgra(input_u8(x, y))
   lbgra_to_u8color(lcol)
@@ -235,7 +235,7 @@ def result_u8 |x, y| {
 
 There are the following functions: (Implemented in v1.0.01)
 
-```rust
+```mfg
 f32v4 to_xyza| col:u8v4 |
 u8v4 xyza_to_u8color| col:f32v4 |
 
@@ -246,7 +246,7 @@ f32v3 xyz_to_lbgr| col:f32v3 |
 
 **Example**
 
-```swift
+```mfg
 def result_u8 |x, y| {
   let xcol = to_xyza(input_u8(x, y))
   xyza_to_u8color(xcol)
@@ -303,14 +303,14 @@ There is also a function with a trailing `A` that passes alpha as it is and appl
 
 In this case, it is fixed to 4D. The following two have the same meaning:
 
-```swift
+```mfg
 let lcol1 = gamma2linearA(ncol)
 let lcol2 = [*gamma2linear(ncol.xyz), ncol.w]
 ```
 
 ### gamma2linear
 
-```rust
+```mfg
 # T may be scalar
 
 T gamma2linear| ncolor:T |
@@ -322,7 +322,7 @@ input_u8 is the gamma corrected value.
 
 ### linear2gamma
 
-```rust
+```mfg
 # T may be scalar
 
 T linear2gamma| ncolor:T |
@@ -335,7 +335,7 @@ Before returning to result_u8, the value must be gamma corrected.
 
 ## rand
 
-```rust
+```mfg
 f32 rand| |
 ```
 
@@ -402,7 +402,7 @@ All functions cannot be used for vectorization.
 smoothstep is a common function in shaders.
 Completion of smoothstep is done using the following formula:
 
-```swift
+```mfg
 let t = clamp((x – edge0)/(edge1 –edge0), 0.0, 1.0)
 t * t * (3.0 – 2.0 * t);
 ```
@@ -420,7 +420,7 @@ Neither can be vectorized.
 
 **Example**
 
-```swift
+```mfg
 let fvec = vec3(3.0)
 let ivec = vec4(1)
 ```
@@ -434,7 +434,7 @@ this is not supported in MFG.
 
 In MFG, just tuples mean the same thing, so please use that.
 
-```swift
+```mfg
 # let fvec = vec3(1.0, 2.0, 3.0) This is not supported, use following.
 let fvec = [1.0, 2.0, 3.0]
 ```
@@ -453,7 +453,7 @@ Clamp can be used in scalars and vectors, and can also be used for both i32 and 
 
 Strictly speaking, we can write as following four definitions:
 
-```rust
+```mfg
 f32 clamp|x:f32, minVal:f32, maxVal:f32|
 i32 clamp|x:i32, minVal:i32, maxVal:i32|
 T clamp|x:T, minVal:T, maxVal:T|
@@ -468,14 +468,14 @@ clamp returns minVal if x is less than minVal, maxVal if it is greater than maxV
 
 The variable length argument means that:
 
-```swift
+```mfg
 min(1.5, 3.2, 2.0)
 max(3, 2, 5, 7)
 ```
 
 At first glance, this may look like a vectorization, but it differ in which the arugments are not a tuple.
 
-```swift
+```mfg
 #Vectrise. There is one argument, but the number of tuple elements is arbitrary
 sin([1.0, 2.0, 3.0, 4.0])
 
@@ -487,7 +487,7 @@ It also supports vectors for each argument.
 
 So you can do the following:
 
-```swift
+```mfg
 # The result is [3, 3, 3]
 max([1, 2, 3], [3, 2, 1], [1, 3, 2])
 ```
@@ -496,7 +496,7 @@ This is a tuple of the results of max for each element.
 
 From the way I wrote it so far,
 
-```rust
+```mfg
 T max|x1:T, x2:T, ...|
 T min|x1:T, x2:T, ...|
 ```
