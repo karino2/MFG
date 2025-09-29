@@ -1,0 +1,32 @@
+{
+  "name": "mfg",
+  "version": "1.0.0",
+  "description": "package.json for VuePress of docs.",
+  "homepage": "https://github.com/karino2/MFG#readme",
+  "bugs": {
+    "url": "https://github.com/karino2/MFG/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/karino2/MFG.git"
+  },
+  "license": "MIT",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "copymfgjs": "cp  tools/prism-mfg/prism-mfg.js docs/.vuepress/",
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
+  },
+  "devDependencies": {
+    "@vuepress/bundler-vite": "^2.0.0-rc.24",
+    "@vuepress/theme-default": "^2.0.0-rc.112",
+    "prismjs": "^1.30.0",
+    "sass-embedded": "^1.93.2",
+    "vuepress": "^2.0.0-rc.24"
+  }
+}

@@ -1,0 +1,4 @@
+docs/.vuepress/.cache/deps
+docs/.vuepress/.temp
+node_modules
+docs/.vuepress/prism-mfg.js
