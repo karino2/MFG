@@ -1,7 +1,7 @@
-(function(){
-
-Prism.languages.mfg = {
-  'comment': {
+export default {
+  id: 'mfg',
+  grammar: {
+     'comment': {
     pattern: /(^|[^\\])#.*/,
     lookbehind: true,
     greedy: true,
@@ -31,6 +31,5 @@ Prism.languages.mfg = {
 			/\b(?:abs|all|any|elif|else|f32|f32v[2-4]|input_u8|i32|i32v[2-4]|ifel|max|min|rsum|reduce|sampler|u8|u8v[2-4]|u32|u32v[2-4]|vars|vec[2-4]|xor)\b/,
   'operator': /[-+*/%=!<>&|^~?]+|\|>|\.\.\.|\.\.</,
   'punctuation': /[{}[\](),.:\\]/,    
-} 
-
-}())
+} ,
+}
