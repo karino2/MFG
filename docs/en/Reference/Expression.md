@@ -268,7 +268,7 @@ It is assumed that the arguments for the named arguments are first filled in, an
 Named arguments can be specified in the order of arguments without names, but many of them may change the order due to future changes in specifications.
 Use named arguments wherever you can use named arguments.
 
-Named arguments are covered in more detail using [Sampler](sampler.md) and [trans and reduce](TransReduce.md).
+Named arguments are covered in more detail using [Sampler](Sampler.md) and [trans and reduce](TransReduce.md).
 
 ### Block arguments
 

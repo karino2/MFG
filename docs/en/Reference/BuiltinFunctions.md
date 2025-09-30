@@ -68,7 +68,7 @@ There are many functions in MFG that correspond to genType in OpenGL terms and T
 If you know these, following is the same explanatin of them.
 
 In MFG, there are functions that support either vectors or scalars.
-As explained in [Types](Types.md), vectors are tuples of the same type and have 2-4 elements.
+As explained in [Type](Type.md), vectors are tuples of the same type and have 2-4 elements.
 The reason for the constraint of up to four elements is the constraints of the underling environment (Metal, OpenGL, DirectX) constraints.
 
 For example, length is a typical function that supports vectors.

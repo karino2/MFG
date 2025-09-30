@@ -167,7 +167,7 @@ A tuple that meets these two conditions is called a vector.
 In MFG, some functions only support scalars or vectors,
 so it can be important whether a variable is a vector or not.
 
-This is noted for each function item in [Builtin Functions](BultinFunctions.md).
+This is noted for each function item in [Builtin Functions](BuiltinFunctions.md).
 
 MFG treats tuple as vector automatically if you only meet the conditions.
 For example, normalize, a function that normalizes a vector, can be called as follows:
