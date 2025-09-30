@@ -18,9 +18,8 @@
     "doc": "docs"
   },
   "scripts": {
-    "copymfgjs": "cp  tools/prism-mfg/prism-mfg.js docs/.vuepress/",
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs"
+    "docs:dev": "cp tools/prism-mfg/prism-mfg.js docs/.vuepress/; vuepress dev docs",
+    "docs:build": "cp tools/prism-mfg/prism-mfg.js docs/.vuepress/; vuepress build docs"
   },
   "devDependencies": {
     "@vuepress/bundler-vite": "^2.0.0-rc.24",
