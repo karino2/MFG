@@ -26,14 +26,14 @@ export default defineUserConfig({
     locales: {
       "/ja/": {
         navbar: [
-          { text: 'Top', link: '/ja/' },
+          { text: 'Home', link: '/ja/' },
           { text: 'Getting Started', link: '/ja/GettingStarted/' },
           { text: 'Reference', link: '/ja/Reference/' },
         ],
       },
       "/en/": {
         navbar: [
-          { text: 'Top', link: '/en/' },
+          { text: 'Home', link: '/en/' },
           { text: 'Getting Started', link: '/en/GettingStarted/' },
           { text: 'Reference', link: '/en/Reference/' },
         ],
