@@ -8,9 +8,38 @@ Prism.languages.mfg = PrismMfg.grammar
 
 
 export default defineUserConfig({
-  bundler: viteBundler(),
-  theme: defaultTheme(),
   base: "/MFG/",
+  locales: {
+    "/ja/": {
+      lang: "ja-JP",
+      title: "MFGドキュメント",
+      descpription: "MFGのドキュメント"
+    },
+    "/en/": {
+      lang: "en-US",
+      title: "MFG Document",
+      descrption: "MFG Documentation."
+    }
+  },
+  bundler: viteBundler(),
+  theme: defaultTheme({
+    locales: {
+      "/ja/": {
+        navbar: [
+          { text: 'Top', link: '/ja/' },
+          { text: 'Getting Started', link: '/ja/GettingStarted/' },
+          { text: 'Reference', link: '/ja/Reference/' },
+        ],
+      },
+      "/en/": {
+        navbar: [
+          { text: 'Top', link: '/en/' },
+          { text: 'Getting Started', link: '/en/GettingStarted/' },
+          { text: 'Reference', link: '/en/Reference/' },
+        ],
+      }
+    }
+  }),
   markdown: {
     extendMarkdown: md => {
       const org_highlight = md.options.highlight
