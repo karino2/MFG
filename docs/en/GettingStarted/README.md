@@ -1,7 +1,5 @@
 # Getting Started
 
-[日本語版 Getting Started](../../ja/GettingStarted/README.md)
-
 This is a MFG tutorial page using MFGStudio.
 To install MFG Studio, please refer to the [Instllation Page](../Installation.md).
 

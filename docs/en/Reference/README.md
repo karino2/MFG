@@ -1,7 +1,5 @@
 # Reference
 
-[Japanese Version](../../ja/Reference/README.md).
-
 - [Tensor](Tensor.md)
 - [Type](Type.md)
 - [Expression and Vectorize Operation](Expression.md)

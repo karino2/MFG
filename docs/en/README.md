@@ -1,7 +1,5 @@
 # MFG Documentation Page
 
-[日本語版](../ja/README.md)
-
 Develop filters on GPUs using a modern programming language!
 
 MFG is a programming language designed from scratch to develop image processing filters that run on GPUs.
@@ -36,6 +34,8 @@ def result_u8 |x2, y2| {
 
 - Official: [MFG - Modern Filter-language for GPU / MFG Studio](https://modernfilterlanguageforgpu.org/)
 - [ReleaseNotes.md](ReleaseNotes.md)
+- This document is hosted at [https://karino2.github.io/MFG/en/](https://karino2.github.io/MFG/en/).
+
 
 ## MFG Features
 

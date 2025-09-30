@@ -1,7 +1,5 @@
 # MFGのドキュメントのページ
 
-[English Doc](../en/README.md)
-
 モダンなプログラム言語でGPU上のフィルタ開発を！
 
 MFGはGPU上で動作する画像処理フィルタを開発するために、1から設計されたプログラム言語です。
@@ -36,6 +34,7 @@ def result_u8 |x2, y2| {
 
 - 公式ページ [MFG - Modern Filter-language for GPU / MFG Studio](https://modernfilterlanguageforgpu.org/)
 - [ReleaseNotes.md](ReleaseNotes.md)
+- このドキュメントは、[https://karino2.github.io/MFG/ja/](https://karino2.github.io/MFG/ja/)で公開されています
 
 ## MFGの特徴
 
