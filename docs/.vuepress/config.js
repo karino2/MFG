@@ -40,15 +40,4 @@ export default defineUserConfig({
       }
     }
   }),
-  markdown: {
-    extendMarkdown: md => {
-      const org_highlight = md.options.highlight
-      md.options.highlight =  (code, lang) => {
-        if (lang === "mfg")
-          return Prism.highlight(code, Prism.languages[lang], lang)
-        else
-          return org_highlight(code, lang)
-      }
-    }
-  }
 })
