@@ -241,8 +241,8 @@ let col = input_u8(x, y) |>
           gamma2linearA(...)
 ```
 
-If you write multiple lines, the end of the line is considered to be the end of the expression,
-the pipe operator must be written on the previous line or escape the line break.
+In MFG, a line break is recognized as the end of an expression, but special treatment is given when the beginning of the next line is a pipe operator.
+It is fine to write a pipe symbol at the beginning of a next line as in the example above.
 
 ### Named Arguments
 
