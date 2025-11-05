@@ -1,5 +1,6 @@
 
 @title $TITLE
+@version "1.0"
 
 # bayer pattern
 def pattern by

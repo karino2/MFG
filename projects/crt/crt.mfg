@@ -1,4 +1,5 @@
 @title $TITLE_CRT_FILTER
+@version "1.0"
 
 #
 # Similar to following shader, but much simpler.
