@@ -2,6 +2,13 @@
 
 Update history. [MFG Studio download page](https://modernfilterlanguageforgpu.org/download/)
 
+## 1.0.07 2025-11-05
+
+- Added thumbnail_base.mdz, which is the thumbnail_base.mdz, to the preview target
+- Added ability to import current preview as thumbnail.png
+
+The thumbnail is a 512x512 png image and will be included in the mar archive with the file name thumbnail.png.
+
 ## v1.0.06 2025-09-22
 
 - Implement cancellation during long running times

@@ -2,6 +2,13 @@
 
 更新履歴です。[MFG Studioのダウンロードページ](https://modernfilterlanguageforgpu.org/download/)
 
+## 1.0.07 2025-11-05
+
+- サムネイルのベースとなるthumbnail_base.mdzをプレビューのターゲットに追加
+- 現在のプレビューをthumbnail.pngとしてインポートする機能を追加
+
+サムネイルは512x512のpng画像でthumbnail.pngというファイル名としてmarファイルに含めるものとします。
+
 ## v1.0.06 2025-09-22
 
 - 長時間実行時のキャンセルを実装
