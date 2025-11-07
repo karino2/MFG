@@ -1,0 +1,27 @@
+@title $TITLE
+@version "1.0"
+
+@param_pos CENTER(POINTER, label=$LABEL_CENTER)
+@param_f32 DISTORT(SLIDER, label=$LABEL_STRENGTH, min=0.0, max=1.0, init=0.1)
+
+let SIZE = f32(min(*input_u8.extent()))
+# ずらし強度1.0で半径が一番外のずらし。
+let MAX_DELTA = 100.0/SIZE
+
+let finput = sampler<input_u8>(coord=.NormalizedLinear, address=.ClampToEdge)
+
+def result_u8 |x, y| {
+  let fv = to_ncoord([x, y])
+  let rvec = fv - CENTER
+  let r = length(rvec)
+  let strength = r*MAX_DELTA*DISTORT
+
+  let r1vec = (1.0+strength)*rvec+CENTER
+  let r2vec = (1.0-strength)*rvec+CENTER
+  let col0 = finput(*fv)
+  let col1 = finput(*r1vec)
+  let col2 = finput(*r2vec)
+
+   ifel(col0.w == 0, col0,
+         u8[col2.x, col0.y, col1.z, col0.w])
+}

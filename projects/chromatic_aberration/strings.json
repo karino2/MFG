@@ -1,0 +1,4 @@
+{
+  "ja": {"TITLE": "色収差（放射）", "LABEL_CENTER": "中心", "LABEL_STRENGTH": "ずらし強度"},
+  "en": {"TITLE": "Chromatic Aberration(radial)", "LABEL_CENTER": "Center", "LABEL_STRENGTH": "Strength"}
+}
