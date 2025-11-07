@@ -1,0 +1,19 @@
+@title $TITLE
+@version "1.0"
+
+@param_f32 STR(SLIDER, label=$LABEL_STRENGTH, min=0.0, max=1.0, init=0.2)
+@param_pos CXY(POINTER, label=$LABEL_CENTER)
+
+# Maybe linear is not enough radial effect, power might be better.
+
+def result_u8 |x, y| {
+  let fcol = f32(input_u8(x, y))/255.0
+  let fxy = to_ncoord([x, y])
+  let r = distance(fxy, CXY)
+  # To make distance from 0l.5, 0.5 to 1.0, 1.0 be 1.0, mutiply 4.0
+  let delta = min(1.0, STR*r*4.0)
+
+  let fcol2 = fcol - delta*[*vec3(1.0), 0.0]
+
+  u8(clamp(255.0*fcol2, 0.0, 255.0))
+}
