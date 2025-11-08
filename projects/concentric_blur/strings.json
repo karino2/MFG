@@ -1,0 +1,4 @@
+{
+  "ja": {"TITLE": "同心円ぼかし", "LABEL_CENTER": "中心", "LABEL_BLUR_WIDTH": "ぼかし幅", "LABEL_FALLOFF": "減衰率"},
+  "en": {"TITLE": "Concentric Blur", "LABEL_CENTER": "Center", "LABEL_BLUR_WIDTH": "Blur Width", "LABEL_FALLOFF": "Falloff"}
+}

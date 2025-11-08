@@ -1,0 +1,58 @@
+@title $TITLE
+@version "1.0"
+
+@param_pos nCXY(POINTER, label=$LABEL_CENTER)
+@param_f32 BWf(SLIDER, label=$LABEL_BLUR_WIDTH, min=0.1, max=1.0, init=0.25)
+@param_f32 DECLINE(SLIDER, label=$LABEL_FALLOFF, min=0.0, max=1.0, init=0.0)
+
+# The radius of the weight.
+# We kept it around 32, as making it much larger didn't provide any benefit.
+let WR = 32
+
+let sigma = f32(WR)/3.0
+
+# The maximum arc length of the summation range. (
+let MAX_WIDTH = 128
+
+# Summation range.
+let TOTAL_WIDTHf = f32(MAX_WIDTH)*BWf
+let POS_WIDTH = i32(TOTAL_WIDTHf)/2
+let NEG_WIDTH = -(POS_WIDTH-1)
+
+
+let finput = sampler<input_u8>(coord=.NormalizedLinear, address=.ClampToEdge)
+
+@bounds(WR)
+def weight |x| {
+  exp(- f32(x^2)/(2.0*sigma^2) )
+}
+
+let fweight = sampler<weight>(coord=.NormalizedLinear)
+
+let CXY = nCXY*input_u8.extentf()
+
+def result_u8 |x, y| {
+  let fxy = f32([x, y])
+  let d = distance(fxy, CXY)
+  let dxy = fxy-CXY
+
+   # addhook adjustment.
+  let oneDeltaTheta =exp(-d*DECLINE/(0.5*min(*input_u8.extentf())))*3.1415/512.0
+  let theta0 = atan2(dxy.y, dxy.x)
+
+   let [bs, gs, rs, as, wsum] = rsum(NEG_WIDTH..<POS_WIDTH) |rx| {
+      let deltaTheta = f32(rx)*oneDeltaTheta
+      let theta = theta0+deltaTheta
+      let dxy2 = d*[cos(theta), sin(theta)]+CXY
+      let [b, g, r, a] = finput( *dxy2/input_u8.extentf() )  /255.0
+      # In theory, this should have align to arc.
+      let w = fweight(abs(f32(rx))/(f32(POS_WIDTH-1)))
+      let ga = a*w
+      let [b2, g2, r2] =  [b, g, r]*ga
+     [b2, g2, r2, ga, w]
+   }
+   let a = as/wsum
+   let [b, g, red] = ifel(abs(as) < 0.0001, [0.0, 0.0, 0.0], [bs, gs, rs]/as)
+   u8(255.0*[b, g, red, a])
+}
+
