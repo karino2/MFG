@@ -409,6 +409,7 @@ there are also some methods for tensor as well.
 Tensor has the following methods:
 
 - extent
+- extentf
 - is_inside
 - to_ncoord
 - sum
@@ -441,6 +442,17 @@ If no argument is specified, all values ​​will be returned as a vector.
 
 ```mfg
 let [w, h] = input_u8.extent()
+```
+
+### ts.extentf(dim)
+
+(since v1.0.08)
+
+Returns the result of `exntet` casting to f32. 
+Similar to extent, return vector if no arugment is specified.
+
+```mfg
+let fsize = max(*input_u8.extentf()) 
 ```
 
 ### ts.is_inside(x, y)

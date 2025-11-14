@@ -54,11 +54,14 @@ MEPはMFG Enhanced Proposalの略。PythonのPEPなどのMFG版。
 
 - [MEP 27: パイプライン演算子だけは次の行に書ける例外とするルール](MEP/27.md)
 
+**v1.0.08**
+
+- [MEP 28: 前景色の取得](MEP/28.md)
+
 
 ### ステータス、Proposed
 
 - [MEP 23: result_u8などをresultに](MEP/23.md)
-- [MEP 28: 前景色の取得](MEP/28.md)
 
 ### ステータス、Declined
 
