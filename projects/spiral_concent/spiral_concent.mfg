@@ -1,0 +1,119 @@
+@title "渦巻き集中線"
+
+# Specify width by ratio of I.
+@param_f32 PHASE_R(SLIDER, label="巻き具合",  init=0.5, min=-1.0, max=1.0)
+@param_f32 LENGTH_R(SLIDER, label="長さ",  init=0.85, min=0.1, max=1.0)
+@param_f32 TR(SLIDER, label="幅",  init=0.6, min=0.1, max=1.0)
+@param_f32 WRR(SLIDER, label="幅ランダム",  init=0.2, min=0.0, max=1.0)
+@param_f32 DR(SLIDER, label="密度", init=0.3, min=0.01, max=1.0)
+@param_f32 LR(SLIDER, label="長さランダム",  init=0.3, min=0.0, max=1.0)
+# @param_f32v4 fgcol(COLOR_PICKER, label="線の色", init=[1.0, 1.0, 0.0, 1.0])
+@param_pos ORIGIN(POINTER, label="中心")
+
+let fgcol = fore_color()
+
+
+let PI = 3.141592
+let N_MAX = 400
+# Number of lines. Interval is 2PI/N
+let N = f32(N_MAX)*DR
+let I = 2.0*PI/N
+
+# Shorter edge of canvas (width or height).
+let SIDE = min(*input_u8.extentf())
+
+# Start line from about half of shorter edge.
+let OFFSET = SIDE*(1.0-LENGTH_R)
+
+# N random number, but N is not known  in advance, so create N_MAX.
+@bounds(N_MAX, 2)
+def RAND_TABLE |x, y| { rand() }
+
+# return positive region theta. arg order is x, y for spread usage
+fn atan2xy |x: f32, y: f32| {
+  let theta = atan2(y, x)
+  ifel(theta > 0.0, theta, 2.0*PI+theta)
+}
+
+# Adding offset if rad is near 0.0.
+# offset is either 0.0 or 2.0*PI.
+# This make "2*PI-eps" to "eps" to be "2*PI-eps" to "2*PI + eps", which is continous.
+# offset is first for better pipelining.
+fn continuise |  offset: f32, rad: f32 | {
+  ifel(rad > PI, rad, rad+offset)
+}
+
+# alpha blend.
+fn blend_simple | src: f32v4, cur: f32v4 | {
+  # let mixA = mix(src.w, cur.w, cur.w)
+  let resA = max(src.w, cur.w)
+  # let resBGR = mix(src.w*src.xyz, cur.xyz, cur.w)/mixA
+  let resBGR = mix(src.xyz, cur.xyz, cur.w)
+  ifel(cur.w < 0.001,
+        src,
+        [*resBGR, resA])
+}
+
+fn blend | dest: f32v4, cur: f32v4 | {
+  let resA = mix(dest.w, 1.0, cur.w)
+  let resBGR = mix(dest.w*dest.xyz, cur.xyz, cur.w)/resA
+  ifel(cur.w < 0.0001,
+        dest,
+        [*resBGR, resA])
+}
+
+def result_u8 |x_0, y_0| {
+  # ORIGIN to pixel pos.
+  let fo = ORIGIN*f32(input_u8.extent())
+
+  let b_fxy0 = f32[x_0, y_0]
+    let b_rxy0 = b_fxy0 - fo
+    let d = length(b_rxy0)
+    let theta_g = d * 0.00005*(5.0*PHASE_R)^3.0
+    let a_rxy0 = [dot([cos(theta_g), -sin(theta_g)], b_rxy0), dot([sin(theta_g), cos(theta_g)], b_rxy0)]
+    let fxy0 = a_rxy0+fo
+
+  let tt_center_0 = atan2xy( *(fxy0-fo) )
+  let A0 = round(tt_center_0/I)
+  let ATheta0 = A0*I
+
+  let offset = ifel(ATheta0-I/2.0 < 0.0 || ATheta0+I/2.0 > 2.0*PI, 2*PI, 0.0)
+  let tt_center = continuise(offset, tt_center_0)
+
+  # Index of I.
+  let A = round(tt_center/I)
+  # Basic angle of this pos.
+  let ATheta = A*I
+  let AI = i32(A)
+
+  # Width of line, stands for the angle of triangle. Randomness is added for each A.
+  let T = TR*(1.0-WRR*RAND_TABLE(AI, 0))*I
+
+  # Length of origin. Away from OFFSET+random.
+  let RO = OFFSET*(1.0+2.0*LR*RAND_TABLE(AI, 1))
+
+  # to: Origin of triangle
+  let to =  fo + RO* [cos(ATheta), sin(ATheta)]
+
+  let AT_min = ATheta-T/2.0 |> continuise(offset, ...)
+  let AT_max = ATheta+T/2.0 |> continuise(offset, ...)
+
+  let [tt_min, tt_max] = reduce(init=[-1.0, -1.0], 0..<2, 0..<2) |i, j, accm| {
+    # (x-0.5, y-0.5), (x+0.5, y-0.5), (x-0.5, y+0.5), (x+0.5, y+0.5)
+    let fxy = fxy0 -[0.5, 0.5] + f32[i, j]   
+    let theta = atan2xy(*(fxy-to)) |> continuise(offset, ...)
+
+
+    ifel( accm < -0.5, vec2(theta), [min(accm.x, theta), max(accm.y, theta)])
+  }
+
+  let tt_w = tt_max - tt_min
+
+  let r_over = clamp(AT_min-tt_min, 0.0, tt_w)
+  let l_over = clamp(tt_max - AT_max, 0.0, tt_w)
+
+  let overwrap = tt_w - r_over - l_over
+  let avg_occupy = overwrap / tt_w  
+  let src = input_u8(x_0, y_0) |> to_ncolor(...)
+  blend(src, [*fgcol.xyz, avg_occupy]) |> to_u8color(...)
+}
