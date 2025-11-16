@@ -1,0 +1,4 @@
+{
+  "ja": {"TITLE": "集中線(渦巻き)", "LABEL_WINDING_RATE": "巻き具合", "LABEL_LENGTH": "長さ", "LABEL_WIDTH": "幅", "LABEL_WIDTH_RANDOM": "幅（ランダム）", "LABEL_DENSITY": "密度", "LABEL_LENGTH_RANDOM": "長さ（ランダム）", "LABEL_CENTER": "中心"},
+  "en": {"TITLE": "Concent Line(Spiral)", "LABEL_WINDING_RATE": "Winding Rate", "LABEL_LENGTH": "Length", "LABEL_WIDTH": "Width", "LABEL_WIDTH_RANDOM": "Width (Random)", "LABEL_DENSITY": "Density", "LABEL_LENGTH_RANDOM": "Length (Random)", "LABEL_CENTER": "Center"}
+}

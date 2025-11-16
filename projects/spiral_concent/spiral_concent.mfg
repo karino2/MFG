@@ -1,20 +1,21 @@
-@title "渦巻き集中線"
+@title $TITLE
+@version "1.0"
 
 # Specify width by ratio of I.
-@param_f32 PHASE_R(SLIDER, label="巻き具合",  init=0.5, min=-1.0, max=1.0)
-@param_f32 LENGTH_R(SLIDER, label="長さ",  init=0.85, min=0.1, max=1.0)
-@param_f32 TR(SLIDER, label="幅",  init=0.6, min=0.1, max=1.0)
-@param_f32 WRR(SLIDER, label="幅ランダム",  init=0.2, min=0.0, max=1.0)
-@param_f32 DR(SLIDER, label="密度", init=0.3, min=0.01, max=1.0)
-@param_f32 LR(SLIDER, label="長さランダム",  init=0.3, min=0.0, max=1.0)
-# @param_f32v4 fgcol(COLOR_PICKER, label="線の色", init=[1.0, 1.0, 0.0, 1.0])
-@param_pos ORIGIN(POINTER, label="中心")
+@param_f32 PHASE_R(SLIDER, label=$LABEL_WINDING_RATE,  init=0.5, min=-1.0, max=1.0)
+@param_f32 LENGTH_R(SLIDER, label=$LABEL_LENGTH,  init=0.85, min=0.1, max=1.0)
+@param_f32 LR(SLIDER, label=$LABEL_LENGTH_RANDOM,  init=0.3, min=0.0, max=1.0)
+@param_f32 TR(SLIDER, label=$LABEL_WIDTH,  init=0.6, min=0.1, max=1.0)
+@param_f32 WRR(SLIDER, label=$LABEL_WIDTH_RANDOM,  init=0.2, min=0.0, max=1.0)
+@param_f32 DR(SLIDER, label=$LABEL_DENSITY, init=0.3, min=0.01, max=1.0)
+@param_pos ORIGIN(POINTER, label=$LABEL_CENTER)
 
 let fgcol = fore_color()
 
 
 let PI = 3.141592
 let N_MAX = 400
+
 # Number of lines. Interval is 2PI/N
 let N = f32(N_MAX)*DR
 let I = 2.0*PI/N
