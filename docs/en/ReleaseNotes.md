@@ -2,6 +2,15 @@
 
 Update history. [MFG Studio download page](https://modernfilterlanguageforgpu.org/download/)
 
+## 1.0.08 2025-11-20
+
+Along with the official release of FireAlpaca SE 3.0, we released MFGStudio with the same engine.
+
+- `fore_color()` and `back_color()` allow you to obtain the currently selected color of the app's brush and its back color([Reference: User Defined and Bultin Functions](Reference/BultinFunctions.md)）
+- Added a color picker to MFGStudio (can be displayed from the window menu). Now you can specify the color that can be obtained with `fore_color()` and `back_color()`
+- Added `ts.extentf()`, which is f32 version of `ts.extent()`([Reference: Tensor](Reference/Tensor.md))
+
+
 ## 1.0.07 2025-11-05
 
 - Added thumbnail_base.mdz, which is the thumbnail_base.mdz, to the preview target

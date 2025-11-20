@@ -503,6 +503,16 @@ T min|x1:T, x2:T, ...|
 
 Furthermore, T can also use Ti, and f32 and i32.
 
+## Color acquisition function (since v1.0.08)
+
+| API | Description |
+| ---- | ---- |
+| `f32v4 fore_color\| \|` | Get foreground color (ncolor) |
+| `f32v4 back_color\| \|` | Get background color (ncolor) |
+
+Take the currently selected color or background color of the paint application which host MFG (FireAlpaca etc.).
+
+Color is ncolor, a 4-element vector from 0.0 to 1.0, but the alpha element is always 1.0.
 
 ## Other functions
 
