@@ -6,7 +6,7 @@
 
 FireAlpaca SE 3.0の正式リリースに合わせて、同じエンジンの入ったMFGStudioをリリース。
 
-- `fore_color()`, `back_color()`で、アプリのブラシの現在選択されている色とその裏の色（グラデーションなどで使うback color）をとれるようにする（[リファレンス: ユーザー定義関数と組み込み関数](Reference/BultinFunctions.md), [MEP 28: 前景色の取得](MEP/28.md)）
+- `fore_color()`, `back_color()`で、アプリのブラシの現在選択されている色とその裏の色（グラデーションなどで使うback color）をとれるようにする（[リファレンス: ユーザー定義関数と組み込み関数](Reference/BuiltinFunctions.md), [MEP 28: 前景色の取得](MEP/28.md)）
 - MFGStudioにカラーピッカーを追加（ウィンドウのメニューから表示出来る）。これで`fore_color()`, `back_color()`でとれる色を指定出来る
 - `ts.extent()`のf32版、`ts.extentf()`を追加([リファレンス: テンソル](Reference/Tensor.md))
 
