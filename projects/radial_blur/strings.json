@@ -1,0 +1,4 @@
+{
+  "ja": {"TITLE": "放射ぼかし", "LABEL_STRENGTH": "強度", "LABEL_FALLOFF": "減衰"},
+  "en": {"TITLE": "Radial Blur", "LABEL_STRENGTH": "Strength", "LABEL_FALLOFF": "Falloff"}
+}

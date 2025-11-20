@@ -1,0 +1,56 @@
+@title $TITLE
+@version "1.0"
+
+@param_f32 strength_r(SLIDER, label=$LABEL_STRENGTH, min=0.0, max=1.0, init=0.5)
+@param_f32 reduction(SLIDER, label=$LABEL_FALLOFF, min=0.0, max=1.0, init=0.5)
+@param_pos center(POINTER, label=$LABEL_CENTER)
+
+let strength = (2.0+(strength_r^2.0)*11.0)
+
+let sample = 2
+
+let mw = i32( strength * sample )
+let ar = 0.33 * mw
+
+@bounds(mw+1)
+def weights |m|{ 100 * exp( -m*m / (2*ar*ar) ) }
+
+let finput = sampler<input_u8>(coord=.NormalizedLinear)
+
+# ncoord delta per 1px(rough)
+let pdelta = 1.0/min(*input_u8.extentf())
+
+@bounds(input_u8.extent(0), input_u8.extent(1))
+def mid_all |x, y| {
+  let fxy = to_ncoord([x, y])
+  let radial = fxy-center
+
+  # mw is around 10, adjust for this level.
+  let range = i32(length(radial)^(0.5+reduction)*100.0*mw^(1.5))/20
+  let rdir = normalize(radial)
+  rsum(-range..<range+1) |rx| {
+
+    let pxy = fxy + rdir*pdelta*f32(rx)
+    let inside = all(pxy >= 0.0 && pxy <= 1.0)
+
+    let gauss = ifel(inside, weights( mw*abs(rx)/range ), 0.0)
+  
+    let [b, g, r, a] = finput(*pxy)
+    let ga = gauss * a
+  
+    [
+        *[b, g, r]*ga,
+        ga,
+        gauss
+     ]
+  }
+}
+
+def result_u8 |x, y| {
+  let [mid_b, mid_g, mid_r, mid_a, count] = mid_all(x, y)
+
+  ifel( mid_a == 0,
+    u8[0, 0, 0, 0],
+    u8[*[mid_b, mid_g, mid_r]/mid_a,  (mid_a / count)]
+  )
+}
