@@ -2,6 +2,12 @@
 
 Update history. [MFG Studio download page](https://modernfilterlanguageforgpu.org/download/)
 
+## 1.0.09 2025-12-09
+
+Allow users to add their own target images.
+If there are png, jpg, mdp, or mdz files in preview_targets in the settings folder that can be opened from the Help menu, add them as targets.
+This is done when the app starts, so you need to close the app once after adding it.
+
 ## 1.0.08 2025-11-20
 
 Along with the official release of FireAlpaca SE 3.0, we released MFGStudio with the same engine.
