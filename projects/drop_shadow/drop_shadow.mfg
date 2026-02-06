@@ -1,0 +1,65 @@
+
+@title $TITLE
+@version "1.0"
+
+@param_i32 range(SLIDER, label=$LABEL_SHADOW_SIZE, min=5, max=50, init=15)
+@param_i32 ar(SLIDER, label=$LABEL_BLUR_WIDTH, min=1, max=30, init=7)
+@param_i32 is_target_upper(CHECKBOX, label=$LABEL_ABOVE_LAYER, init=0)
+@param_f32 angle(DIRECTION, init=-0.5)
+
+let sigma = f32(ar)
+let WR = 3*ar
+let mWR = -(WR-1)
+
+@bounds(WR)
+def weight |x| {
+  exp(- f32(x^2)/(2.0*sigma^2) )
+}
+
+let coeff = rsum(mWR..<WR) |rx| { weight(abs(rx)) }
+
+let dir = [cos(angle), sin(angle)]*1.415
+let [W, H] = input_u8.extent()
+
+let upper = sampler<input_u8[1]>(address=.ClampToEdge)
+let current = sampler<input_u8>(address=.ClampToEdge)
+
+fn target |x: i32, y:i32| {
+    ifel(is_target_upper, upper(x, y), current(x, y))
+}
+
+
+@bounds(W, H)
+def shadow_x0 |x, y| {
+  rsum(mWR..<WR) |rx| {
+    let v = [x, y] + [rx, 0]
+    let ocu = reduce(init=0.0, 0..<range) | index, accm | {
+      let vi = v + i32(dir*index)
+      let cur = target(*vi) |> to_ncolor(...).w
+
+      max(cur, accm)
+    }
+    ocu*weight(abs(rx))
+  }
+}
+
+let shadow_x = sampler<shadow_x0>(address=.ClampToEdge)
+
+fn blend | dest: f32v4, cur: f32v4 | {
+  let resA = mix(dest.w, 1.0, cur.w)
+  let resBGR = mix(dest.w*dest.xyz, cur.xyz, cur.w)/resA
+  ifel(cur.w < 0.0001,
+        dest,
+        [*resBGR, resA])
+}
+
+def result_u8 |x, y| {
+   let shadowSum = rsum(mWR..<WR) |ry| {
+      shadow_x( x, y+ry)  * weight(abs(ry))
+   }
+   let shadowBGR = fore_color().xyz |> gamma2linear(...)
+   let shadow = [*shadowBGR, shadowSum/(coeff^2)]
+   let org = input_u8(x, y) |> to_lbgra(...)
+   ifel(is_target_upper, shadow, blend(shadow, org))
+     |> lbgra_to_u8color(...)
+}

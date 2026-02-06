@@ -1,0 +1,4 @@
+{
+  "ja": {"TITLE": "ドロップシャドウ", "LABEL_SHADOW_SIZE": "影のサイズ", "LABEL_BLUR_WIDTH": "ぼかし幅", "LABEL_ABOVE_LAYER": "上のレイヤーの影にする"},
+  "en": {"TITLE": "Drop Shadow", "LABEL_SHADOW_SIZE": "Shadow Size", "LABEL_BLUR_WIDTH": "Blur Width", "LABEL_ABOVE_LAYER": "Upper Layer's Shadow"}
+}
