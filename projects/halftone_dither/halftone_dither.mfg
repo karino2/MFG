@@ -1,0 +1,174 @@
+
+@title "ハーフトーンディザ"
+
+@param_f32 threshold(SLIDER, label="閾値", init=0.6, min=0.0, max=1.0)
+# @param_f32 scale(SLIDER, label="スケール", init=1.0, min=0.01, max=10.0)
+@param_i32 antialias(CHECKBOX, label="アンチエイリアス", init=1)
+@param_f32 angle(DIRECTION, init=0.8)
+@param_i32 pattern(DROPDOWN, label="形", items=["四角", "sin", "新聞", "インターリーブ"])
+
+let PI = 3.1415926
+
+# let angle = PI/4.0
+
+# bayer pattern
+def bayer_pattern by
+[
+    [ 0.0, 32.0,  8.0, 40.0,  2.0, 34.0, 10.0, 42.0],
+    [48.0, 16.0, 56.0, 24.0, 50.0, 18.0, 58.0, 26.0],
+    [12.0, 44.0,  4.0, 36.0, 14.0, 46.0,  6.0, 38.0],
+    [60.0, 28.0, 52.0, 20.0, 62.0, 30.0, 54.0, 22.0],
+    [ 3.0, 35.0, 11.0, 43.0,  1.0, 33.0,  9.0, 41.0],
+    [51.0, 19.0, 59.0, 27.0, 49.0, 17.0, 57.0, 25.0],
+    [15.0, 47.0,  7.0, 39.0, 13.0, 45.0,  5.0, 37.0],
+    [63.0, 31.0, 55.0, 23.0, 61.0, 29.0, 53.0, 21.0]
+]
+
+let PATTERN_WIDTH = bayer_pattern.extent(0)
+let PAT_MAX = f32(PATTERN_WIDTH^2-1)
+
+fn level_to_gray_bayer |x: i32, y:i32, level: f32| {
+   let pxy = [x, y]%PATTERN_WIDTH
+   let pval = bayer_pattern(*pxy)/PAT_MAX
+
+   ifel(level > threshold*pval, 1.0, 0.0)
+}
+
+
+# sincos pat
+
+# uv: x方向を0.0〜1.0 にノーマライズした座標（y方向はas比を維持してスケール）
+# iscale: これを掛けると、周期を0.0〜1.0としたグリッドとなるようなスケール（0.0, 1.0, 2.0, 3.0...の位置に中心が来るように格子を作る）
+fn sincos_pat |uv: f32v2, iscale:f32 | {
+  let pscale = iscale*2*PI
+  0.5 + 0.25 * cos(uv.x * pscale) + 0.25 * cos(uv.y * pscale)
+}
+
+# circle pat
+fn circle_pat |sh: f32v2, pscale: f32| {
+   let gsize =6.0
+   let sxy = sh*pscale
+   let cxy = round(sxy/gsize)*gsize
+   let rxy = sxy - cxy
+   # 1.0 - (length(rxy)/gsize)^2.0
+   # 1.0- length(rxy)/gsize
+   1.0 - sin(PI*length(rxy)/(2.0*gsize))
+   # smoothstep(gsize/6.0, gsize/2.0, length(rxy))
+}
+
+fn square_pat |uv: f32v2, iscale:f32 | {
+  let vxy = uv*iscale
+  let cxy = round(vxy)
+  # 0.0 to 0.5
+  let delta = abs(vxy-cxy)
+
+  let dst = max(*delta)
+  1.0 - sin(dst*PI)
+}
+
+# uv: 幅で正規化したf32v2をangleだけ回転したもの
+fn xy_to_uv |x: i32, y:i32| {
+   let uv0 = f32([x, y])/input_u8.extent(0)
+   let dir = [cos(angle), sin(angle)]
+   let ortho = [dir.y, -dir.x]
+   [dot(uv0, dir), dot(uv0, ortho)]
+}
+
+fn level_to_gray_shape_uv |uv: f32v2, level: f32, stype: i32| {
+   let dotSize = 6.0
+   let iscale = 1000.0/ dotSize
+   let rasterPattern =
+     ifel(stype == 0,
+       square_pat(uv, iscale), ...)
+     else(
+       sincos_pat(uv, iscale))
+
+   ifel(level > threshold*rasterPattern, 1.0, 0.0)
+}
+
+fn level_to_gray_shape_uv_anti |uv0: f32v2, level: f32, stype: i32| {
+   let divNum = 4
+   let eps = 1.0/f32(input_u8.extent(0)*divNum)
+   let cover = rsum(0..<divNum, 0..<divNum) |rx, ry| {
+     let uv = uv0 + f32[rx, ry]*eps
+     level_to_gray_shape_uv(uv, level, stype)
+   }
+  cover/(divNum^2)
+}
+
+fn level_to_gray_shape |x: i32, y:i32, level: f32, stype: i32| {
+   let uv = xy_to_uv(x, y)
+
+   ifel(antialias,
+       level_to_gray_shape_uv_anti(uv, level, stype),
+       level_to_gray_shape_uv(uv, level, stype))
+}
+
+fn level_to_gray_sincos |x: i32, y:i32, level: f32| {
+   level_to_gray_shape(x, y, level, 1)
+}
+
+fn level_to_gray_square |x: i32, y:i32, level: f32| {
+   level_to_gray_shape(x, y, level, 0)
+}
+
+fn interleave_gray |fxy: f32v2| {
+   # let scale = 1.0
+   let scale = threshold
+   let magic = [0.06711056, 0.00583715, 52.9829189]
+   # let fxy = xy_to_uv(x, y)*f32(input_u8.extent(0))
+   -scale + 2.0*scale*fract(magic.z*fract(dot(fxy, magic.xy)))
+}
+
+fn level_to_gray_interleave |x: i32, y:i32, level: f32| {
+   let fxy = f32([x, y])
+   let pval = interleave_gray(fxy)
+
+   ifel(level > pval, 1.0, 0.0)
+}
+
+
+
+fn level_to_gray |x: i32, y:i32, level: f32| {
+   ifel(pattern == 0,
+        level_to_gray_square(x, y, level), ...)
+   elif(pattern == 1,
+        level_to_gray_sincos(x, y, level), ...)
+   elif(pattern == 2,
+        level_to_gray_bayer(x, y, level), ...)
+   else(
+        level_to_gray_interleave(x, y, level))
+}
+
+
+fn deb_shape |x:i32, y:i32| {
+   let uv = xy_to_uv(x, y)
+   let dotSize = 12.0
+   let pscale =  1000.0/ dotSize
+
+   let gray = 1.0 - square_pat(uv, pscale)
+   [*vec3(gray), 1.0] |> lbgra_to_u8color(...)
+}
+
+fn deb_shape2 |x:i32, y:i32| {
+   let fxy = f32([x, y])
+   # let fxy = xy_to_uv(x, y)*f32(input_u8.extent(0))
+   let gray = interleave_gray(fxy)
+
+   [*vec3(gray), 1.0] |> lbgra_to_u8color(...)
+}
+
+
+fn real_result |x:i32, y:i32| {
+   let [level, a] = input_u8(x, y) |> to_xyza(...).yw
+   let gray = level_to_gray(x, y, level)
+
+   [*vec3(gray), a] |> lbgra_to_u8color(...)
+}
+
+def result_u8 |x, y| {
+   real_result(x, y)
+
+   # deb_shape(x, y)
+   # deb_shape2(x, y)
+}
