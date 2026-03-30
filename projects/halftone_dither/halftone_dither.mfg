@@ -2,7 +2,6 @@
 @title "ハーフトーンディザ"
 
 @param_f32 threshold(SLIDER, label="閾値", init=0.6, min=0.0, max=1.0)
-# @param_f32 scale(SLIDER, label="スケール", init=1.0, min=0.01, max=10.0)
 @param_i32 antialias(CHECKBOX, label="アンチエイリアス", init=1)
 @param_f32 angle(DIRECTION, init=0.8)
 @param_i32 pattern(DROPDOWN, label="形", items=["四角", "sin", "新聞", "インターリーブ"])
@@ -37,23 +36,11 @@ fn level_to_gray_bayer |x: i32, y:i32, level: f32| {
 
 # sincos pat
 
-# uv: x方向を0.0〜1.0 にノーマライズした座標（y方向はas比を維持してスケール）
+# uv: x方向を0.0〜1.0 にノーマライズした座標（y方向はas比を維持してスケール)をangleで回転させたもの
 # iscale: これを掛けると、周期を0.0〜1.0としたグリッドとなるようなスケール（0.0, 1.0, 2.0, 3.0...の位置に中心が来るように格子を作る）
 fn sincos_pat |uv: f32v2, iscale:f32 | {
   let pscale = iscale*2*PI
   0.5 + 0.25 * cos(uv.x * pscale) + 0.25 * cos(uv.y * pscale)
-}
-
-# circle pat
-fn circle_pat |sh: f32v2, pscale: f32| {
-   let gsize =6.0
-   let sxy = sh*pscale
-   let cxy = round(sxy/gsize)*gsize
-   let rxy = sxy - cxy
-   # 1.0 - (length(rxy)/gsize)^2.0
-   # 1.0- length(rxy)/gsize
-   1.0 - sin(PI*length(rxy)/(2.0*gsize))
-   # smoothstep(gsize/6.0, gsize/2.0, length(rxy))
 }
 
 fn square_pat |uv: f32v2, iscale:f32 | {
@@ -112,11 +99,11 @@ fn level_to_gray_square |x: i32, y:i32, level: f32| {
    level_to_gray_shape(x, y, level, 0)
 }
 
+# interleaved gradient noise
+# [Jorge Jimenez – Game Developer – Next Generation Post Processing in Call of Duty: Advanced Warfare](https://www.iryoku.com/next-generation-post-processing-in-call-of-duty-advanced-warfare/)
 fn interleave_gray |fxy: f32v2| {
-   # let scale = 1.0
    let scale = threshold
    let magic = [0.06711056, 0.00583715, 52.9829189]
-   # let fxy = xy_to_uv(x, y)*f32(input_u8.extent(0))
    -scale + 2.0*scale*fract(magic.z*fract(dot(fxy, magic.xy)))
 }
 
