@@ -1,7 +1,7 @@
 
 @title "ハーフトーンディザ"
 
-@param_f32 threshold(SLIDER, label="閾値", init=0.6, min=0.0, max=1.0)
+@param_f32 threshold(SLIDER, label="閾値", init=1.0, min=0.0, max=1.0)
 @param_i32 antialias(CHECKBOX, label="アンチエイリアス", init=1)
 @param_f32 angle(DIRECTION, init=0.8)
 @param_i32 pattern(DROPDOWN, label="形", items=["四角", "sin", "新聞", "インターリーブ"])
@@ -50,7 +50,12 @@ fn square_pat |uv: f32v2, iscale:f32 | {
   let delta = abs(vxy-cxy)
 
   let dst = max(*delta)
-  1.0 - sin(dst*PI)
+  # 4.0*dst^2
+  cos(dst*PI)
+  # 2.0*dst
+  # 1.0 - 8.0*dst^3
+   # 1.0 - 2.0*dst
+   # 1.0 - sin(dst*PI)
 }
 
 # uv: 幅で正規化したf32v2をangleだけ回転したもの
@@ -99,19 +104,18 @@ fn level_to_gray_square |x: i32, y:i32, level: f32| {
    level_to_gray_shape(x, y, level, 0)
 }
 
-# interleaved gradient noise
+# Similar to interleaved gradient noise
 # [Jorge Jimenez – Game Developer – Next Generation Post Processing in Call of Duty: Advanced Warfare](https://www.iryoku.com/next-generation-post-processing-in-call-of-duty-advanced-warfare/)
 fn interleave_gray |fxy: f32v2| {
-   let scale = threshold
    let magic = [0.06711056, 0.00583715, 52.9829189]
-   -scale + 2.0*scale*fract(magic.z*fract(dot(fxy, magic.xy)))
+   fract(magic.z*fract(dot(fxy, magic.xy)))
 }
 
 fn level_to_gray_interleave |x: i32, y:i32, level: f32| {
    let fxy = f32([x, y])
    let pval = interleave_gray(fxy)
 
-   ifel(level > pval, 1.0, 0.0)
+   ifel(level > threshold*pval, 1.0, 0.0)
 }
 
 
@@ -153,9 +157,38 @@ fn real_result |x:i32, y:i32| {
    [*vec3(gray), a] |> lbgra_to_u8color(...)
 }
 
+@bounds(1024, 1024)
+def grid |x, y| {
+   f32([x, y]) |> interleave_gray(...)
+}
+
+@bounds(16, 16)
+def avg |x, y| {
+   rsum(0..<64, 0..<64) |xi, yi| {
+     grid(x*64+xi, y*64+yi)
+   }/4096.0
+}
+
+
 def result_u8 |x, y| {
-   real_result(x, y)
 
    # deb_shape(x, y)
    # deb_shape2(x, y)
+   # let gray2 = rsum(0..<16, 0..<16) |xi, yi| {
+   #     avg(xi, yi)
+   # }/256.0
+   # let gray = grid(x%1024, y%1024)
+  #  let gray = avg(x%16, y%16)
+#   let igray3 = i32[255.0*gray, 255.0*255.0*gray, 255.0*255.0*255.0*gray]
+   # let igray3 = i32[255.0*gray, 255.0*255.0*gray, 0]
+   # let igray3 = i32[255.0*gray, 0, 0]
+   # ifel(gray < 0.0, u8[0, 0, 255, 255], u8[*igray3, 255])
+  # ifel(gray > 0.5, u8[0, 0, 255, 255], u8[0, 0, 0, 255])
+
+   # let igray = i32(255.0*gray)
+   # u8[*vec3(igray), 255]
+   real_result(x, y)
+
+   # let deb = interleave_gray(f32[x, y])
+   # ifel(deb < 0.0, u8[0, 0, 255, 255], u8[0, 0, 0, 255])
 }
