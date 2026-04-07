@@ -129,6 +129,7 @@ The widget types are as follows:
 - CHECKBOX
 - POINTER
 - COLOR_PICKER
+- DROPDOWN
 
 The named arguments follow depends on this first argument.
 
@@ -222,6 +223,24 @@ This widget can be used with `@param_f32v4`.
 
 - `label`: The label that appears in the color picker. String.
 - `init`: Initial value for the color picker.
+
+### DROPDOWN (v1.0.10)
+
+Select an item from the dropdown. The result is an index (i32) starting with 0. 
+Default is 0.
+
+This widget can be used with `@param_i32`.
+
+**Example:**
+
+```mfg
+@param_i32 pattern(DROPDOWN, label="Shape", items=["Square", "Circle", "Star"])
+```
+
+**Argument:**
+
+- `label`: The label that appears in the dropdown list. String.
+- `items`: Items of dropdown list. Array of strings.
 
 ## Next
 

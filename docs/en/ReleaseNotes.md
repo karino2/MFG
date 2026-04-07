@@ -2,6 +2,14 @@
 
 Update history. [MFG Studio download page](https://modernfilterlanguageforgpu.org/download/)
 
+
+## 1.0.10 2026-04-07
+
+- Supports dropdown list([Reference: Attributes and Input Widgets](Reference/AttrWidget.md))
+- Fixed the position and magnification to remain when reloading the preview 
+- Added init to DIRECTION widget (fixed implementation omission) 
+- Fixed a bug that could cause variable collision when rsum etc. were used in a user-defined function.
+
 ## 1.0.09 2025-12-09
 
 Allow users to add their own target images.

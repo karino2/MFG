@@ -58,10 +58,13 @@ MEPはMFG Enhanced Proposalの略。PythonのPEPなどのMFG版。
 
 - [MEP 28: 前景色の取得](MEP/28.md)
 
+**v1.0.10**
+
+- [MEP 29: ドロップダウンのウィジェット](MEP/29.md)
+
 
 ### ステータス、Proposed
 
-- [MEP 29: ドロップダウンのウィジェット](MEP/29.md)
 - [MEP 23: result_u8などをresultに](MEP/23.md)
 
 ### ステータス、Declined
