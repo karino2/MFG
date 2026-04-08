@@ -1,0 +1,4 @@
+{
+  "ja": {"LABEL_TITLE": "ハーフトーンディザ", "LABEL_THRESHOLD": "閾値", "LABEL_ANTIALIAS": "アンチエイリアス", "LABEL_SHAPE": "形状", "LABEL_SHAPE_SIN": "sin", "LABEL_SHAPE_SQUARE": "四角", "LABEL_NEWSPAPER": "新聞", "LABEL_INTERLEAVE": "インタリーブ"},
+  "en": {"LABEL_TITLE": "Halftone Dither", "LABEL_THRESHOLD": "Threshold", "LABEL_ANTIALIAS": "Antialias", "LABEL_SHAPE": "Shape", "LABEL_SHAPE_SIN": "Sine", "LABEL_SHAPE_SQUARE": "Square", "LABEL_NEWSPAPER": "Newspaper", "LABEL_INTERLEAVE": "Interleave"}
+}

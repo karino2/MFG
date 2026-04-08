@@ -1,10 +1,11 @@
 
-@title "ハーフトーンディザ"
+@title $LABEL_TITLE
+@version "1.0"
 
-@param_f32 threshold(SLIDER, label="閾値", init=1.0, min=0.0, max=1.0)
-@param_i32 antialias(CHECKBOX, label="アンチエイリアス", init=1)
+@param_f32 threshold(SLIDER, label=$LABEL_THRESHOLD, init=1.0, min=0.0, max=1.0)
+@param_i32 antialias(CHECKBOX, label=$LABEL_ANTIALIAS, init=1)
 @param_f32 angle(DIRECTION, init=0.8)
-@param_i32 pattern(DROPDOWN, label="形", items=["四角", "sin", "新聞", "インターリーブ"])
+@param_i32 pattern(DROPDOWN, label=$LABEL_SHAPE, items=[$LABEL_SHAPE_SQUARE, $LABEL_SHAPE_SIN, $LABEL_NEWSPAPER, $LABEL_INTERLEAVE])
 
 let PI = 3.1415926
 
