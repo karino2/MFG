@@ -2,6 +2,9 @@
 
 Update history. [MFG Studio download page](https://modernfilterlanguageforgpu.org/download/)
 
+## 1.0.11 2026-05-03
+
+- Fixed parsing error in dropdown list internationalization
 
 ## 1.0.10 2026-04-07
 

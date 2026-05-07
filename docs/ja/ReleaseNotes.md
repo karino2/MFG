@@ -2,6 +2,9 @@
 
 更新履歴です。[MFG Studioのダウンロードページ](https://modernfilterlanguageforgpu.org/download/)
 
+## 1.0.11 2026-05-03
+
+- ドロップダウンリストの国際化のパースエラーの修正
 
 ## 1.0.10 2026-04-07
 
