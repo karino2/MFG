@@ -12,6 +12,8 @@ In this chapter we will look at attributes.
 Because attributes are parsed with rules that are different from the normal script type system,
 there is a difference in syntax.
 
+For internationalization, see also: [Internationalization and Resources](Resource.md).
+
 ## List of attributes
 
 MFG has the following attributes:

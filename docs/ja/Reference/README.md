@@ -8,3 +8,4 @@
 - [transとreduce](TransReduce.md)
 - [アトリビュートと入力ウィジェット](AttrWidget.md)
 - [ユーザー定義関数と組み込み関数](BuiltinFunctions.md)
+- [国際化とリソース](Resource.md)

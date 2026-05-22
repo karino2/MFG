@@ -8,3 +8,4 @@
 - [trans and reduce](TransReduce.md)
 - [Attributes and Input Widgets](AttrWidget.md)
 - [User Defined and Bultin Functions](BuiltinFunctions.md)
+- [Internationalization and Resources](Resource.md)

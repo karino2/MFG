@@ -88,6 +88,7 @@ There are the following major types of tensors:
 - input tensor
 - result tensor
 - Tensor literal
+- Image textures
 - Normal tensor (intermediate tensor)
 - Local tensor
 
@@ -212,6 +213,18 @@ Expressed in nested notation of `by` keyword and tuples.
 
 A tensor literal must have all elements the same.
 As an element, it currently only supports numbers, and tuples are not supported.
+
+## Image textures
+
+Image resources in the project can be used as textures. Only support PNG format.
+
+For example, if you place an image file named `4rect_texture16.png` in the project and define it like this, it can be used as a tensor named `lts`:
+
+```mfg
+  def lts by load("4rect_texture16.png")
+```
+
+PNGs are currently always loaded as tensors with element type `u8v4` in BGRA order.
 
 ## Regular tensor
 

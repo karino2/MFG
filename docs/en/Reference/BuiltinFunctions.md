@@ -526,3 +526,6 @@ Ti of xor also supports u32.
 In normal shaders, it corresponds to `^`,
 but in MFG, this is used as a power, so only xor is a function for bitwise operations.
 
+## Next
+
+[Internationalization and Resources](Resource.md)
