@@ -1,0 +1,7 @@
+@title "ハローMFG"
+
+let clamped = sampler<input_u8>(address=.ClampToEdge)
+
+def result_u8 |x, y| {
+  (clamped(x-1, y-1)+clamped(x, y)+clamped(x+1, y+1))/3
+}

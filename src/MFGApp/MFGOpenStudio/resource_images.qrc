@@ -1,0 +1,59 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/icon_redo.png</file>
+        <file>images/icon_undo.png</file>
+
+        <file>images/icon_redo_x2.png</file>
+        <file>images/icon_undo_x2.png</file>
+
+        <file>images/icon_run.png</file>
+        <file>images/icon_run_x2.png</file>
+        <file>images/icon_run_large.png</file>
+
+
+        <file>images/icon_zoomin.png</file>
+        <file>images/icon_zoomfit.png</file>
+        <file>images/icon_zoomout.png</file>
+
+        <file>images/icon_zoomin_x2.png</file>
+        <file>images/icon_zoomfit_x2.png</file>
+        <file>images/icon_zoomout_x2.png</file>
+
+        <file>images/icon_folder.png</file>
+        <file>images/icon_trash.png</file>
+        <file>images/icon_hint.png</file>
+
+        <file>images/icon_folder_x2.png</file>
+        <file>images/icon_trash_x2.png</file>
+        <file>images/icon_hint_x2.png</file>
+
+        <file>images/icon_file.png</file>
+        <file>images/icon_file_x2.png</file>
+
+        <file>images/icon_reset.png</file>
+        <file>images/icon_reset_x2.png</file>
+
+        <file>images/icon_strings.png</file>
+        <file>images/icon_strings_x2.png</file>
+
+        <file>images/about_mfg.png</file>
+
+        <file>images/folder_41_close.png</file>
+        <file>images/folder_41_open.png</file>
+
+        <file>images/material_op_delete.png</file>
+        <file>images/material_op_down.png</file>
+        <file>images/material_op_rot.png</file>
+        <file>images/material_op_up.png</file>
+        <file>images/material_op_prop.png</file>
+
+        <file>images/gear_10.png</file>
+        <file>images/gear_12.png</file>
+        <file>images/gear_18.png</file>
+
+        <file>images/thumb_import.png</file>
+        <file>images/thumb_import_x2.png</file>
+
+        <file>images/mfg_nothumbnail.png</file>
+    </qresource>
+</RCC>
