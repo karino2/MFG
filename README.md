@@ -13,7 +13,7 @@ Document is build using VuePress and deployed at [https://karino2.github.io/MFG/
 
 MFG’s implementation, the Qt-based IDE MFGOpenStudio, and the command-line tools mfg_cli and unit_test are located in the following directories.
 
-- [src/README.md](src/README.md)
+- [src/](src/)
 
 ## Projects
 
