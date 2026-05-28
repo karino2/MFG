@@ -1,0 +1,4 @@
+# OpenCommon
+
+ここにはmfg_cliとMFGOpenStudioで共通のコードを置く。
+主にpalでPOSIXなどで十分なものなど。

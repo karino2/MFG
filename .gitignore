@@ -3,3 +3,6 @@ docs/.vuepress/.temp
 node_modules
 docs/.vuepress/prism-mfg.js
 .DS_Store
+src/MFGApp/mfg_cli/build
+src/MFGApp/MFGOpenStudio/build
+src/MFGApp/MFGOpenStudio/.envrc

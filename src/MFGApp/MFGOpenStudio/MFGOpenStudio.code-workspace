@@ -1,0 +1,228 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../OpenCommon"
+		},
+		{
+			"path": "../StudioLib"
+		},
+		{
+			"path": "../../_pgn/_mfg"
+		},
+		{
+			"path": "../../_pgn/_tools"
+		},
+		{
+			"path": "../../_pgn/_picojson"
+		}
+	],
+	"settings": {
+		"workbench.colorTheme": "Visual Studio 2017 Dark - C++",
+		"files.associations": {
+			".fantomasignore": "ignore",
+			"*.hpp": "cpp",
+			"*.ipp": "cpp",
+			"__bit_reference": "cpp",
+			"cmath": "cpp",
+			"cstddef": "cpp",
+			"limits": "cpp",
+			"optional": "cpp",
+			"vector": "cpp",
+			"algorithm": "cpp",
+			"cctype": "cpp",
+			"clocale": "cpp",
+			"csetjmp": "cpp",
+			"csignal": "cpp",
+			"cstdarg": "cpp",
+			"cstdio": "cpp",
+			"cstdlib": "cpp",
+			"cstring": "cpp",
+			"ctime": "cpp",
+			"cwchar": "cpp",
+			"cwctype": "cpp",
+			"any": "cpp",
+			"array": "cpp",
+			"atomic": "cpp",
+			"strstream": "cpp",
+			"barrier": "cpp",
+			"bit": "cpp",
+			"*.tcc": "cpp",
+			"bitset": "cpp",
+			"cfenv": "cpp",
+			"charconv": "cpp",
+			"chrono": "cpp",
+			"cinttypes": "cpp",
+			"codecvt": "cpp",
+			"compare": "cpp",
+			"complex": "cpp",
+			"concepts": "cpp",
+			"condition_variable": "cpp",
+			"coroutine": "cpp",
+			"cstdint": "cpp",
+			"deque": "cpp",
+			"forward_list": "cpp",
+			"list": "cpp",
+			"map": "cpp",
+			"set": "cpp",
+			"string": "cpp",
+			"unordered_map": "cpp",
+			"unordered_set": "cpp",
+			"exception": "cpp",
+			"functional": "cpp",
+			"iterator": "cpp",
+			"memory": "cpp",
+			"memory_resource": "cpp",
+			"numeric": "cpp",
+			"random": "cpp",
+			"ratio": "cpp",
+			"regex": "cpp",
+			"source_location": "cpp",
+			"string_view": "cpp",
+			"system_error": "cpp",
+			"tuple": "cpp",
+			"type_traits": "cpp",
+			"utility": "cpp",
+			"rope": "cpp",
+			"slist": "cpp",
+			"format": "cpp",
+			"fstream": "cpp",
+			"future": "cpp",
+			"initializer_list": "cpp",
+			"iomanip": "cpp",
+			"iosfwd": "cpp",
+			"iostream": "cpp",
+			"istream": "cpp",
+			"latch": "cpp",
+			"mutex": "cpp",
+			"new": "cpp",
+			"numbers": "cpp",
+			"ostream": "cpp",
+			"print": "cpp",
+			"ranges": "cpp",
+			"scoped_allocator": "cpp",
+			"semaphore": "cpp",
+			"shared_mutex": "cpp",
+			"span": "cpp",
+			"sstream": "cpp",
+			"stdexcept": "cpp",
+			"stdfloat": "cpp",
+			"stop_token": "cpp",
+			"streambuf": "cpp",
+			"syncstream": "cpp",
+			"text_encoding": "cpp",
+			"thread": "cpp",
+			"typeindex": "cpp",
+			"typeinfo": "cpp",
+			"valarray": "cpp",
+			"variant": "cpp",
+			"__node_handle": "cpp",
+			"__hash_table": "cpp",
+			"__locale": "cpp",
+			"__split_buffer": "cpp",
+			"__threading_support": "cpp",
+			"__verbose_abort": "cpp",
+			"ios": "cpp",
+			"locale": "cpp",
+			"__tree": "cpp",
+			"queue": "cpp",
+			"stack": "cpp",
+			"execution": "cpp",
+			"__assertion_handler": "cpp"
+		},
+		"dotnet.defaultSolution": "disable",
+		"terminal.integrated.env.windows": {
+			"PATH": "${env:PATH};C:\\Qt\\6.8.0\\msvc2022_64\\bin",
+		}
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "launch MFGOpenStudio",
+				"type":"lldb",
+				"request": "launch",
+				"program": "${workspaceFolder:MFGOpenStudio}/build/Debug/MFGOpenStudio.app",
+				"args": [],
+				"cwd": "${workspaceFolder:MFGOpenStudio}",
+	            "terminal":"console",
+				"internalConsoleOptions": "openOnSessionStart",
+				"preLaunchTask": "Build MFGOpenStudio with cmake"
+			},
+			{
+				"name": "launch MFGOpenStudio(cppdbg)",
+				"type":"cppdbg",
+				"logging": {"moduleLoad": false},
+				"request": "launch",
+				"program": "${workspaceFolder:MFGOpenStudio}/build/Debug/MFGOpenStudio.app",
+				"args": [],
+				"cwd": "${workspaceFolder:MFGOpenStudio}",
+				"externalConsole": false,
+				"internalConsoleOptions": "openOnSessionStart",
+				"targetArchitecture": "x64",
+				"MIMode": "lldb",
+				"preLaunchTask": "Build MFGOpenStudio with cmake"
+			},
+			{
+				"name": "launch MFGOpenStudio (windows VS)",
+				"type": "cppvsdbg",
+				"request": "launch",
+				"program": "${workspaceFolder:MFGOpenStudio}/build/Debug/MFGOpenStudio.exe",
+				"sourceFileMap": {
+					"C:/Users/qt/work/qt": "C:/Qt/6.8.0/Src"
+				},
+				"cwd": "${workspaceFolder:MFGOpenStudio}",
+				"logging": {
+					"moduleLoad": false,
+					"exceptions": false,
+					"trace": true
+				},
+				"internalConsoleOptions": "openOnSessionStart",
+				"preLaunchTask": "Build MFGOpenStudio with cmake"	
+			},
+		]
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "Build MFGOpenStudio with cmake",
+				"command": "cmake",
+				"type": "shell",
+				"args": [
+					"--build",
+					"./build",
+					"--config",
+					"Debug",
+					"--target",
+					"MFGOpenStudio",
+				],
+				"windows": {
+					"args": [
+						"--build",
+						"./build",
+						"--config",
+						"Debug",
+						"--target",
+						"MFGOpenStudio",
+						"--",
+						"/p:UseMultiToolTask=true"
+					],	
+				},
+				"options": {
+					"cwd": "${workspaceFolder:MFGOpenStudio}"
+				},
+				"problemMatcher": [
+					"$tsc"
+				],
+				"presentation": {
+					"reveal": "always"
+				},
+				"group": "build"
+			}
+		]
+	}
+
+}

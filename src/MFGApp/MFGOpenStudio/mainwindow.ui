@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
+  </property>
+  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QMenuBar" name="menuBar">
+
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <widget class="QMenu" name="menu_FileRecent">
+     <property name="title">
+      <string>Open &amp;Recent File</string>
+     </property>
+     <addaction name="action_File0"/>
+     <addaction name="action_File1"/>
+     <addaction name="action_File2"/>
+     <addaction name="action_File3"/>
+     <addaction name="action_File4"/>
+     <addaction name="action_File5"/>
+     <addaction name="action_File6"/>
+     <addaction name="action_File7"/>
+    </widget>
+    <widget class="QMenu" name="menu_FileRecentProject">
+     <property name="title">
+      <string>Open Recent &amp;Project</string>
+     </property>
+     <addaction name="action_FileProject0"/>
+     <addaction name="action_FileProject1"/>
+     <addaction name="action_FileProject2"/>
+     <addaction name="action_FileProject3"/>
+     <addaction name="action_FileProject4"/>
+     <addaction name="action_FileProject5"/>
+     <addaction name="action_FileProject6"/>
+     <addaction name="action_FileProject7"/>
+    </widget>
+    <addaction name="action_FileProjectNew"/>
+    <addaction name="separator"/>
+    <addaction name="action_FileProjectOpen"/>
+    <addaction name="action_FileOpen"/>
+    <addaction name="separator"/>
+    <addaction name="menu_FileRecentProject"/>
+    <addaction name="menu_FileRecent"/>
+    <addaction name="separator"/>
+    <addaction name="action_FileSave"/>
+    <addaction name="action_FileSaveAs"/>
+    <addaction name="separator"/>
+    <addaction name="action_FileExamplesProject"/>
+    <addaction name="separator"/>
+    <addaction name="action_FileClose"/>
+    <addaction name="action_FileProjectClose"/>
+   </widget>
+
+   <widget class="QMenu" name="menu_Edit">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="action_EditUndo"/>
+    <addaction name="action_EditRedo"/>
+    <addaction name="separator"/>
+    <addaction name="action_EditCut"/>
+    <addaction name="action_EditCopy"/>
+    <addaction name="action_EditPaste"/>
+   </widget>
+
+
+   <widget class="QMenu" name="menu_Project">
+    <property name="title">
+     <string>&amp;Project</string>
+    </property>
+    <addaction name="action_ProjectPackMAR"/>
+   </widget>
+
+
+   <widget class="QMenu" name="menu_View">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <addaction name="action_ViewZoomIn"/>
+    <addaction name="action_ViewZoomOut"/>
+   </widget>
+
+   <widget class="QMenu" name="menu_Window">
+    <property name="title">
+     <string>&amp;Window</string>
+    </property>
+    <addaction name="action_WindowPreview"/>
+    <addaction name="action_WindowOutput"/>
+    <addaction name="separator"/>
+    <addaction name="action_WindowP0"/>
+    <addaction name="action_WindowP1"/>
+    <addaction name="separator"/>
+    <addaction name="action_WindowStatus"/>
+    <addaction name="separator"/>
+    <addaction name="action_WindowInitialize"/>
+   </widget>
+
+   <widget class="QMenu" name="menu_Help">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <widget class="QMenu" name="menu_HelpLanguage">
+     <property name="title">
+      <string>&amp;Language</string>
+     </property>
+     <addaction name="action_HelpAuto"/>
+     <addaction name="separator"/>
+     <addaction name="action_HelpEnglish"/>
+     <addaction name="action_HelpJapanese"/>
+     <addaction name="action_HelpChineseSimp"/>
+     <addaction name="action_HelpChineseTrad"/>
+     <addaction name="action_HelpKorean"/>
+     <addaction name="action_HelpPortugues"/>
+     <addaction name="action_HelpSpanish"/>
+     <addaction name="action_HelpGerman"/>
+     <addaction name="action_HelpFrench"/>
+     <addaction name="action_HelpRussian"/>
+     <addaction name="action_HelpHindi"/>
+     <addaction name="action_HelpBengali"/>
+     <addaction name="action_HelpPolish"/>
+    </widget>
+    <addaction name="action_HelpOfficial"/>
+    <addaction name="separator"/>
+    <addaction name="action_HelpAbout"/>
+    <addaction name="action_HelpQt"/>
+    <addaction name="separator"/>
+    <addaction name="menu_HelpLanguage"/>
+    <addaction name="separator"/>
+    <addaction name="action_HelpConfig"/>
+   </widget>
+
+   <addaction name="menu_File"/>
+   <addaction name="menu_Edit"/>
+   <addaction name="menu_Project"/>
+   <addaction name="menu_View"/>
+   <addaction name="menu_Window"/>
+   <addaction name="menu_Help"/>
+  </widget>
+
+  <widget class="QStatusBar" name="statusBar"/>
+
+  <action name="action_FileProjectNew">
+   <property name="text">
+    <string>&amp;New Project...</string>
+   </property>
+  </action>
+  <action name="action_FileProjectOpen">
+   <property name="text">
+    <string>&amp;Open Project...</string>
+   </property>
+  </action>
+  <action name="action_FileOpen">
+   <property name="text">
+    <string>Open MFG File...</string>
+   </property>
+  </action>
+  <action name="action_FileSave">
+   <property name="text">
+    <string>Save MFG File</string>
+   </property>
+  </action>
+  <action name="action_FileSaveAs">
+   <property name="text">
+    <string>Save MFG File As...</string>
+   </property>
+  </action>
+  <action name="action_FileExamplesProject">
+   <property name="text">
+    <string>Open Examples Project</string>
+   </property>
+  </action>
+  <action name="action_FileClose">
+   <property name="text">
+    <string>&amp;Close File</string>
+   </property>
+  </action>
+  <action name="action_FileProjectClose">
+   <property name="text">
+    <string>Close Project</string>
+   </property>
+  </action>
+
+  <action name="action_File0">
+   <property name="text">
+    <string>File0</string>
+   </property>
+  </action>
+  <action name="action_File1">
+   <property name="text">
+    <string>File1</string>
+   </property>
+  </action>
+  <action name="action_File2">
+   <property name="text">
+    <string>File2</string>
+   </property>
+  </action>
+  <action name="action_File3">
+   <property name="text">
+    <string>File3</string>
+   </property>
+  </action>
+  <action name="action_File4">
+   <property name="text">
+    <string>File4</string>
+   </property>
+  </action>
+  <action name="action_File5">
+   <property name="text">
+    <string>File5</string>
+   </property>
+  </action>
+  <action name="action_File6">
+   <property name="text">
+    <string>File6</string>
+   </property>
+  </action>
+  <action name="action_File7">
+   <property name="text">
+    <string>File7</string>
+   </property>
+  </action>
+
+  <action name="action_FileProject0">
+   <property name="text">
+    <string>Project0</string>
+   </property>
+  </action>
+  <action name="action_FileProject1">
+   <property name="text">
+    <string>Project1</string>
+   </property>
+  </action>
+  <action name="action_FileProject2">
+   <property name="text">
+    <string>Project2</string>
+   </property>
+  </action>
+  <action name="action_FileProject3">
+   <property name="text">
+    <string>Project3</string>
+   </property>
+  </action>
+  <action name="action_FileProject4">
+   <property name="text">
+    <string>Project4</string>
+   </property>
+  </action>
+  <action name="action_FileProject5">
+   <property name="text">
+    <string>Project5</string>
+   </property>
+  </action>
+  <action name="action_FileProject6">
+   <property name="text">
+    <string>Project6</string>
+   </property>
+  </action>
+  <action name="action_FileProject7">
+   <property name="text">
+    <string>Project7</string>
+   </property>
+  </action>
+
+  <action name="action_EditUndo">
+   <property name="text">
+    <string>&amp;Undo</string>
+   </property>
+  </action>
+  <action name="action_EditRedo">
+   <property name="text">
+    <string>&amp;Redo</string>
+   </property>
+  </action>
+  <action name="action_EditCut">
+   <property name="text">
+    <string>Cu&amp;t</string>
+   </property>
+  </action>
+  <action name="action_EditCopy">
+   <property name="text">
+    <string>&amp;Copy</string>
+   </property>
+  </action>
+  <action name="action_EditPaste">
+   <property name="text">
+    <string>&amp;Paste</string>
+   </property>
+  </action>
+
+  <action name="action_ProjectPackMAR">
+   <property name="text">
+    <string>Pack to mar...</string>
+   </property>
+  </action>
+  <action name="action_ProjectDevMARList">
+   <property name="text">
+    <string>MARList...</string>
+   </property>
+  </action>
+
+  <action name="action_ViewZoomIn">
+   <property name="text">
+    <string>Zoom &amp;In</string>
+   </property>
+  </action>
+  <action name="action_ViewZoomOut">
+   <property name="text">
+    <string>Zoom &amp;Out</string>
+   </property>
+  </action>
+  <action name="action_ViewZoomAdjust">
+   <property name="text">
+    <string>Fit to &amp;Window Size</string>
+   </property>
+  </action>
+  <action name="action_ViewZoom100">
+   <property name="text">
+    <string>100%</string>
+   </property>
+  </action>
+  <action name="action_ViewZoom200">
+   <property name="text">
+    <string>200%</string>
+   </property>
+  </action>
+
+  <action name="action_WindowPreview">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Preview</string>
+   </property>
+  </action>
+  <action name="action_WindowOutput">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Output</string>
+   </property>
+  </action>
+  <action name="action_WindowP0">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>P0</string>
+   </property>
+  </action>
+  <action name="action_WindowP1">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>P1</string>
+   </property>
+  </action>
+  <action name="action_WindowStatus">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Status Bar</string>
+   </property>
+  </action>
+  <action name="action_WindowInitialize">
+   <property name="text">
+    <string>&amp;Initialize...</string>
+   </property>
+  </action>
+  <action name="action_WindowShowHide">
+   <property name="text">
+    <string>&amp;Show/Hide</string>
+   </property>
+  </action>
+
+  <action name="action_HelpOfficial">
+   <property name="text">
+    <string>&amp;Official Website...</string>
+   </property>
+  </action>
+  <action name="action_HelpAbout">
+   <property name="text">
+    <string>&amp;About...</string>
+   </property>
+  </action>
+  <action name="action_HelpQt">
+   <property name="text">
+    <string>About &amp;Qt...</string>
+   </property>
+  </action>
+  <action name="action_HelpConfig">
+   <property name="text">
+    <string>&amp;Open Config Folder...</string>
+   </property>
+  </action>
+  <action name="action_HelpAuto">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Auto</string>
+   </property>
+  </action>
+  <action name="action_HelpEnglish">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;English</string>
+   </property>
+  </action>
+  <action name="action_HelpJapanese">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Japanese</string>
+   </property>
+  </action>
+  <action name="action_HelpChineseSimp">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Chinese (Simplified)</string>
+   </property>
+  </action>
+  <action name="action_HelpChineseTrad">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Chinese (Traditional)</string>
+   </property>
+  </action>
+  <action name="action_HelpKorean">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Korean</string>
+   </property>
+  </action>
+  <action name="action_HelpPortugues">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Portugues</string>
+   </property>
+  </action>
+  <action name="action_HelpSpanish">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Spanish</string>
+   </property>
+  </action>
+  <action name="action_HelpGerman">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>German</string>
+   </property>
+  </action>
+  <action name="action_HelpFrench">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>French</string>
+   </property>
+  </action>
+  <action name="action_HelpRussian">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Russian</string>
+   </property>
+  </action>
+  <action name="action_HelpHindi">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Hindi</string>
+   </property>
+  </action>
+  <action name="action_HelpBengali">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Bengali</string>
+   </property>
+  </action>
+  <action name="action_HelpPolish">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Polish</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>

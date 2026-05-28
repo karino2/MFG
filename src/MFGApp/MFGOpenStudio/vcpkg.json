@@ -1,0 +1,13 @@
+{
+  "dependencies": [
+    {
+      "name": "minizip-ng",
+      "default-features": false,
+      "features": ["zlib"]
+    }
+  ],
+  "vcpkg-configuration": {
+    "overlay-triplets": [ "./custom_vcpkg_triplets" ]
+  },
+  "builtin-baseline": "6760f636e7bcd0dd034c5c0906f6174009465c29"
+}

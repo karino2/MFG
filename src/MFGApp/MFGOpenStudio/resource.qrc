@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file>sample_targets/colorful_baloon.png</file>
+        <file>sample_targets/riverside_photo.png</file>
+        <file>sample_targets/girl001.png</file>
+        <file>sample_targets/man_lineart.png</file>
+        <file>sample_targets/nightcity_photo.png</file>
+        <file>sample_targets/room_photo.png</file>
+        <file>sample_targets/grid.png</file>
+        <file>sample_targets/color_grid.png</file>
+        <file>sample_targets/noise_riverside_photo.png</file>
+        <file>sample_targets/girl001_lineart.png</file>
+        <file>sample_targets/non_aa_line.png</file>
+        <file>sample_targets/non_aa_chara.png</file>
+        <file>sample_targets/non_aa_color_shape.png</file>
+        <file>sample_targets/non_aa_silhouette.png</file>
+        <file>sample_targets/thumbnail_base.png</file>
+    </qresource>
+</RCC>
