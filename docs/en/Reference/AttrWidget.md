@@ -19,6 +19,7 @@ For internationalization, see also: [Internationalization and Resources](Resourc
 MFG has the following attributes:
 
 - `@title`
+- `@version`
 - `@bounds`
 - `@print_expr`
 - param related:
@@ -47,6 +48,21 @@ Strings appear only in attribute.
 
 The title specified by `@title` can be used in the menu in the filter list, or
 it is also used in the title of a dialog at runtime.
+
+## `@version`
+
+Specifies the version of the filter.
+This does not affect the script behavior.
+It is used by applications to display the filter version,
+and to clearly communicate which version is being used when troubleshooting.
+
+The version is specified as a string.
+
+```
+@version "1.0"
+```
+
+There are currently no special rules for version numbers.
 
 ## `@bounds`
 
