@@ -59,6 +59,12 @@ MFGの開発はMFGStudioで行います。
 
 - [リファレンス](Reference/README.md)
 
+## ソースコード
+
+MFGの処理系のソースコードや関連ツール、MFGStudioのオープンソース版であるMFGOpenStudioは、以下のgithubで公開されています。（このドキュメントと同じレポジトリ）
+
+[karino2/MFG: Modern Filter language for GPU](https://github.com/karino2/MFG/)
+
 ## 発展的な内容
 
 以下はコア開発者向けの、より発展的な内容となります。
