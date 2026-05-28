@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/karino2/MFG.git"
   },
-  "license": "MIT",
+  "license": "Apache-2.0",
   "author": "",
   "type": "commonjs",
   "main": "index.js",
