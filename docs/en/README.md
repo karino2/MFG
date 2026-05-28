@@ -60,3 +60,8 @@ MFG will be developed using MFG Studio.
 
 - [Reference](Reference/README.md)
 
+## Source Code
+
+The source code for the MFG implementation, related tools, and the open-source MFGStudio version called MFGOpenStudio is available on GitHub. This is the same repository as this documentation.
+
+[karino2/MFG: Modern Filter language for GPU](https://github.com/karino2/MFG/)
