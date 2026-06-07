@@ -555,7 +555,21 @@ static void ExecVerifyScript( const std::string& src, int width, int height, std
 
   inputTile.Resize( width, height );
   resTile.Resize( width, height );
+  auto& irbinary = *builder._binary.get();
+
   TargetBackend backend;
+
+
+  // @paramやfore_colorなどの変数をenvに追加しておく。
+  for( auto& one : irbinary._params)
+  {
+    one.SetupEnv( backend._renv );
+  }
+
+  for( auto& one : irbinary._sparams)
+  {
+    one.SetupEnv( backend._renv );
+  }
 
   RunBackend( backend, *builder._binary.get(), inputTile, resTile );
 
@@ -7095,6 +7109,108 @@ def result_u8 |x, y| {
       REQUIRE( 0x00000603 == resTile.PixelGet( 0, 0 ).Value );
     });
   }
+}},
+{"SamplerCallのhoist時の名前の初期化がうまくいっているか？(#7)", []{
+  auto src = R"(
+
+let current = sampler<input_u8>(address=.ClampToEdge)
+
+fn target |x: i32, y:i32| {
+    ifel((x%2)==0, current(x, y).w, current(y, x).w)
+}
+
+def result_u8 |x, y| {
+  let tmp = target(x, y)
+  u8[tmp, 0, 0, 0]
+}
+)";
+
+  // 以前 _nameが ""のままで、rres.i0_.0などi0のあとが空になって重複定義になるバグがあった。
+  if(SECTION("SamplerCallのHoist時に_nameが正しく振られているか")) {SG g;
+    auto actual = ParseAndLowerAndReturnTreeDump( src );
+    // cout << actual << endl;
+    REQUIRE( 1 == CountContains(actual, "let rres.i0_r1.0") );
+  }
+  if (SECTION("正常に実行出来るか")){SG g;
+    bool success = false;
+    ExecVerifyScript( src, 1, 1, [&](mfg_pal::Image32& resTile) {
+      success = true;
+    });
+    REQUIRE(success);
+  }
+
+}},
+{"ドロップシャドウが正しく実行出来るか(#7)", []{
+  auto src = R"(
+let range = 10
+let ar = 7
+let is_target_upper = 0
+let angle = -0.5
+
+let sigma = f32(ar)
+let WR = 3*ar
+let mWR = -(WR-1)
+
+@bounds(WR)
+def weight |x| {
+  exp(- f32(x^2)/(2.0*sigma^2) )
+}
+
+let coeff = rsum(mWR..<WR) |rx| { weight(abs(rx)) }
+
+let dir = [cos(angle), sin(angle)]*1.415
+let [W, H] = input_u8.extent()
+
+let upper = sampler<input_u8[1]>(address=.ClampToEdge)
+let current = sampler<input_u8>(address=.ClampToEdge)
+
+fn target |x: i32, y:i32| {
+    ifel(is_target_upper, upper(x, y), current(x, y))
+}
+
+
+@bounds(W, H)
+def shadow_x0 |x, y| {
+  rsum(mWR..<WR) |rx| {
+    let v = [x, y] + [rx, 0]
+    let ocu = reduce(init=0.0, 0..<range) | index, accm | {
+      let vi = v + i32(dir*index)
+      let cur = target(*vi) |> to_ncolor(...).w
+
+      max(cur, accm)
+    }
+    ocu*weight(abs(rx))
+  }
+}
+
+let shadow_x = sampler<shadow_x0>(address=.ClampToEdge)
+
+fn blend | dest: f32v4, cur: f32v4 | {
+  let resA = mix(dest.w, 1.0, cur.w)
+  let resBGR = mix(dest.w*dest.xyz, cur.xyz, cur.w)/resA
+  ifel(cur.w < 0.0001,
+        dest,
+        [*resBGR, resA])
+}
+
+def result_u8 |x, y| {
+   let shadowSum = rsum(mWR..<WR) |ry| {
+      shadow_x( x, y+ry)  * weight(abs(ry))
+   }
+   let shadowBGR = fore_color().xyz |> gamma2linear(...)
+   let shadow = [*shadowBGR, shadowSum/(coeff^2)]
+   let org = input_u8(x, y) |> to_lbgra(...)
+   ifel(is_target_upper, shadow, blend(shadow, org))
+     |> lbgra_to_u8color(...)
+}
+)";
+  bool success = false;
+
+  // #7 のように実行出来なくなっていないかを確認。
+  ExecVerifyScript( src, 1, 1, [&](mfg_pal::Image32& resTile) {
+    success = true;
+  });
+  REQUIRE(success);
 }},
 #endif
 {"mfgでリークが無いかの確認。", []{
