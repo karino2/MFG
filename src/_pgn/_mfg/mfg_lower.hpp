@@ -975,6 +975,9 @@ struct InlineFuncLower : private IRBuildDSL
     }
     else if (auto sc = elem->As<SamplerCall>())
     {
+      // SamlerCallの_nameはlazyに初期化するので
+      // replaceする前に初期化する。
+      sc->Name();
       ReplaceName( sc );
     }
     // fnの中ではローカルテンソルは禁止なのでTransformTensorなどは無い
