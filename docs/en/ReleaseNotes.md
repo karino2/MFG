@@ -2,6 +2,10 @@
 
 Update history. [MFG Studio download page](https://modernfilterlanguageforgpu.org/download/)
 
+## 1.0.12 2026-06-08
+
+Fixed a bug that could sometimes cause a script error due to duplicate variable definitions when the same sampler was used multiple times within a function.
+
 ## 1.0.11 2026-05-03
 
 - Fixed parsing error in dropdown list internationalization
